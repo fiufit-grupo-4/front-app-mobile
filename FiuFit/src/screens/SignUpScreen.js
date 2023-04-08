@@ -58,19 +58,19 @@ const SignUpScreen = () => {
         />
 
         <CustomButton text="Register" onPress={onRegisterPressed} />
-
-        <Text style={styles.text}>
-          By registering, you confirm that you accept our{' '}
-          <Text style={styles.link} onPress={onTermsOfUsePressed}>
-            Terms of Use
-          </Text>{' '}
-          and{' '}
-          <Text style={styles.link} onPress={onPrivacyPressed}>
-            Privacy Policy
+        <View style={styles.container} > 
+          <Text style={styles.text}>
+            By registering, you confirm that you accept our{' '}
+            <Text style={styles.link} onPress={onTermsOfUsePressed}>
+              Terms of Use
+            </Text>{' '}
+            and{' '}
+            <Text style={styles.link} onPress={onPrivacyPressed}>
+              Privacy Policy
+            </Text>
+            .
           </Text>
-        </Text>
-
-        <SocialSignInButtons />
+        </View>
 
         <CustomButton
           text="Have an account? Sign in"
@@ -89,6 +89,12 @@ const styles = StyleSheet.create({
     backgroundColor:"skyblue",
     justifyContent: "center"
   },
+  container: {
+    width: '85%',
+    padding: 5,
+    alignItems: 'center',
+    borderRadius: 15,
+  },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   link: {
-    color: 'seagreen',
+    color: 'forestgreen',
   },
 });
 
