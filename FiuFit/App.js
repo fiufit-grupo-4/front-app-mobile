@@ -1,19 +1,22 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
-import Main from './src/components/Main';
-import SignInScreen from './src/screens/SignIn/SignInScreen';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import {SafeAreaView,View, StyleSheet} from 'react-native';
+import Navigation from './src/navigation/Navigation';
 
-export default function App() {
+const App = () => {
   return (
-      <SafeAreaView style= {styles.root}>
-        <SignInScreen></SignInScreen>
-      </SafeAreaView>
+    <SafeAreaView style={styles.root}>
+      <Navigation />
+      <StatusBar style="auto" />
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   root: {
-    flex:1,
-    backgroundColor: "F9FBFC"
-  }
-})
+    flex: 1,
+    backgroundColor: 'skyblue',
+  },
+});
 
+export default App;
