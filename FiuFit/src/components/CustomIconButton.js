@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable,TouchableOpacity} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
-import { TouchableOpacity } from 'react-native-web';
 
 const CustomIconButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor,icon,iconColor}) => {
   return (
