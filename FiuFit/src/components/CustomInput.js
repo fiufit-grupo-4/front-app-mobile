@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 45,
-    backgroundColor: 'powderblue',
+    backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 15,
     alignContent:"center",
     paddingHorizontal: 15,
     marginVertical: 5,
+    textDecorationColor:"black"
   },
 });
 

@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 const NewPasswordScreen = () => {
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
-
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
 
   const onSubmitPressed = () => {
@@ -33,8 +33,8 @@ const NewPasswordScreen = () => {
 
         <CustomInput
           placeholder="Confirm your new password"
-          value={newPassword}
-          setValue={setNewPassword}
+          value={confirmPassword}
+          setValue={setConfirmPassword}
         />
 
         <CustomButton text="Submit" onPress={onSubmitPressed} />
