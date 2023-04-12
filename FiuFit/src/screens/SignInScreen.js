@@ -69,12 +69,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor:"skyblue",
     justifyContent: "center"
-  },
-  logo: {
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 200,
-  },
+  }
 });
 
 export default SignInScreen;

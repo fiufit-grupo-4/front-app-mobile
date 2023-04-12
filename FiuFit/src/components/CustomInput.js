@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 45,
-    backgroundColor: 'white',
+    backgroundColor: 'powderblue',
     borderWidth: 1,
     borderRadius: 15,
     alignContent:"center",

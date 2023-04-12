@@ -13,7 +13,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Home, sweet home</Text>
+      <Text style={styles.title}>Buen día Grupo</Text>
 
       <CustomButton
           text="Log Out"
