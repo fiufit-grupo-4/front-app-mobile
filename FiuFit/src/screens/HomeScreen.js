@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text,StyleSheet} from 'react-native';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeScreen = () => {

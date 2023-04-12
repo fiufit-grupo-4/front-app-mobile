@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton';
-import SocialSignInButtons from '../components/SocialSignInButtons';
+import CustomInput from '../components/inputs/CustomInput';
+import CustomPassword from '../components/inputs/CustomPassword';
+import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../components/Logo';
-
+import Logo from '../components/utils/Logo';
+import { PasswordVisibility } from '../components/utils/PasswordVisibility';
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
+  const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
+    PasswordVisibility();
 
   const navigation = useNavigation();
 
@@ -42,19 +44,28 @@ const SignUpScreen = () => {
           placeholder="Username"
           value={username}
           setValue={setUsername}
+          icon={"person-outline"}
         />
-        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
-        <CustomInput
+        <CustomInput placeholder="Email" value={email} setValue={setEmail}  icon={"mail-outline"}/>
+        
+        <CustomPassword
           placeholder="Password"
           value={password}
           setValue={setPassword}
-          secureTextEntry
+          passwordVisibility={passwordVisibility}
+          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon={rightIcon}
+
         />
-        <CustomInput
-          placeholder="Repeat Password"
+
+        <CustomPassword
+          placeholder="Repeat your Password"
           value={passwordRepeat}
           setValue={setPasswordRepeat}
-          secureTextEntry
+          passwordVisibility={passwordVisibility}
+          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon={rightIcon}
+
         />
 
         <CustomButton text="Register" onPress={onRegisterPressed} />

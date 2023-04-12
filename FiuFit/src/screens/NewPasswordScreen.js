@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton';
-import Logo from '../components/Logo';
+import CustomButton from '../components/buttons/CustomButton';
+import CustomPassword from '../components/inputs/CustomPassword';
+import Logo from '../components/utils/Logo';
 import {useNavigation} from '@react-navigation/native';
+import { PasswordVisibility } from '../components/utils/PasswordVisibility';
 
 const NewPasswordScreen = () => {
-  const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
+  const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
+    PasswordVisibility();
 
   const onSubmitPressed = () => {
     navigation.navigate('Home');
@@ -25,16 +27,22 @@ const NewPasswordScreen = () => {
 
         <Text style={styles.title}>Reset your Password</Text>
 
-        <CustomInput
+        <CustomPassword
           placeholder="Enter your new password"
           value={newPassword}
           setValue={setNewPassword}
+          passwordVisibility={passwordVisibility}
+          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon={rightIcon}
         />
 
-        <CustomInput
+        <CustomPassword
           placeholder="Confirm your new password"
           value={confirmPassword}
           setValue={setConfirmPassword}
+          passwordVisibility={passwordVisibility}
+          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon={rightIcon}
         />
 
         <CustomButton text="Submit" onPress={onSubmitPressed} />

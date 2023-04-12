@@ -1,22 +1,29 @@
 import React, {useState} from 'react';
 import {
   View,
-  Image,
   StyleSheet
 } from 'react-native';
-
-import Logo from '../components/Logo';
-import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton';
-import SocialSignInButtons from '../components/SocialSignInButtons';
+import Logo from '../components/utils/Logo';
+import CustomInput from '../components/inputs/CustomInput';
+import CustomPassword from '../components/inputs/CustomPassword';
+import CustomButton from '../components/buttons/CustomButton';
+import SocialSignInButtons from '../components/buttons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
+import { PasswordVisibility } from '../components/utils/PasswordVisibility';
+
+const validator = require('validator');
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
+    PasswordVisibility();
 
   const onSignInPressed = () => {
+    //console.log(validator.isEmail(username))
+    console.log(passwordVisibility)
+    console.log(rightIcon)
     navigation.navigate('Home');
   };
 
@@ -36,12 +43,17 @@ const SignInScreen = () => {
           placeholder="Email"
           value={username}
           setValue={setUsername}
+          icon={"mail-outline"}
         />
-        <CustomInput
+
+        <CustomPassword
           placeholder="Password"
           value={password}
           setValue={setPassword}
-          secureTextEntry
+          passwordVisibility={passwordVisibility}
+          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon={rightIcon}
+
         />
 
         <CustomButton text="Sign In" onPress={onSignInPressed} />

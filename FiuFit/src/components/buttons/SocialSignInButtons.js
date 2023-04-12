@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomIconButton from '../components/CustomIconButton';
+import CustomIconButton from './CustomIconButton';
 
 const SocialSignInButtons = () => {
   const onSignInFacebook = () => {

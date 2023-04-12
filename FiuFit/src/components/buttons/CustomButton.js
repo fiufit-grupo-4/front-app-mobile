@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
 
   container_SECONDARY: {
     backgroundColor: 'white',
-    borderWidth: 2,
   },
 
   container_TERTIARY: {},
