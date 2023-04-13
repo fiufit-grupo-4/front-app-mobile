@@ -1,19 +1,46 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
+import {Controller} from 'react-hook-form';
 
-const CustomInput = ({value, setValue, placeholder, secureTextEntry,icon}) => {
+const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}}) => {
   return (
-    <View style={styles.container}>
-      <Ionicons name={icon} style= {styles.icon} size ={25}/>
-      <TextInput
-        value={value}
-        onChangeText={setValue}
-        placeholder={placeholder}
-        style={styles.input}
-        secureTextEntry={secureTextEntry}
-      />
-    </View>
+      <Controller
+          control={control}
+          rules={rules}
+          render={({ field: { onChange, onBlur, value },fieldState: {error} }) => (
+            <>
+              <View 
+                style={[
+                  styles.container, 
+                  {borderColor: error ? "crimson":"powderblue"},
+                  {borderWidth: error ? 1.5:0}
+                ]}
+              >
+                <Ionicons name={icon} style= {
+                  [styles.icon,{color: error ? "crimson":"#222831"} ]
+                } size ={25}/>
+                <TextInput
+                  placeholder={placeholder}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  style={[
+                    styles.input, 
+
+                  ]}
+                  secureTextEntry={secureTextEntry}
+                />
+              </View>
+              { error && (
+                <Text style = {{fontSize:12,color : "crimson",padding:5}}> {error.message}</Text>
+              )
+              }
+            </>   
+          )}
+
+          name={name}
+        />  
   );
 };
 
@@ -30,15 +57,15 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    padding: 14,
     fontSize: 15,
-    width: '90%',
+    width: '100%',
     backgroundColor: 'powderblue',
-    borderRadius: 15,
     paddingHorizontal: 5,
-    height: 45,
+    height: 20,
+    borderRadius: 15,
     outlineStyle: 'none',
-    placeholderTextColor:"#222831"
+    placeholderTextColor:"#222831",
+    flex:1,
   },
   icon: {
     paddingHorizontal: 5,

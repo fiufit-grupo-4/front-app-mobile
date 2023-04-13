@@ -1,12 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomInput from '../components/inputs/CustomInput';
 import CustomButton from '../components/buttons/CustomButton';
-import Logo from '../components/utils/Logo';
+import Logo from '../components/icons/Logo';
 import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 
 const ConfirmCodeScreen = () => {
-  const [code, setCode] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      code: '',
+    }
+  });
 
   const navigation = useNavigation();
 
@@ -18,9 +23,6 @@ const ConfirmCodeScreen = () => {
     navigation.navigate('SignIn');
   };
 
-  const onResendPress = () => {
-    console.warn('onResendPress');
-  };
 
 
   return (
@@ -29,16 +31,15 @@ const ConfirmCodeScreen = () => {
 
         <Text style={styles.title}>Reset your Password</Text>
 
-        <CustomInput placeholder="Code" value={code} setValue={setCode} />
-
-
-        <CustomButton text="Submit" onPress={onSubmitPressed} />
-
-        <CustomButton
-          text="Resend Code"
-          onPress={onResendPress}
-          type="SECONDARY"
+        <CustomInput
+          name= "code"
+          placeholder="Validation Code"
+          control={control}
+          rules = {{required:"Validation Code is required"}}
         />
+
+
+        <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
 
         <CustomButton
           text="Back to Sign in"

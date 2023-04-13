@@ -2,11 +2,16 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomInput from '../components/inputs/CustomInput';
 import CustomButton from '../components/buttons/CustomButton';
-import Logo from '../components/utils/Logo';
+import Logo from '../components/icons/Logo';
 import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 
 const ConfirmEmailScreen = () => {
-  const [code, setCode] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      code: '',
+    }
+  });
 
   const navigation = useNavigation();
 
@@ -18,9 +23,6 @@ const ConfirmEmailScreen = () => {
     navigation.navigate('SignIn');
   };
 
-  const onResendPress = () => {
-    console.warn('onResendPress');
-  };
 
   return (
       <View style={styles.root}>
@@ -28,18 +30,13 @@ const ConfirmEmailScreen = () => {
         <Text style={styles.title}>Confirm your Email</Text>
 
         <CustomInput
+          name= "code"
           placeholder="Enter your confirmation code"
-          value={code}
-          setValue={setCode}
+          control={control}
+          rules = {{required:"Confirmation Code is required"}}
         />
 
-        <CustomButton text="Confirm" onPress={onConfirmPressed} />
-
-        <CustomButton
-          text="Resend Code"
-          onPress={onResendPress}
-          type="SECONDARY"
-        />
+        <CustomButton text="Confirm" onPress={handleSubmit(onConfirmPressed)} />
 
         <CustomButton
           text="Back to Sign in"

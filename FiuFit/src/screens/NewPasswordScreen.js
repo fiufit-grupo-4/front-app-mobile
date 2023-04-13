@@ -2,16 +2,24 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomButton from '../components/buttons/CustomButton';
 import CustomPassword from '../components/inputs/CustomPassword';
-import Logo from '../components/utils/Logo';
+import Logo from '../components/icons/Logo';
 import {useNavigation} from '@react-navigation/native';
-import { PasswordVisibility } from '../components/utils/PasswordVisibility';
+import { PasswordVisibility } from '../utils/PasswordVisibility';
+import {useForm} from 'react-hook-form';
 
 const NewPasswordScreen = () => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
+
+  const { control, handleSubmit, formState: { errors }, watch } = useForm({
+      defaultValues: {
+        password: '',
+        repeatPassword:'',
+      }
+  });
+  
+  const pwd = watch("password")
 
   const onSubmitPressed = () => {
     navigation.navigate('Home');
@@ -28,24 +36,29 @@ const NewPasswordScreen = () => {
         <Text style={styles.title}>Reset your Password</Text>
 
         <CustomPassword
+          name="password"
           placeholder="Enter your new password"
-          value={newPassword}
-          setValue={setNewPassword}
+          control={control}
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
+          rules = {{required:"This field is required"}}
         />
 
         <CustomPassword
+          name="repeatPassword"
           placeholder="Confirm your new password"
-          value={confirmPassword}
-          setValue={setConfirmPassword}
+          control={control}
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
+          rules = {{
+            required:"This field is required",
+            validate: value => value === pwd || "Passwords do not match"
+          }}
         />
 
-        <CustomButton text="Submit" onPress={onSubmitPressed} />
+        <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
 
         <CustomButton
           text="Back to Sign in"

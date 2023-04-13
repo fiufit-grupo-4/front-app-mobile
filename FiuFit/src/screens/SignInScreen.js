@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
 import {
   View,
-  StyleSheet
+  ToastAndroid,
+  StyleSheet,
+  Linking,
+  TextInput
 } from 'react-native';
-import Logo from '../components/utils/Logo';
+import Logo from '../components/icons/Logo';
 import CustomInput from '../components/inputs/CustomInput';
 import CustomPassword from '../components/inputs/CustomPassword';
 import CustomButton from '../components/buttons/CustomButton';
 import SocialSignInButtons from '../components/buttons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
-import { PasswordVisibility } from '../components/utils/PasswordVisibility';
+import { PasswordVisibility } from '../utils/PasswordVisibility';
+import {useForm,Controller} from 'react-hook-form';
+
 
 const validator = require('validator');
 
@@ -20,10 +25,19 @@ const SignInScreen = () => {
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
-  const onSignInPressed = () => {
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
+
+  const onSignInPressed = (data) => {
+    //ToastAndroid.show('Request sent successfully!', ToastAndroid.SHORT);
     //console.log(validator.isEmail(username))
-    console.log(passwordVisibility)
-    console.log(rightIcon)
+    //Linking.openURL('whatsapp://send?text=hello&phone=5491161637747')
+    //Linking.openURL('https://wa.me/5491161637747?text=hola')
+    console.log(data)
     navigation.navigate('Home');
   };
 
@@ -35,28 +49,36 @@ const SignInScreen = () => {
     navigation.navigate('SignUp');
   };
 
+  const validateEmail = (email) => {
+    return validator.isEmail(email)
+  };
+
   return (
       <View style={styles.root}>
         <Logo/>
 
         <CustomInput
+          name= "email"
           placeholder="Email"
-          value={username}
-          setValue={setUsername}
-          icon={"mail-outline"}
+          control={control}
+          icon={"mail-outline" }
+          rules = {{
+            required:"Email is required",
+            validate: value => validateEmail(value) || "Not a valid email"}}
         />
 
         <CustomPassword
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-
+          rules = {{required:"Password is required"}}
         />
+     
 
-        <CustomButton text="Sign In" onPress={onSignInPressed} />
+        <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
 
         <CustomButton
           text="Forgot password?"

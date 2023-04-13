@@ -4,14 +4,14 @@ import CustomInput from '../components/inputs/CustomInput';
 import CustomPassword from '../components/inputs/CustomPassword';
 import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../components/utils/Logo';
-import { PasswordVisibility } from '../components/utils/PasswordVisibility';
+import Logo from '../components/icons/Logo';
+import { PasswordVisibility } from '../utils/PasswordVisibility';
+import {useForm,Controller} from 'react-hook-form';
+
+const validator = require('validator');
 
 const SignUpScreen = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordRepeat, setPasswordRepeat] = useState('');
+
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
@@ -34,6 +34,26 @@ const SignUpScreen = () => {
     console.warn('onPrivacyPressed');
   };
 
+  const { control, handleSubmit, formState: { errors }, watch } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      username:'',
+      repeatPassword:'',
+      phoneNumber: '',
+    }
+  });
+
+  const pwd = watch("password")
+
+  const validateEmail = (email) => {
+    return validator.isEmail(email)
+  };
+
+  const validatePhoneNumber = (phoneNumber) => {
+    return validator.isMobilePhone(phoneNumber)
+  };
+
   return (
       <View style={styles.root}>
         <Logo/>
@@ -41,34 +61,61 @@ const SignUpScreen = () => {
         <Text style={styles.title}>Create an Account</Text>
 
         <CustomInput
+          name= "username" 
           placeholder="Username"
-          value={username}
-          setValue={setUsername}
           icon={"person-outline"}
+          control={control}
+          rules = {{required:"This field is required"}}
         />
-        <CustomInput placeholder="Email" value={email} setValue={setEmail}  icon={"mail-outline"}/>
-        
+
+
+        <CustomInput
+          name= "email"
+          placeholder="Email"
+          control={control}
+          icon={"mail-outline" }
+          rules = {{
+            required:"This field is required", 
+            validate : value => validateEmail(value) || "Not a valid email",
+            }}
+        />
+
+        <CustomInput
+          name= "phoneNumber"
+          placeholder="Phone number"
+          control={control}
+          icon={"call-outline"}
+          rules = {{
+            required:"This field is required",
+            validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+        />
+
+
         <CustomPassword
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-
+          rules = {{required:"This field is required"}}
         />
 
         <CustomPassword
-          placeholder="Repeat your Password"
-          value={passwordRepeat}
-          setValue={setPasswordRepeat}
+          name="repeatPassword"
+          placeholder="Repeat your password"
+          control={control}
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-
+          rules = {{
+            required:"This field is required",
+            validate: value => value === pwd || "Passwords do not match"
+          }}
         />
 
-        <CustomButton text="Register" onPress={onRegisterPressed} />
+
+        <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
         <View style={styles.container} > 
           <Text style={styles.text}>
             By registering, you confirm that you accept our{' '}
