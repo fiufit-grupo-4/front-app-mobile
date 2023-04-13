@@ -13,19 +13,18 @@ import CustomButton from '../components/buttons/CustomButton';
 import SocialSignInButtons from '../components/buttons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
-import {useForm,Controller} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 
-
+const URL = "https://api-gateway-fiufit.herokuapp.com/login/"
 const validator = require('validator');
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+
+  const { control, handleSubmit, formState: { errors },watch } = useForm({
     defaultValues: {
       email: '',
       password: ''
@@ -33,11 +32,24 @@ const SignInScreen = () => {
   });
 
   const onSignInPressed = (data) => {
-    //ToastAndroid.show('Request sent successfully!', ToastAndroid.SHORT);
-    //console.log(validator.isEmail(username))
-    //Linking.openURL('whatsapp://send?text=hello&phone=5491161637747')
-    //Linking.openURL('https://wa.me/5491161637747?text=hola')
-    console.log(data)
+    
+    var url = 'https://user-service-fiufit.herokuapp.com/login';
+    let json = {
+      "username": data.email,
+      "password": data.password
+    }
+  
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(json), 
+      mode : "no-cors",
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response)); 
+
     navigation.navigate('Home');
   };
 

@@ -6,7 +6,7 @@ import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import Logo from '../components/icons/Logo';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
-import {useForm,Controller} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 
 const validator = require('validator');
 
@@ -17,7 +17,27 @@ const SignUpScreen = () => {
 
   const navigation = useNavigation();
 
-  const onRegisterPressed = () => {
+  const onRegisterPressed = (data) => {
+
+    var url = 'https://user-service-fiufit.herokuapp.com/signup';
+    let json = {
+      "username": data.email,
+      "password": data.password
+    }
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(json), 
+      mode : "no-cors",
+      headers:{
+        'Content-Type': 'application/json'
+      }
+      
+    }).then(res => 
+
+      console.log(res.json())
+    )
+    .catch(error => console.error('Error:', error))
+    .then(response => console.log('Success:', response));
     navigation.navigate('ConfirmEmail');
   };
 
@@ -59,7 +79,8 @@ const SignUpScreen = () => {
         <Logo/>
 
         <Text style={styles.title}>Create an Account</Text>
-
+        
+         {/* 
         <CustomInput
           name= "username" 
           placeholder="Username"
@@ -67,8 +88,8 @@ const SignUpScreen = () => {
           control={control}
           rules = {{required:"This field is required"}}
         />
-
-
+        */}
+        
         <CustomInput
           name= "email"
           placeholder="Email"
@@ -80,6 +101,7 @@ const SignUpScreen = () => {
             }}
         />
 
+        {/* 
         <CustomInput
           name= "phoneNumber"
           placeholder="Phone number"
@@ -89,8 +111,8 @@ const SignUpScreen = () => {
             required:"This field is required",
             validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
         />
-
-
+        */}
+        
         <CustomPassword
           name="password"
           placeholder="Password"
@@ -101,6 +123,7 @@ const SignUpScreen = () => {
           rules = {{required:"This field is required"}}
         />
 
+ 
         <CustomPassword
           name="repeatPassword"
           placeholder="Repeat your password"
@@ -113,7 +136,6 @@ const SignUpScreen = () => {
             validate: value => value === pwd || "Passwords do not match"
           }}
         />
-
 
         <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
         <View style={styles.container} > 
