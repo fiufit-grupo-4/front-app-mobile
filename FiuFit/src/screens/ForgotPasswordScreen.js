@@ -40,7 +40,7 @@ const ForgotPasswordScreen = () => {
           control={control}
           icon={"mail-outline" }
           rules = {{
-            required:"This field is required", 
+            required:"This field is Required", 
             validate : value => validateEmail(value) || "Not a valid email",
             }}
         />

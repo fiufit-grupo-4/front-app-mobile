@@ -6,6 +6,10 @@ import Logo from '../components/icons/Logo';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 
+
+
+
+
 const ConfirmCodeScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {

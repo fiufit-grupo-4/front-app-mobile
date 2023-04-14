@@ -18,27 +18,30 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
 
   const onRegisterPressed = (data) => {
-
-    var url = 'https://user-service-fiufit.herokuapp.com/signup';
-    let json = {
-      "username": data.email,
-      "password": data.password
-    }
+    var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
+    console.log(data)
+ 
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(json), 
-      mode : "no-cors",
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "mail": data.email,
+        "password": data.password
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.log("ERROR u.u")
+        throw new Error('Error de respuesta: ' + response.status);
       }
-      
-    }).then(res => 
-
-      console.log(res.json())
-    )
-    .catch(error => console.error('Error:', error))
-    .then(response => console.log('Success:', response));
-    navigation.navigate('ConfirmEmail');
+      navigation.navigate('SignInScreen');
+    })
+    .catch(error => {
+      console.error('Error al enviar la solicitud POST:', error);
+    })
+   
   };
 
   const onSignInPress = () => {
@@ -86,7 +89,7 @@ const SignUpScreen = () => {
           placeholder="Username"
           icon={"person-outline"}
           control={control}
-          rules = {{required:"This field is required"}}
+          rules = {{required:"This field is Required"}}
         />
         */}
         
@@ -96,8 +99,8 @@ const SignUpScreen = () => {
           control={control}
           icon={"mail-outline" }
           rules = {{
-            required:"This field is required", 
-            validate : value => validateEmail(value) || "Not a valid email",
+            required:"This field is Required", 
+            validate : value => validateEmail(value) || "Not a valid email address",
             }}
         />
 
@@ -120,7 +123,7 @@ const SignUpScreen = () => {
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-          rules = {{required:"This field is required"}}
+          rules = {{required:"This field is Required"}}
         />
 
  
@@ -132,7 +135,7 @@ const SignUpScreen = () => {
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
           rules = {{
-            required:"This field is required",
+            required:"This field is Required",
             validate: value => value === pwd || "Passwords do not match"
           }}
         />

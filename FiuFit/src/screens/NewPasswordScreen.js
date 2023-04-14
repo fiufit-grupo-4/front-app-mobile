@@ -42,7 +42,7 @@ const NewPasswordScreen = () => {
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-          rules = {{required:"This field is required"}}
+          rules = {{required:"This field is Required"}}
         />
 
         <CustomPassword
@@ -53,7 +53,7 @@ const NewPasswordScreen = () => {
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
           rules = {{
-            required:"This field is required",
+            required:"This field is Required",
             validate: value => value === pwd || "Passwords do not match"
           }}
         />

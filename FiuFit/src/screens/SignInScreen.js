@@ -14,9 +14,12 @@ import SocialSignInButtons from '../components/buttons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
+import axios from 'axios';
+
 
 const URL = "https://api-gateway-fiufit.herokuapp.com/login/"
 const validator = require('validator');
+
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -26,31 +29,38 @@ const SignInScreen = () => {
 
   const { control, handleSubmit, formState: { errors },watch } = useForm({
     defaultValues: {
-      email: '',
-      password: ''
+      email: 'sofia@fi.uba.ar',
+      password: '123456e'
     }
   });
 
+  
   const onSignInPressed = (data) => {
     
-    var url = 'https://user-service-fiufit.herokuapp.com/login';
-    let json = {
-      "username": data.email,
-      "password": data.password
-    }
-  
+    var url = 'https://api-gateway-fiufit.herokuapp.com/login/';
+    console.log(data)
+ 
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify(json), 
-      mode : "no-cors",
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "mail": data.email,
+        "password": data.password
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.log("ERROR u.u")
+        throw new Error('Error de respuesta: ' + response.status);
       }
-    }).then(res => res.json())
-    .catch(error => console.error('Error:', error))
-    .then(response => console.log('Success:', response)); 
-
-    navigation.navigate('Home');
+      navigation.navigate('Home');
+    })
+    .catch(error => {
+      console.error('Error al enviar la solicitud POST:', error);
+    })
+    
   };
 
   const onForgotPasswordPressed = () => {
@@ -75,8 +85,8 @@ const SignInScreen = () => {
           control={control}
           icon={"mail-outline" }
           rules = {{
-            required:"Email is required",
-            validate: value => validateEmail(value) || "Not a valid email"}}
+            required:"Email is Required",
+            validate: value => validateEmail(value) || "Not a valid email address"}}
         />
 
         <CustomPassword
@@ -86,7 +96,7 @@ const SignInScreen = () => {
           passwordVisibility={passwordVisibility}
           handlePasswordVisibility={handlePasswordVisibility}
           rightIcon={rightIcon}
-          rules = {{required:"Password is required"}}
+          rules = {{required:"Password is Required"}}
         />
      
 
