@@ -52,13 +52,12 @@ const SignInScreen = () => {
     })
     .then(response => {
       if (!response.ok) {
-        console.log("ERROR u.u")
         throw new Error('Error de respuesta: ' + response.status);
       }
       navigation.navigate('Home');
     })
     .catch(error => {
-      console.error('Error al enviar la solicitud POST:', error);
+      console.error( error);
     })
     
   };
