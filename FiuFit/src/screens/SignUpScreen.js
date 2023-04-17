@@ -7,11 +7,12 @@ import {useNavigation} from '@react-navigation/native';
 import Logo from '../components/utils/Logo';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
+import LoadingIndicator from '../components/utils/LoadingIndicator';
 
 const validator = require('validator');
 
 const SignUpScreen = () => {
-
+  const [loading, setLoading] = useState(false);
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
@@ -20,7 +21,7 @@ const SignUpScreen = () => {
   const onRegisterPressed = (data) => {
     var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
     console.log(data)
- 
+    setLoading(true)
     fetch(url, {
       method: 'POST',
       headers: {
@@ -32,6 +33,7 @@ const SignUpScreen = () => {
       })
     })
     .then(response => {
+      setLoading(false)
       if (!response.ok) {
         throw new Error('Error de respuesta: ' + response.status);
       }
@@ -80,85 +82,89 @@ const SignUpScreen = () => {
       <View style={styles.root}>
         <Logo/>
 
-        <Text style={styles.title}>Create an Account</Text>
-        
-         {/* 
-        <CustomInput
-          name= "username" 
-          placeholder="Username"
-          icon={"person-outline"}
-          control={control}
-          rules = {{required:"This field is Required"}}
-        />
-        */}
-        
-        <CustomInput
-          name= "email"
-          placeholder="Email"
-          control={control}
-          icon={"mail-outline" }
-          rules = {{
-            required:"This field is Required", 
-            validate : value => validateEmail(value) || "Not a valid email address",
-            }}
-        />
+        {loading 
+          ? <LoadingIndicator/>
+          : <>
+              <Text style={styles.title}>Create an Account</Text>
+                {/* 
+              <CustomInput
+                name= "username" 
+                placeholder="Username"
+                icon={"person-outline"}
+                control={control}
+                rules = {{required:"This field is Required"}}
+              />
+              */}
+            
+              <CustomInput
+                name= "email"
+                placeholder="Email"
+                control={control}
+                icon={"mail-outline" }
+                rules = {{
+                  required:"This field is Required", 
+                  validate : value => validateEmail(value) || "Not a valid email address",
+                  }}
+              />
 
-        {/* 
-        <CustomInput
-          name= "phoneNumber"
-          placeholder="Phone number"
-          control={control}
-          icon={"call-outline"}
-          rules = {{
-            required:"This field is required",
-            validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
-        />
-        */}
-        
-        <CustomPassword
-          name="password"
-          placeholder="Password"
-          control={control}
-          passwordVisibility={passwordVisibility}
-          handlePasswordVisibility={handlePasswordVisibility}
-          rightIcon={rightIcon}
-          rules = {{required:"This field is Required"}}
-        />
+              {/* 
+              <CustomInput
+                name= "phoneNumber"
+                placeholder="Phone number"
+                control={control}
+                icon={"call-outline"}
+                rules = {{
+                  required:"This field is required",
+                  validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+              />
+              */}
+            
+              <CustomPassword
+                name="password"
+                placeholder="Password"
+                control={control}
+                passwordVisibility={passwordVisibility}
+                handlePasswordVisibility={handlePasswordVisibility}
+                rightIcon={rightIcon}
+                rules = {{required:"This field is Required"}}
+              />
 
- 
-        <CustomPassword
-          name="repeatPassword"
-          placeholder="Repeat your password"
-          control={control}
-          passwordVisibility={passwordVisibility}
-          handlePasswordVisibility={handlePasswordVisibility}
-          rightIcon={rightIcon}
-          rules = {{
-            required:"This field is Required",
-            validate: value => value === pwd || "Passwords do not match"
-          }}
-        />
 
-        <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
-        <View style={styles.container} > 
-          <Text style={styles.text}>
-            By registering, you confirm that you accept our{' '}
-            <Text style={styles.link} onPress={onTermsOfUsePressed}>
-              Terms of Use
-            </Text>{' '}
-            and{' '}
-            <Text style={styles.link} onPress={onPrivacyPressed}>
-              Privacy Policy
-            </Text>
-            .
-          </Text>
-        </View>
+              <CustomPassword
+                name="repeatPassword"
+                placeholder="Repeat your password"
+                control={control}
+                passwordVisibility={passwordVisibility}
+                handlePasswordVisibility={handlePasswordVisibility}
+                rightIcon={rightIcon}
+                rules = {{
+                  required:"This field is Required",
+                  validate: value => value === pwd || "Passwords do not match"
+                }}
+              />
 
-        <CustomButton
-          text="Have an account? Sign in"
-          onPress={onSignInPress}
-          type="TERTIARY"
-        />
+              <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
+              <View style={styles.container} > 
+                <Text style={styles.text}>
+                  By registering, you confirm that you accept our{' '}
+                  <Text style={styles.link} onPress={onTermsOfUsePressed}>
+                    Terms of Use
+                  </Text>{' '}
+                  and{' '}
+                  <Text style={styles.link} onPress={onPrivacyPressed}>
+                    Privacy Policy
+                  </Text>
+                  .
+                </Text>
+              </View>
+
+              <CustomButton
+                text="Have an account? Sign in"
+                onPress={onSignInPress}
+                type="TERTIARY"
+              /> 
+            </>
+        }       
       </View>
 
   );

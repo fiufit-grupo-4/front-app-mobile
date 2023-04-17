@@ -3,6 +3,7 @@ import {
   View,
   ToastAndroid,
   StyleSheet,
+  Text
 } from 'react-native';
 import Logo from '../components/utils/Logo';
 import CustomInput from '../components/inputs/CustomInput';
@@ -74,48 +75,42 @@ const SignInScreen= () => {
   return (
       <View style={styles.root}>
         <Logo/>
-        
-        <CustomInput
-          name= "email"
-          placeholder="Email"
-          control={control}
-          icon={"mail-outline" }
-          rules = {{
-            required:"Email is Required",
-            validate: value => validateEmail(value) || "Not a valid email address"}}
-        />
-
-        <CustomPassword
-          name="password"
-          placeholder="Password"
-          control={control}
-          passwordVisibility={passwordVisibility}
-          handlePasswordVisibility={handlePasswordVisibility}
-          rightIcon={rightIcon}
-          rules = {{required:"Password is Required"}}
-        />
-     
-
-        <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
-
-        { loading && (
-            <LoadingIndicator/>
-          )
-        }
-
-        <CustomButton
-          text="Forgot password?"
-          onPress={onForgotPasswordPressed}
-          type="TERTIARY"
-        />
-
-        <SocialSignInButtons />
-
-        <CustomButton
-          text="Don't have an account? Create one"
-          onPress={onSignUpPress}
-          type="TERTIARY"
-        />
+  
+        {loading 
+          ? <LoadingIndicator/>
+          : <>
+              <CustomInput
+                name= "email"
+                placeholder="Email"
+                control={control}
+                icon={"mail-outline" }
+                rules = {{
+                  required:"Email is Required",
+                  validate: value => validateEmail(value) || "Not a valid email address"}}
+              />
+              <CustomPassword
+                name="password"
+                placeholder="Password"
+                control={control}
+                passwordVisibility={passwordVisibility}
+                handlePasswordVisibility={handlePasswordVisibility}
+                rightIcon={rightIcon}
+                rules = {{required:"Password is Required"}}
+              />
+              <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+              <CustomButton
+                text="Forgot password?"
+                onPress={onForgotPasswordPressed}
+                type="TERTIARY"
+              />
+              <SocialSignInButtons />
+              <CustomButton
+                text="Don't have an account? Create one"
+                onPress={onSignUpPress}
+                type="TERTIARY"
+              />
+            </>
+        }  
       </View>
   );
 };
