@@ -3,10 +3,8 @@ import {
   View,
   ToastAndroid,
   StyleSheet,
-  Linking,
-  TextInput
 } from 'react-native';
-import Logo from '../components/icons/Logo';
+import Logo from '../components/utils/Logo';
 import CustomInput from '../components/inputs/CustomInput';
 import CustomPassword from '../components/inputs/CustomPassword';
 import CustomButton from '../components/buttons/CustomButton';
@@ -14,20 +12,18 @@ import SocialSignInButtons from '../components/buttons/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
-import axios from 'axios';
+import LoadingIndicator from '../components/utils/LoadingIndicator';
 
-
-const URL = "https://api-gateway-fiufit.herokuapp.com/login/"
 const validator = require('validator');
 
-
-const SignInScreen = () => {
+const SignInScreen= () => {
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
 
-  const { control, handleSubmit, formState: { errors },watch } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       email: 'sofia@fi.uba.ar',
       password: '123456e'
@@ -39,7 +35,7 @@ const SignInScreen = () => {
     
     var url = 'https://api-gateway-fiufit.herokuapp.com/login/';
     console.log(data)
- 
+    setLoading(true)
     fetch(url, {
       method: 'POST',
       headers: {
@@ -51,6 +47,7 @@ const SignInScreen = () => {
       })
     })
     .then(response => {
+      setLoading(false)
       if (!response.ok) {
         throw new Error('Error de respuesta: ' + response.status);
       }
@@ -77,7 +74,7 @@ const SignInScreen = () => {
   return (
       <View style={styles.root}>
         <Logo/>
-
+        
         <CustomInput
           name= "email"
           placeholder="Email"
@@ -100,6 +97,11 @@ const SignInScreen = () => {
      
 
         <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+
+        { loading && (
+            <LoadingIndicator/>
+          )
+        }
 
         <CustomButton
           text="Forgot password?"

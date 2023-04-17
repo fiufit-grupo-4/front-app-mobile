@@ -4,7 +4,7 @@ import CustomInput from '../components/inputs/CustomInput';
 import CustomPassword from '../components/inputs/CustomPassword';
 import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../components/icons/Logo';
+import Logo from '../components/utils/Logo';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
 

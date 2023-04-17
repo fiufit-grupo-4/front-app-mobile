@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomInput from '../components/inputs/CustomInput';
 import CustomButton from '../components/buttons/CustomButton';
-import Logo from '../components/icons/Logo';
+import Logo from '../components/utils/Logo';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 
