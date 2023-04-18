@@ -8,6 +8,7 @@ import Logo from '../components/utils/Logo';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../components/utils/LoadingIndicator';
+import styles from '../styles/styles';
 
 const validator = require('validator');
 
@@ -110,6 +111,7 @@ const SignUpScreen = () => {
                   required:"This field is Required", 
                   validate : value => validateEmail(value) || "Not a valid email address",
                   }}
+                otherError={error}
               />
 
               {/* 
@@ -132,6 +134,7 @@ const SignUpScreen = () => {
                 handlePasswordVisibility={handlePasswordVisibility}
                 rightIcon={rightIcon}
                 rules = {{required:"This field is Required"}}
+                otherError={error}
               />
 
 
@@ -146,6 +149,7 @@ const SignUpScreen = () => {
                   required:"This field is Required",
                   validate: value => value === pwd || "Passwords do not match"
                 }}
+                otherError={error}
               />
 
               <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
@@ -179,33 +183,5 @@ const SignUpScreen = () => {
 
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    flex:1,
-    alignItems: 'center',
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  container: {
-    width: '85%',
-    padding: 5,
-    alignItems: 'center',
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'black',
-    margin: 10,
-  },
-  text: {
-    color: 'black',
-    marginVertical: 10,
-  },
-  link: {
-    color: 'forestgreen',
-  },
-});
 
 export default SignUpScreen;

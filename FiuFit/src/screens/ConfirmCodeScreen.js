@@ -5,10 +5,7 @@ import CustomButton from '../components/buttons/CustomButton';
 import Logo from '../components/utils/Logo';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
-
-
-
-
+import styles from '../styles/styles';
 
 const ConfirmCodeScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
@@ -55,20 +52,5 @@ const ConfirmCodeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    flex:1,
-    padding: 20,
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'black',
-    margin: 10,
-  },
-});
 
 export default ConfirmCodeScreen;

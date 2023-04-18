@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../components/utils/LoadingIndicator';
+import styles from '../styles/styles';
 
 const validator = require('validator');
 
@@ -131,14 +132,5 @@ const SignInScreen= () => {
       </View>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    flex:1,
-    alignItems: 'center',
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  }
-});
 
 export default SignInScreen;

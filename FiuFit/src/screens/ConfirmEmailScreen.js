@@ -5,6 +5,7 @@ import CustomButton from '../components/buttons/CustomButton';
 import Logo from '../components/utils/Logo';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
+import styles from '../styles/styles';
 
 const ConfirmEmailScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
@@ -46,28 +47,5 @@ const ConfirmEmailScreen = () => {
       </View>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    flex:1,
-    padding: 20,
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'Black',
-    margin: 10,
-  },
-  text: {
-    color: 'gray',
-    marginVertical: 10,
-  },
-  link: {
-    color: '#FDB075',
-  },
-});
 
 export default ConfirmEmailScreen;

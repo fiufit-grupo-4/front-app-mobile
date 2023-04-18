@@ -6,6 +6,7 @@ import Logo from '../components/utils/Logo';
 import {useNavigation} from '@react-navigation/native';
 import { PasswordVisibility } from '../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
+import styles from '../styles/styles';
 
 const NewPasswordScreen = () => {
   const navigation = useNavigation();
@@ -68,21 +69,5 @@ const NewPasswordScreen = () => {
       </View>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    flex:1,
-    padding: 20,
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'black',
-    margin: 10,
-  },
-});
 
 export default NewPasswordScreen;

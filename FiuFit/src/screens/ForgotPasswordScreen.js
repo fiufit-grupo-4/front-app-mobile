@@ -5,6 +5,7 @@ import CustomButton from '../components/buttons/CustomButton';
 import Logo from "../components/utils/Logo"
 import {useNavigation} from '@react-navigation/native';
 import {useForm,Controller} from 'react-hook-form';
+import styles from '../styles/styles';
 
 const validator = require('validator');
 
@@ -56,25 +57,5 @@ const ForgotPasswordScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    flex:1,
-    padding: 20,
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'black',
-    margin: 10,
-    marginBottom:20
-  },
-  text: {
-    color: 'gray',
-    marginVertical: 10,
-  },
-});
 
 export default ForgotPasswordScreen;
