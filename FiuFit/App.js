@@ -7,8 +7,9 @@ class App extends React.Component {
   render() {
       return (
         <SafeAreaView style={styles.root}>
-          <Navigation />
           <StatusBar style="auto" />
+          <Navigation />
+          
         </SafeAreaView>
       )
   }

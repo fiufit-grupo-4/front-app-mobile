@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import CustomInput from '../components/inputs/CustomInput';
-import CustomButton from '../components/buttons/CustomButton';
-import Logo from "../components/utils/Logo"
+import CustomInput from '../../components/inputs/CustomInput';
+import CustomButton from '../../components/buttons/CustomButton';
+import Logo from "../../components/utils/Logo"
 import {useNavigation} from '@react-navigation/native';
 import {useForm,Controller} from 'react-hook-form';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 
 const validator = require('validator');
 

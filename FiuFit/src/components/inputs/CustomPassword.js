@@ -54,13 +54,14 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 15,
-    width: '90%',
+    width: '100%',
     backgroundColor: 'powderblue',
     borderRadius: 15,
     paddingHorizontal: 5,
     height: 20,
     outlineStyle: 'none',
-    placeholderTextColor:"#222831"
+    placeholderTextColor:"#222831",
+    flex:1,
   },
 
   icon: {
