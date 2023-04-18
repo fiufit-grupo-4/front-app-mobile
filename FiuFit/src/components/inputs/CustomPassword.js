@@ -3,7 +3,7 @@ import {View,TextInput, StyleSheet, TouchableWithoutFeedback,Text} from 'react-n
 import {Ionicons} from 'react-native-vector-icons'
 import {Controller} from 'react-hook-form';
 
-const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePasswordVisibility,rightIcon,rules= {}}) => {
+const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePasswordVisibility,rightIcon,rules= {},otherError}) => {
   return (
         <Controller
           control={control}
@@ -12,12 +12,12 @@ const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePas
             <>
             <View style={[
                   styles.container, 
-                  {borderColor: error ? "crimson":"powderblue"},
-                  {borderWidth: error ? 1.5:0}
+                  {borderColor: error || otherError ? "crimson":"powderblue"},
+                  {borderWidth: error || otherError ? 1.5:0}
               ]}>
 
               <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
-                  <Ionicons name={rightIcon} style= {[styles.icon,{color: error ? "crimson":"#222831"}]} size ={25}/>
+                  <Ionicons name={rightIcon} style= {[styles.icon,{color: error || otherError ? "crimson":"#222831"}]} size ={25}/>
               </TouchableWithoutFeedback>
 
               <TextInput
@@ -31,7 +31,7 @@ const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePas
               />
             </View>
             { error && (
-              <Text style = {{fontSize:12,color : "crimson",padding:5}}> {error.message} </Text>
+              <Text style = {{fontSize:14,color : "crimson",padding:5}}> {error.message} </Text>
             )}
             
             </>

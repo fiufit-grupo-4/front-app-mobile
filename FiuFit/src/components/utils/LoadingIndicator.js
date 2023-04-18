@@ -6,7 +6,7 @@ const LoadingIndicator = () => {
     return (   
         <View style={styles.container}>
             <Text style={styles.text} > Loading </Text>
-            <ActivityIndicator size="large" color = "black" />
+            <ActivityIndicator size="large" color = "black"/>
             
         </View>
     );
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: 'black',
+    color: 'white',
     margin: 25,
   }
 });

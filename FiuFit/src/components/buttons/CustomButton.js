@@ -55,6 +55,10 @@ const styles = StyleSheet.create({
   text_TERTIARY: {
     color: 'black',
   },
+
+  text_ERROR: {
+    color:"crimson",
+  }
 });
 
 export default CustomButton;

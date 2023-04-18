@@ -19,6 +19,8 @@ const validator = require('validator');
 
 const SignInScreen= () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigation = useNavigation();
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
@@ -33,7 +35,6 @@ const SignInScreen= () => {
 
   
   const onSignInPressed = (data) => {
-    
     var url = 'https://api-gateway-fiufit.herokuapp.com/login/';
     console.log(data)
     setLoading(true)
@@ -50,12 +51,19 @@ const SignInScreen= () => {
     .then(response => {
       setLoading(false)
       if (!response.ok) {
-        throw new Error('Error de respuesta: ' + response.status);
+        setError(true)
+        if(response.status == 401){
+          setErrorMessage("Invalid username or password")
+        } else {
+          setErrorMessage("Failed to connect with server")
+        }
+      } else {
+        navigation.navigate('Home');
       }
-      navigation.navigate('Home');
     })
     .catch(error => {
-      console.error( error);
+      setError(true)
+      setErrorMessage(error)
     })
     
   };
@@ -86,7 +94,9 @@ const SignInScreen= () => {
                 icon={"mail-outline" }
                 rules = {{
                   required:"Email is Required",
-                  validate: value => validateEmail(value) || "Not a valid email address"}}
+                  validate: value => validateEmail(value) || "Not a valid email address",
+                }}
+                otherError={error}
               />
               <CustomPassword
                 name="password"
@@ -96,8 +106,15 @@ const SignInScreen= () => {
                 handlePasswordVisibility={handlePasswordVisibility}
                 rightIcon={rightIcon}
                 rules = {{required:"Password is Required"}}
+                otherError={error}
               />
+
               <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+
+              {error && (
+                <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
+              )}
+          
               <CustomButton
                 text="Forgot password?"
                 onPress={onForgotPasswordPressed}
