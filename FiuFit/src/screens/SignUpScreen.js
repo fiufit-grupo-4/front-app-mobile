@@ -13,6 +13,8 @@ const validator = require('validator');
 
 const SignUpScreen = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
 
@@ -35,12 +37,15 @@ const SignUpScreen = () => {
     .then(response => {
       setLoading(false)
       if (!response.ok) {
-        throw new Error('Error de respuesta: ' + response.status);
+        setError(true)
+        setErrorMessage("Failed to connect with server")    
+      } else {
+        navigation.navigate('ConfirmEmail');
       }
-      navigation.navigate('ConfirmEmail');
     })
     .catch(error => {
-      console.error(error);
+      setError(true)
+      setErrorMessage(error)
     })
    
   };
@@ -144,6 +149,11 @@ const SignUpScreen = () => {
               />
 
               <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
+              
+              {error && (
+                <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
+              )}
+
               <View style={styles.container} > 
                 <Text style={styles.text}>
                   By registering, you confirm that you accept our{' '}
