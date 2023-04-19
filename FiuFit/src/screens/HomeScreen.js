@@ -8,6 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import ProfileScreen from "./profile/ProfileScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {HomeTab} from "./HomeTab";
 
 
 const Tab = createBottomTabNavigator();
@@ -27,7 +28,7 @@ const HomeScreen = () => {
   return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen
-              name="Perfil" component={ProfileScreen}
+              name="Home" component={HomeTab}
               options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color }) => (
@@ -43,7 +44,30 @@ const HomeScreen = () => {
                   <MaterialCommunityIcons name="magnify" color={color} size={26} />
               )
             }}
-              name="Busqueda" >{() => <Text>Busqueda</Text>}</Tab.Screen>
+              name="Search" >{() => <Text>Busqueda</Text>}</Tab.Screen>
+
+
+            <Tab.Screen
+                name="Profile" component={ProfileScreen}
+                options={{
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+                    ),
+                }}
+            />
+
+            <Tab.Screen
+                options={{
+                    tabBarLabel: 'Menu',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="menu" color={color} size={26} />
+                    )
+                }}
+                name="Menu" >{() => <Text>Menu</Text>}</Tab.Screen>
+
+
+
 
         </Tab.Navigator>
 
