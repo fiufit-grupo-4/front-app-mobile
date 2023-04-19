@@ -14,7 +14,7 @@ const ProfileScreen = () => {
 
   return (
     <View style= {styles.container}>
-      <Text>{username}</Text>
+      <Text style= {styles.title}> {username} </Text>
       <Text>{bio}</Text>
 
       <CustomButton
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex:1,
-    backgroundColor:"powderblue",
+    backgroundColor:"orange",
     justifyContent: "center",
     borderWidth:0
   },

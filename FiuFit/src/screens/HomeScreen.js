@@ -4,6 +4,14 @@ import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {Ionicons} from 'react-native-vector-icons'
 import Logo from '../components/utils/Logo';
+import { NavigationContainer } from '@react-navigation/native';
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import ProfileScreen from "./profile/ProfileScreen";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+
+const Tab = createBottomTabNavigator();
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -17,20 +25,39 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Screen
+              name="Perfil" component={ProfileScreen}
+              options={{
+                tabBarLabel: 'Home',
+                tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="home" color={color} size={26} />
+                ),
+              }}
+              />
 
-      <Text style={styles.title}>Buen día Grupo</Text>
+          <Tab.Screen
+              options={{
+              tabBarLabel: 'Search',
+              tabBarIcon: ({ color }) => (
+                  <MaterialCommunityIcons name="magnify" color={color} size={26} />
+              )
+            }}
+              name="Busqueda" >{() => <Text>Busqueda</Text>}</Tab.Screen>
 
-      <CustomButton
-          text="Log Out"
-          onPress={onLogOutPressed}
-          type="PRIMARY"
-      />
+        </Tab.Navigator>
 
-    </View>
+
   );
 };
 
+// <Text style={styles.title}>Buen día Grupo</Text>
+//
+// <CustomButton
+//     text="Log Out"
+//     onPress={onLogOutPressed}
+//     type="PRIMARY"
+// />
 
 const styles = StyleSheet.create({
   container: {

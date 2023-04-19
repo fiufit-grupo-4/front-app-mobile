@@ -21,7 +21,7 @@ class Navigation extends React.Component {
       return (
         <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="FiuFit" component={HomeScreen} options={
+            <Stack.Screen name="Home" component={HomeScreen} options={
               { headerShown : true,
                 headerStyle: {
                   backgroundColor: 'skyblue',

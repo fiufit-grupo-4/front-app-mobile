@@ -7,7 +7,7 @@ import {
 const {width,height} = Dimensions.get("window")
 
 
-import FiuFitLogo from '../../../assets/images/FiuFit.png';
+import FiuFitLogo from '../../../assets/images/fiufit.png';
 
 const Logo = () => {
     return (
