@@ -13,11 +13,9 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 
 class Navigation extends React.Component {

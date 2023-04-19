@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import ProfileScreen from "./profile/ProfileScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {HomeTab} from "./HomeTab";
+import {SearchScreen} from "./Search/SearchScreen";
 
 
 const Tab = createBottomTabNavigator();
@@ -37,15 +38,15 @@ const HomeScreen = () => {
               }}
               />
 
-          <Tab.Screen
-              options={{
-              tabBarLabel: 'Search',
-              tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="magnify" color={color} size={26} />
-              )
-            }}
-              name="Search" >{() => <Text>Busqueda</Text>}</Tab.Screen>
-
+            <Tab.Screen
+                name="Search" component={SearchScreen}
+                options={{
+                    tabBarLabel: 'Search',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="magnify" color={color} size={26} />
+                    ),
+                }}
+            />
 
             <Tab.Screen
                 name="Profile" component={ProfileScreen}
