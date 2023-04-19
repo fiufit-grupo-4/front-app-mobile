@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image,TouchableOpacity, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -12,16 +12,20 @@ import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
-import ProfileButton from '../components/buttons/ProfileButton';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
 
 class Navigation extends React.Component {
   render() {
       return (
         <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Home" component={HomeScreen} options={
+            <Stack.Screen name="FiuFit" component={HomeScreen} options={
               { headerShown : true,
                 headerStyle: {
                   backgroundColor: 'skyblue',
@@ -36,10 +40,8 @@ class Navigation extends React.Component {
                   <Image style={{ width: 30, height: 30, margin:10 }} source={require('../../assets/fiufiticon.png')} />
                 ),
                 headerRight:() => (
-
-                  <ProfileButton/>
-
-                 
+                    // TODO: SI HAY FOTO DE PERFIL PONER FOTO SINO PONER UN ICONO DE SILUETA
+                    <MaterialCommunityIcons name="account" size={26} />
                 ),
               }
             }/>
