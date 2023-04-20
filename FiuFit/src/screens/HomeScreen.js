@@ -58,18 +58,6 @@ const HomeScreen = () => {
                 }}
             />
 
-            <Tab.Screen
-                options={{
-                    tabBarLabel: 'Menu',
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="menu" color={color} size={26} />
-                    )
-                }}
-                name="Menu" >{() => <Text>Menu</Text>}</Tab.Screen>
-
-
-
-
         </Tab.Navigator>
 
 
