@@ -18,22 +18,14 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const handleProfilePress = () => {
-    navigation.navigate('Profile');
-  };
-
-  const onLogOutPressed = () => {
-    navigation.navigate('SignIn');
-  };
-
   return (
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Navigator  screenOptions={{ headerShown: false , tabBarActiveBackgroundColor: "whitesmoke" }}>
           <Tab.Screen
               name="Home" component={HomeTab}
               options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={26} />
+                  tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Home</Text>),
+                  tabBarIcon: () => (
+                    <MaterialCommunityIcons name="home" color='#91AED4' size={26} />
                 ),
               }}
               />
@@ -41,9 +33,9 @@ const HomeScreen = () => {
             <Tab.Screen
                 name="Search" component={SearchScreen}
                 options={{
-                    tabBarLabel: 'Search',
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="magnify" color={color} size={26} />
+                    tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Search</Text>),
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons name="magnify" color="#91AED4" size={26} />
                     ),
                 }}
             />
@@ -51,9 +43,9 @@ const HomeScreen = () => {
             <Tab.Screen
                 name="Profile" component={ProfileScreen}
                 options={{
-                    tabBarLabel: 'Profile',
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="account-circle" color={color} size={26} />
+                    tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Profile</Text>),
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons name="account-circle" color="#91AED4" size={26} />
                     ),
                 }}
             />
@@ -64,19 +56,12 @@ const HomeScreen = () => {
   );
 };
 
-// <Text style={styles.title}>Buen día Grupo</Text>
-//
-// <CustomButton
-//     text="Log Out"
-//     onPress={onLogOutPressed}
-//     type="PRIMARY"
-// />
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex:1,
-    backgroundColor:"powderblue",
+    backgroundColor:"lightsteelblue",
     justifyContent: "center",
     borderWidth:0
   },
@@ -90,47 +75,5 @@ const styles = StyleSheet.create({
     marginBottom:20
   },
 });
-
-
-/*
-const HomeScreen = () => {
-  const navigation = useNavigation();
-
-  const onLogOutPressed = () => {
-    // validate user
-    navigation.navigate('SignIn');
-  };
-
-  return (
-    <View style={styles.root}>
-      <Text style={styles.title}>Buen día Grupo</Text>
-
-      <CustomButton
-          text="Log Out"
-          onPress={onLogOutPressed}
-          type="PRIMARY"
-      />
-
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    flex:1,
-    padding: 20,
-    backgroundColor:"skyblue",
-    justifyContent: "center"
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
-    margin: 10,
-    marginBottom:20
-  },
-});*/
 
 export default HomeScreen;

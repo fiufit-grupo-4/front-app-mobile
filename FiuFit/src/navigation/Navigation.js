@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignInScreen from '../screens/login/SignInScreen';
 import SignUpScreen from '../screens/login/SignUpScreen';
@@ -11,40 +11,52 @@ import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
-import EditProfileScreen from '../screens/profile/EditProfileScreen';
+import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MenuButton from "../components/buttons/ProfileButton";
+import {DefaultTheme} from "react-native-paper";
 
 
 const Stack = createNativeStackNavigator();
 
+const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: 'white'
+    },
+};
 
 class Navigation extends React.Component {
+
   render() {
       return (
-        <NavigationContainer>
+        <NavigationContainer >
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="FiuFit" component={HomeScreen} options={
-              { headerShown : true,
+            <Stack.Screen name="FiuFit" color='#2C3137' component={HomeScreen} options={({navigation}) =>
+              {return { headerShown : true,
                 headerStyle: {
-                  backgroundColor: 'skyblue',
-                  height: 70,
+                  backgroundColor: 'lightsteelblue',
+                  height: 60,
                 },
                 headerTitleStyle: {
                   textAlign: 'center',
-                  color:"black",
+                  color:"#2C3137",
                   fontWeight:"bold"
                 },
                 headerLeft:() => (
                   <Image style={{ width: 30, height: 30, margin:10 }} source={require('../../assets/fiufiticon.png')} />
                 ),
                 headerRight:() => (
-                    // TODO: SI HAY FOTO DE PERFIL PONER FOTO SINO PONER UN ICONO DE SILUETA
-                    <MaterialCommunityIcons name="account" size={26} />
+                    <View style={{ flex: 1}}>
+                      <MenuButton onPress={() => navigation.navigate("MenuProfile")} />
+                    </View>
+
                 ),
-              }
+              }}
             }/>
             <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="MenuProfile" component={MenuProfileScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
