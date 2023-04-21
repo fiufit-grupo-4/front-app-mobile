@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'reac
 import axios from 'axios';
 import navigation from "../../navigation/Navigation";
 import {useNavigation} from "@react-navigation/native";
+import CustomButton from "../../components/buttons/CustomButton";
+import EditProfileButton from "../../components/buttons/EditProfileButton";
 
 const MenuProfileScreen = () => {
   const [profilePic, setProfilePic] = useState('https://via.placeholder.com/150');
@@ -100,15 +102,13 @@ const MenuProfileScreen = () => {
               </TouchableOpacity>
             </View>
         ) : (
-            <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
+            <View>
+              <EditProfileButton text="Edit Profile" onPress={() => {handleEditPress()}} />
+              <CustomButton text="Log Out" onPress={() => navigation.navigate("SignIn")} />
+            </View>
         )}
 
 
-        <TouchableOpacity style={styles.cancelButton}  onPress={() => navigation.navigate("SignIn")} >
-          <Text style={styles.buttonText}>Log Out</Text>
-        </TouchableOpacity>
 
       </View>
   );
