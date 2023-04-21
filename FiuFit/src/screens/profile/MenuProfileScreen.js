@@ -1,79 +1,4 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Animated from 'react-native-reanimated';
-
-
-const MenuProfileScreen = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-      <View style={styles.container}>
-        {/* Button to open/close slide bar */}
-        <TouchableOpacity onPress={toggleDrawer} style={styles.button}>
-          <Ionicons name="md-menu" size={32} color="white" />
-        </TouchableOpacity>
-
-        {/* Slide bar */}
-        <Animated.View syle={[styles.drawer, { transform: [{ translateX: isOpen ? 0 : -300 }] }]}>
-          {/* Edit profile button */}
-          <TouchableOpacity style={styles.drawerItem}>
-            <Ionicons name="md-person" size={32} color="black" />
-            <Text style={styles.drawerItemText}>Edit Profile</Text>
-          </TouchableOpacity>
-
-          {/* Log out button */}
-          <TouchableOpacity style={styles.drawerItem}>
-            <Ionicons name="md-log-out" size={32} color="black" />
-            <Text style={styles.drawerItemText}>Log Out</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
-  );
-};
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
-  drawer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 300,
-    height: '100%',
-    backgroundColor: 'white',
-    borderRightWidth: 1,
-    borderColor: '#ccc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  drawerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  drawerItemText: {
-    marginLeft: 10,
-    fontSize: 20,
-  },
-});
-
-
-/*import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 
@@ -249,4 +174,3 @@ const styles = StyleSheet.create({
 });
 
 export default MenuProfileScreen;
-*/
