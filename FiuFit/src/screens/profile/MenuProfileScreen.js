@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
+import navigation from "../../navigation/Navigation";
+import {useNavigation} from "@react-navigation/native";
 
 const MenuProfileScreen = () => {
   const [profilePic, setProfilePic] = useState('https://via.placeholder.com/150');
@@ -27,6 +29,8 @@ const MenuProfileScreen = () => {
 
     fetchUserData();
   }, []);
+
+  const navigation = useNavigation();
 
   const handleEditPress = () => {
     setIsEditing(true);
@@ -100,6 +104,12 @@ const MenuProfileScreen = () => {
               <Text style={styles.buttonText}>Edit Profile</Text>
             </TouchableOpacity>
         )}
+
+
+        <TouchableOpacity style={styles.cancelButton}  onPress={() => navigation.navigate("SignIn")} >
+          <Text style={styles.buttonText}>Log Out</Text>
+        </TouchableOpacity>
+
       </View>
   );
 };
@@ -148,20 +158,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   editButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#91AED4',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   cancelButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#000000',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginRight: 10,
   },
   saveButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#91AED4',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
