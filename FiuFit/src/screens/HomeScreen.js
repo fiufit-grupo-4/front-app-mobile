@@ -1,10 +1,6 @@
 import React from 'react';
 import {View, Text,StyleSheet,TouchableOpacity,Image} from 'react-native';
-import CustomButton from '../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import {Ionicons} from 'react-native-vector-icons'
-import Logo from '../components/utils/Logo';
-import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import ProfileScreen from "./profile/ProfileScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,8 +20,12 @@ const HomeScreen = () => {
               name="Home" component={HomeTab}
               options={{
                   tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Home</Text>),
-                  tabBarIcon: () => (
-                    <MaterialCommunityIcons name="home" color='#91AED4' size={26} />
+                  tabBarIcon: ({ color, size, focused }) => (
+                  <MaterialCommunityIcons
+                  name="home"
+                  color={focused ? '#91AED4' : 'grey'}
+                  size={size}
+                  />
                 ),
               }}
               />
@@ -34,8 +34,12 @@ const HomeScreen = () => {
                 name="Search" component={SearchScreen}
                 options={{
                     tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Search</Text>),
-                    tabBarIcon: () => (
-                        <MaterialCommunityIcons name="magnify" color="#91AED4" size={26} />
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <MaterialCommunityIcons
+                            name="magnify"
+                            color={focused ? '#91AED4' : 'grey'}
+                            size={size}
+                        />
                     ),
                 }}
             />
@@ -44,9 +48,13 @@ const HomeScreen = () => {
                 name="Profile" component={ProfileScreen}
                 options={{
                     tabBarLabel:({ focused,color })=>(<Text style={{color:focused?"#91AED4":"grey"}}>Profile</Text>),
-                    tabBarIcon: () => (
-                        <MaterialCommunityIcons name="account-circle" color="#91AED4" size={26} />
-                    ),
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <MaterialCommunityIcons
+                            name="account-circle"
+                            color={focused ? '#91AED4' : 'grey'}
+                            size={size}
+                        />
+                    )
                 }}
             />
 

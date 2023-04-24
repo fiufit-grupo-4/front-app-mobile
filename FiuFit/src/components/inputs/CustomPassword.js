@@ -43,7 +43,7 @@ const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePas
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'powderblue',
+    backgroundColor: '#AFC5E3',
     width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 15,
     width: '100%',
-    backgroundColor: 'powderblue',
+    backgroundColor: '#AFC5E3',
     borderRadius: 15,
     paddingHorizontal: 5,
     height: 20,
