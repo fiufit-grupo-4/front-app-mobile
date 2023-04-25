@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-const EditProfileScreen = ({ route}) => {
+export const EditProfileScreen = ({ route}) => {
   const { username, bio } = route.params;
   const [newUsername, setNewUsername] = useState(username);
   const [newBio, setNewBio] = useState(bio);
@@ -47,5 +47,3 @@ const styles = StyleSheet.create({
     marginBottom:20
   },
 });
-
-export default EditProfileScreen;
