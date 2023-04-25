@@ -30,7 +30,11 @@ class Navigation extends React.Component {
                     drawerContent={props => <CustomDrawer {... props} />}
 
                     screenOptions={{
+                        headerStyle: {
+                            backgroundColor: 'lightsteelblue'
+                        },
                         headerShown: true,
+                        headerTitle: "FiuFit",
                         drawerActiveTintColor: 'white',
                         drawerActiveBackgroundColor: 'lightsteelblue',
                         drawerInactiveTintColor: 'grey',
@@ -38,40 +42,24 @@ class Navigation extends React.Component {
                             marginLeft: -25,
                             fontFamily: 'Roboto-Medium',
                             fontSize: 15
-                        }
-                    }}>
+                        },
+                        headerTitleStyle: {
+                            textAlign: "center",
+                            color: "#2C3137",
+                            fontWeight: "bold",
+                        },
+                        headerRight: () => (
+                            <Image
+                                style={{ width: 50, height: 50, margin: 12 }}
+                                source={require("../../assets/images/logo-fiufit.png")}
+                            />
+                        )}
+                    }>
 
-                    {/*esto es lo que molesta loco*/}
-                    <Drawer.Screen
-                        name="FiuFit"
-                        color="#F0A500"
-                        component={HomeScreen}
-                        options={({ navigation }) => ({
-                            headerShown: true,
-                            swipeEnabled: false,
-                            headerStyle: {
-                                backgroundColor: "lightsteelblue",
-                                height: 90,
-                            },
-                            headerTitleStyle: {
-                                textAlign: "center",
-                                color: "#2C3137",
-                                fontWeight: "bold",
-                            },
-                            headerLeft: () => (
-                                <Image
-                                    style={{ width: 50, height: 50, margin: 10 }}
-                                    source={require("../../assets/images/logo-fiufit.png")}
-                                />
-
-                            )})}/>
-
-                    {/*SIN ESTO TENEMOS UN DRAWER BIEN PIOLITA */}
 
 
                     <Drawer.Screen
                         name="Home"
-                        drawerLabel="Home"
                         color="#F0A500"
                         component={HomeScreen}
                         options={({ navigation }) => ({
