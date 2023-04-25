@@ -8,22 +8,21 @@ const CustomDrawer = (props) => {
             <DrawerContentScrollView
                 {...props}
                 contentContainerStyle= {{backgroundColor: '#fffff'}}>
-                {/*<ImageBackground
+                <ImageBackground
                     source={require('../../assets/images/background.png')}
-                    style={{padding:20}}/>
-                    */}
+                    style={{padding:20}}>
                 <Image
                     source={require('../../assets/images/profilepic.jpeg')}
                     style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
                 />
-                <Text style={{ color: 'black', fontSize: 18, fontFamily: 'Roboto-Medium' }}>Pepito Boxeador</Text>
-                <Text style={{ color: 'black', fontSize: 13, fontFamily: 'Roboto-Medium' }}>32 Seguidores</Text>
+                <Text style={{ color: 'black', fontSize: 18  }}>Pepito Boxeador</Text>
+                <Text style={{ color: 'black', fontSize: 13 }}>32 Seguidores</Text>
+                </ImageBackground>
                 <View style= {{flex:1, backgroundColor: '#fff', paddingTop: 10}}>
                     <DrawerItemList {...props}/>
                 </View>
                 </DrawerContentScrollView>
             <View>
-            <Text>   FiuFit</Text>
         </View>
         </View>
     );

@@ -12,89 +12,42 @@ import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import HomeScreen from '../screens/MainScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
-import MenuButton from "../components/buttons/ProfileButton";
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import CustomDrawer from  "../components/CustomDrawer"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {AntDesign} from "@expo/vector-icons";
 
 
-const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-
-
-function Menu() {
-    return (
-        <Drawer.Navigator drawerContent={props => <CustomDrawer {... props} />}
-            drawerContentContainerStyle={{
-                flex: 9,
-                justifyContent: 'space-between',
-                paddingBottom: 20,
-            }}
-        >
-            <Drawer.Screen
-                name="Home"
-                color="#F0A500"
-                component={HomeScreen}
-                options={({ navigation }) => ({
-                    drawerIcon: () => (
-                        <AntDesign
-                            name="home"
-
-                        />
-                    ),
-                    headerShown: true,
-                })}
-            />
-
-            <Drawer.Screen
-                name="Settings"
-                color="#F0A500"
-                component={MenuProfileScreen}
-                options={({ navigation }) => ({
-                    drawerIcon: () => (
-                        <AntDesign
-                            name="setting"
-
-                        />
-                    ),
-                    headerShown: true,
-                })}
-            />
-
-            <Drawer.Screen
-                name="Log Out"
-                color="#F0A500"
-                component={SignInScreen}
-                options={({ navigation }) => ({
-                    drawerIcon: () => (
-                        <AntDesign
-                            name="logout"
-
-                        />
-                    ),
-                    headerShown: true,
-                })}
-            />
-        </Drawer.Navigator>
-    );
-}
 
 
 class Navigation extends React.Component {
     render() {
         return (
             <NavigationContainer>
-                 <Stack.Navigator screenOptions={{ headerShown: false }}>
-                         <Stack.Screen
+                <Drawer.Navigator
+                    drawerContent={props => <CustomDrawer {... props} />}
+
+                    screenOptions={{
+                        headerShown: true,
+                        drawerActiveTintColor: 'white',
+                        drawerActiveBackgroundColor: 'lightsteelblue',
+                        drawerInactiveTintColor: 'grey',
+                        drawerLabelStyle:{
+                            marginLeft: -25,
+                            fontFamily: 'Roboto-Medium',
+                            fontSize: 15
+                        }
+                    }}>
+
+                    <Drawer.Screen
                         name="FiuFit"
                         color="#F0A500"
-                        component={Menu}
+                        component={HomeScreen}
                         options={({ navigation }) => ({
                             headerShown: true,
                             headerStyle: {
                                 backgroundColor: "lightsteelblue",
-                                height: 60,
+                                height: 90,
                             },
                             headerTitleStyle: {
                                 textAlign: "center",
@@ -103,26 +56,69 @@ class Navigation extends React.Component {
                             },
                             headerLeft: () => (
                                 <Image
-                                    style={{ width: 30, height: 30, margin: 10 }}
+                                    style={{ width: 50, height: 50, margin: 10 }}
                                     source={require("../../assets/images/logo-fiufit.png")}
                                 />
-                            ),
+                            )})}
+                    />
 
+                    <Drawer.Screen
+                        name="Home"
+                        drawerLabel="Home"
+                        color="#F0A500"
+                        component={HomeScreen}
+                        options={({ navigation }) => ({
+                            drawerIcon: () => (
+                                <AntDesign
+                                    name="home"
+                                />
+                            ),
+                            headerShown: true,
                         })}
                     />
-                    <Stack.Screen name="Profile" component={ProfileScreen} />
-                    <Stack.Screen name="MenuProfile" component={MenuProfileScreen} />
-                    <Stack.Screen name="SignIn" component={SignInScreen} />
-                    <Stack.Screen name="SignUp" component={SignUpScreen} />
-                    <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
-                    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-                    <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} />
-                    <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
-                </Stack.Navigator>
+
+                    <Drawer.Screen
+                        name="Settings"
+                        color="#F0A500"
+                        component={MenuProfileScreen}
+                        options={({ navigation }) => ({
+                            drawerIcon: () => (
+                                <AntDesign
+                                    name="setting"
+                                />
+                            ),
+                            headerShown: true,
+                        })}
+                    />
+
+                    <Drawer.Screen
+                        name="Log Out"
+                        color="#F0A500"
+                        component={SignInScreen}
+                        options={({ navigation }) => ({
+                            drawerIcon: () => (
+                                <AntDesign
+                                    name="logout"
+                                />
+                            ),
+                            headerShown: false,
+                        })}
+                    />
+                </Drawer.Navigator>
+                <Drawer.Screen name="Profile" component={ProfileScreen} />
+                <Drawer.Screen name="MenuProfile" component={MenuProfileScreen} />
+                <Drawer.Screen name="SignIn" component={SignInScreen} />
+                <Drawer.Screen name="SignUp" component={SignUpScreen} />
+                <Drawer.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+                <Drawer.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+                <Drawer.Screen name="ConfirmCode" component={ConfirmCodeScreen} />
+                <Drawer.Screen name="NewPassword" component={NewPasswordScreen} />
             </NavigationContainer>
         );
     }
 }
+
+
 
 export default Navigation;
 
