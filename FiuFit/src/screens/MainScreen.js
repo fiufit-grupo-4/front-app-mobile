@@ -5,6 +5,7 @@ import ProfileScreen from "./profile/ProfileScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {HomeTab} from "./HomeTab";
 import {SearchScreen} from "./Search/SearchScreen";
+import {AntDesign} from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ const MainScreen = () => {
                 options={{
                     tabBarLabelStyle: { color: 'transparent' },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <MaterialCommunityIcons
+                        <AntDesign
                             name="home"
                             color={focused ? '#91AED4' : 'grey'}
                             size={size}
@@ -33,8 +34,8 @@ const MainScreen = () => {
                     //tabBarLabel: ({ focused, color }) => (<Text style={{ color: focused ? "#91AED4" : "grey" }}>Search</Text>),
                     tabBarLabelStyle: { color: 'transparent' },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <MaterialCommunityIcons
-                            name="magnify"
+                        <AntDesign
+                            name="search1"
                             color={focused ? '#91AED4' : 'grey'}
                             size={size}
                         />
@@ -48,8 +49,8 @@ const MainScreen = () => {
                    //tabBarLabel: ({ focused, color }) => (<Text style={{ color: focused ? "#91AED4" : "grey" }}>Profile</Text>),
                     tabBarLabelStyle: { color: 'transparent' },
                     tabBarIcon: ({ color, size, focused }) => (
-                        <MaterialCommunityIcons
-                            name="account-circle"
+                        <AntDesign
+                            name="user"
                             color={focused ? '#91AED4' : 'grey'}
                             size={size}
                         />
