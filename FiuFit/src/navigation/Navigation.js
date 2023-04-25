@@ -23,9 +23,9 @@ class Navigation extends React.Component {
                         component={DrawerComponent}
                         options={{ headerShown: false }}
                     />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen}  />
                 <Stack.Screen name="MenuProfile" component={MenuProfileScreen} />
-                <Stack.Screen name="SignIn" component={SignInScreen} />
+                <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />
                 <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
                 <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />

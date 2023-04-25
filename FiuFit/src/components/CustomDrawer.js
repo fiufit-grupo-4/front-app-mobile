@@ -64,7 +64,14 @@ const CustomDrawer = (props) => {
                                 }}
                             />
                         </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={
+                                handleTouchableOpacity
+                            }>
                         <Text style={{color: 'black', fontSize: 20}}>Pepito Boxeador</Text>
+                        </TouchableOpacity>
+
                         <Text style={{color: 'black', fontSize: 13}}>32 Seguidores</Text>
                     </ImageBackground>
 

@@ -58,6 +58,7 @@ const MenuProfileScreen = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsEditing(false);
   };
 
   return (

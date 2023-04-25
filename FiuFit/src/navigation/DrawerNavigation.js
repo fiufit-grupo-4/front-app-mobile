@@ -12,7 +12,6 @@ function DrawerComponent() {
     return (
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {... props} />}
-
             screenOptions={{
                 headerStyle: {
                     backgroundColor: '#91AED4'

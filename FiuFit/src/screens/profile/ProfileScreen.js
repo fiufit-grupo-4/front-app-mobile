@@ -1,18 +1,35 @@
 import React, { useState } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, FlatList, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, FlatList, Image, TouchableWithoutFeedback, Modal} from 'react-native';
 
 const ProfileScreen = ({ navigation }) => {
-  const data = [
-    { id: 1, image: require('../../../assets/images/post1.png') },
-    { id: 2, image: require('../../../assets/images/post2.png') },
-    { id: 3, image: require('../../../assets/images/post3.png') },
-  ];
+      const data = [
+        { id: 1, image: require('../../../assets/images/post1.png') },
+        { id: 2, image: require('../../../assets/images/post2.png') },
+        { id: 3, image: require('../../../assets/images/post3.png') },
+      ];
+
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    };
 
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
-            <Image source={require('../../../assets/images/profilepic.jpeg') } style={{ width: 75, height: 75, borderRadius: 37.5 }} />
-          <Text style={{ marginLeft: 10, fontSize: 20 }}>PEPITO BOXEADOR</Text>
+
+            <TouchableWithoutFeedback onPress={toggleModal}>
+                <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
+            </TouchableWithoutFeedback>
+
+            <Modal visible={showModal} transparent={true}>
+                <TouchableWithoutFeedback onPress={toggleModal}>
+                    <View style={styles.modalBackground}>
+                        <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.enlargedProfileImage} />
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+          <Text style={{ marginLeft: 10, fontSize: 20 }}>Pepito Boxeador</Text>
         </View>
           <FlatList
             data={data}
@@ -22,5 +39,25 @@ const ProfileScreen = ({ navigation }) => {
       </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+    profileImage: {
+        width: 70,
+        height: 70,
+        borderRadius: 25,
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    enlargedProfileImage: {
+        width: 300,
+        height: 300,
+        borderRadius: 300,
+    },
+});
 
 export default ProfileScreen;
