@@ -15,10 +15,60 @@ import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import CustomDrawer from  "../components/CustomDrawer"
 import {AntDesign} from "@expo/vector-icons";
+import drawerItem from "react-native-paper/src/components/Drawer/DrawerItem";
 
 
 const Drawer = createDrawerNavigator();
 
+
+function handleIconButton() {
+    return (
+        <Drawer>
+        <Drawer.Screen
+            name="Home"
+            drawerLabel="Home"
+            color="#F0A500"
+            component={HomeScreen}
+            options={({ navigation }) => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="home"
+                    />
+                ),
+                headerShown: true,
+            })}/>
+
+    <Drawer.Screen
+        name="Settings"
+        color="#F0A500"
+        component={MenuProfileScreen}
+        options={({ navigation }) => ({
+            drawerIcon: () => (
+                <AntDesign
+                    name="setting"
+                />
+            ),
+            headerShown: true,
+        })}
+    />
+
+    <Drawer.Screen
+        name="Log Out"
+        color="#F0A500"
+        component={SignInScreen}
+        options={({ navigation }) => ({
+            drawerIcon: () => (
+                <AntDesign
+                    name="logout"
+                />
+            ),
+            headerShown: false,
+        })}
+    />
+        </Drawer>
+    );
+
+}
 
 class Navigation extends React.Component {
     render() {
@@ -39,12 +89,14 @@ class Navigation extends React.Component {
                         }
                     }}>
 
+                    {/*esto es lo que molesta loco*/}
                     <Drawer.Screen
                         name="FiuFit"
                         color="#F0A500"
                         component={HomeScreen}
                         options={({ navigation }) => ({
                             headerShown: true,
+                            swipeEnabled: false,
                             headerStyle: {
                                 backgroundColor: "lightsteelblue",
                                 height: 90,
@@ -55,56 +107,53 @@ class Navigation extends React.Component {
                                 fontWeight: "bold",
                             },
                             headerLeft: () => (
+                                <Button title={"menu"}>
+                                    <Image
+                                        style={{ width: 50, height: 50, margin: 10 }}
+                                        source={require("../../assets/images/logo-fiufit.png")}
+                                    />
+                                    onPress={() => {handleIconButton()}}
+                                </Button>
+                            )})}/>
+
+                </Drawer.Navigator>
+
+
+
+                {/*<Stack.Navigator screenOptions={{ headerShown: false }}>
+                         <Stack.Screen
+                        name="FiuFit"
+                        color="#F0A500"
+                        component={Menu}
+                        options={({ navigation }) => ({
+                            headerShown: true,
+                            headerStyle: {
+                                backgroundColor: "lightsteelblue",
+                                height: 60,
+                            },
+                            headerTitleStyle: {
+                                textAlign: "center",
+                                color: "#2C3137",
+                                fontWeight: "bold",
+                            },
+                            headerLeft: () => (
                                 <Image
-                                    style={{ width: 50, height: 50, margin: 10 }}
+                                    style={{ width: 30, height: 30, margin: 10 }}
                                     source={require("../../assets/images/logo-fiufit.png")}
                                 />
-                            )})}
-                    />
-
-                    <Drawer.Screen
-                        name="Home"
-                        drawerLabel="Home"
-                        color="#F0A500"
-                        component={HomeScreen}
-                        options={({ navigation }) => ({
-                            drawerIcon: () => (
-                                <AntDesign
-                                    name="home"
-                                />
                             ),
-                            headerShown: true,
+
                         })}
                     />
-
-                    <Drawer.Screen
-                        name="Settings"
-                        color="#F0A500"
-                        component={MenuProfileScreen}
-                        options={({ navigation }) => ({
-                            drawerIcon: () => (
-                                <AntDesign
-                                    name="setting"
-                                />
-                            ),
-                            headerShown: true,
-                        })}
-                    />
-
-                    <Drawer.Screen
-                        name="Log Out"
-                        color="#F0A500"
-                        component={SignInScreen}
-                        options={({ navigation }) => ({
-                            drawerIcon: () => (
-                                <AntDesign
-                                    name="logout"
-                                />
-                            ),
-                            headerShown: false,
-                        })}
-                    />
-                </Drawer.Navigator>
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                    <Stack.Screen name="MenuProfile" component={MenuProfileScreen} />
+                    <Stack.Screen name="SignIn" component={SignInScreen} />
+                    <Stack.Screen name="SignUp" component={SignUpScreen} />
+                    <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+                    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+                    <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} />
+                    <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+                </Stack.Navigator>*/}
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="MenuProfile" component={MenuProfileScreen} />
                 <Drawer.Screen name="SignIn" component={SignInScreen} />
