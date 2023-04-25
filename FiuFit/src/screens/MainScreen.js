@@ -58,30 +58,8 @@ const MainScreen = () => {
                 }}
             />
 
-
         </Tab.Navigator>
     );
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex:1,
-    backgroundColor:"lightsteelblue",
-    justifyContent: "center",
-    borderWidth:0
-  },
-
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: 'black',
-    alignSelf: 'center',
-    margin: 10,
-    marginBottom:20
-  },
-});
-
 
 export default MainScreen;

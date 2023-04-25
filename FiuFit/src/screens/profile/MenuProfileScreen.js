@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
-import navigation from "../../navigation/Navigation";
-import {NavigationContainer, useNavigation} from "@react-navigation/native";
-import CustomButton from "../../components/buttons/CustomButton";
+import { useNavigation} from "@react-navigation/native";
 import EditProfileButton from "../../components/buttons/EditProfileButton";
-import BackButton from "../../components/buttons/BackButton"
 
 const MenuProfileScreen = () => {
   const [profilePic, setProfilePic] = useState('https://via.placeholder.com/150');

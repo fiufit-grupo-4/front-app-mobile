@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import CustomButton from '../../components/buttons/CustomButton';
-import MenuButton from "../../components/buttons/ProfileButton";
 
 const ProfileScreen = ({ navigation }) => {
   const data = [

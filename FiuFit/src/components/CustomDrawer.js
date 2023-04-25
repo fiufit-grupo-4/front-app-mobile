@@ -6,6 +6,7 @@ import {StatusBar} from "expo-status-bar";
 import {AntDesign} from "@expo/vector-icons";
 
 
+
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
@@ -69,8 +70,10 @@ const CustomDrawer = (props) => {
 
                 <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>
                     <DrawerItemList {...props} />
-                    <DrawerItem label="Log Out" onPress={handleLogOut} />
-                    {/*icon:{()=>{<AntDesign name="logout"/>}} />*/}
+                    <DrawerItem label="Log Out" onPress={handleLogOut}
+                                icon={({ focused, color, size }) => (
+                                    <AntDesign name="logout" size={12} color={color} />)}
+                    />
                 </View>
             </DrawerContentScrollView>
         </View>
