@@ -40,7 +40,6 @@ class Navigation extends React.Component {
                         drawerInactiveTintColor: 'grey',
                         drawerLabelStyle:{
                             marginLeft: -25,
-                            fontFamily: 'Roboto-Medium',
                             fontSize: 15
                         },
                         headerTitleStyle: {
@@ -64,7 +63,9 @@ class Navigation extends React.Component {
                         component={HomeScreen}
                         options={({ navigation }) => ({
                             drawerIcon: () => (
-                                <AntDesign name="home"/>
+                                <AntDesign name="home"
+
+                                />
                             ),
                             headerShown: true,
                         })}/>
