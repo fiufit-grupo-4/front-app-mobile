@@ -69,14 +69,8 @@ const CustomDrawer = (props) => {
 
                 <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>
                     <DrawerItemList {...props} />
-                    <DrawerItem label="Log Out" onPress={handleLogOut}
-                                options={({ navigation }) => ({
-                                    drawerIcon: () => (
-                                        <AntDesign
-                                            name="logout"
-                                        />
-                                    )})}
-                    />
+                    <DrawerItem label="Log Out" onPress={handleLogOut} />
+                    {/*icon:{()=>{<AntDesign name="logout"/>}} />*/}
                 </View>
             </DrawerContentScrollView>
         </View>
