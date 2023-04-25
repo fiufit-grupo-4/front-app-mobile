@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Image, Text, TouchableOpacity, View} from 'react-native';
+import {Button, Image, Text, TouchableOpacity, View, ToastAndroid, Alert} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -12,7 +12,7 @@ import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import HomeScreen from '../screens/MainScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
-import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList} from '@react-navigation/drawer';
 import CustomDrawer from  "../components/CustomDrawer"
 import {AntDesign} from "@expo/vector-icons";
 import drawerItem from "react-native-paper/src/components/Drawer/DrawerItem";
@@ -21,6 +21,7 @@ import SearchScreen from "../screens/Search/SearchScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
+
 
 
 function DrawerComponent() {

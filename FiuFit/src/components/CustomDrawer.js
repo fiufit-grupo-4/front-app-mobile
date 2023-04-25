@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, Image, ImageBackground } from 'react-native'
-import { DrawerContentScrollView, DrawerItemList} from "@react-navigation/drawer";
-import { TouchableOpacity } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {View, Text, Image, ImageBackground, Alert, ToastAndroid} from 'react-native'
+import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
+import {useNavigation} from '@react-navigation/native';import { TouchableOpacity } from 'react-native';
 import {StatusBar} from "expo-status-bar";
+import {AntDesign} from "@expo/vector-icons";
 
 
 const CustomDrawer = (props) => {
@@ -13,6 +13,28 @@ const CustomDrawer = (props) => {
         navigation.navigate("Profile")
     };
 
+    const handleLogOut = () => {
+        Alert.alert(
+            'Log Out',
+            'Are you sure you want to log out?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Log out cancelled'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('User logged out');
+                        ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT);
+                        navigation.navigate("SignIn")
+                        // Add code to log the user out here
+                    }
+                }
+            ]
+        );
+    };
 
     return (
         <View style={{flex: 1}}>
@@ -47,6 +69,14 @@ const CustomDrawer = (props) => {
 
                 <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>
                     <DrawerItemList {...props} />
+                    <DrawerItem label="Log Out" onPress={handleLogOut}
+                                options={({ navigation }) => ({
+                                    drawerIcon: () => (
+                                        <AntDesign
+                                            name="logout"
+                                        />
+                                    )})}
+                    />
                 </View>
             </DrawerContentScrollView>
         </View>
