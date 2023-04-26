@@ -35,7 +35,7 @@ const DescriptionInput = ({control,name, placeholder, secureTextEntry,icon,rules
                         />
                     </View>
                     { error && (
-                        <Text style = {{fontSize:14,color : "crimson",padding:5}}> {error.message}</Text>
+                        <Text style = {{fontSize:14, color : "crimson",padding:5}}> {error.message}</Text>
                     )
                     }
                 </>
