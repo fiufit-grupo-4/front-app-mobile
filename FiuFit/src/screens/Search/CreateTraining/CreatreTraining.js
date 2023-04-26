@@ -5,41 +5,8 @@ import axios from 'axios';
 import TitleInput from "../../../components/inputs/TitleInput";
 import {useForm} from "react-hook-form";
 import DescriptionInput from "../../../components/inputs/DescriptionInput";
-import isNumeric from "validator/es/lib/isNumeric";
-import DropDownPicker from 'react-native-dropdown-picker';
-import {SelectList} from "react-native-dropdown-select-list/index";
 import {Ionicons} from "react-native-vector-icons";
-import icon from "react-native-paper/src/components/Icon";
-import {AntDesign} from "@expo/vector-icons";
-
-function DifficultyList() {
-    const [selected, setSelected] = React.useState("");
-
-    const data = [
-        {key:'1', value:'Difficulty: 1'},
-        {key:'2', value:'Difficulty: 2'},
-        {key:'3', value:'Difficulty: 3'},
-        {key:'4', value:'Difficulty: 4'},
-        {key:'5', value:'Difficulty: 5'}
-    ]
-
-    return (
-        <View style={styles.difficultycontainer}>
-            <Ionicons
-                name="ios-stats-chart-outline"
-            />
-        <SelectList
-            boxStyles={{borderWidth: 0, width:"70%"}}
-            setSelected={(val) => setSelected(val)}
-            data={data}
-            search={false}
-            save="value"
-            placeholder={"Pick a difficulty"}
-            defaultOption={{ key:'1', value:'Difficulty: 1' }}
-        />
-        </View>
-    );
-}
+import { DifficultyList } from "../../../components/inputs/DifficultySelect"
 
 const CreateTraining = () => {
     const [imageUri, setImageUri] = useState('');
@@ -93,7 +60,6 @@ const CreateTraining = () => {
                     onChangeText={setTitle}
                 />
 
-
                 <DescriptionInput
                     name= "description"
                     placeholder="Description"
@@ -106,25 +72,7 @@ const CreateTraining = () => {
                     onChangeText={setDescription}
                 />
 
-
-                {/*<Button title="Pick a difficulty" onPress={DifficultyButton} />*/}
-                <DescriptionInput
-                    name= "difficulty"
-                    placeholder="Difficulty [1-5]"
-                    control={control}
-                    icon={"ios-stats-chart-outline"}
-                    rules = {{
-                        required:"Pick a difficulty between 1 and 5",
-                        validate: value => isNumeric(value) || "Not a valid difficulty",
-                    }}
-                    otherError={error}
-                    value={difficulty}
-                    onChangeText={setDifficulty}
-                />
-
-                {error && (
-                    <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
-                )}
+                <DifficultyList />
 
                 <DescriptionInput
                     name= "place"
@@ -138,12 +86,9 @@ const CreateTraining = () => {
                     onChangeText={setPlace}
                 />
 
-                <DifficultyList />
 
                 <Button title="Pick the content" onPress={pickImage} />
                 <Button title="Create post" onPress={createPost} />
-
-
 
 
             </View>
@@ -164,27 +109,6 @@ const styles = StyleSheet.create({
         zIndex:0,
         padding: 15,
         borderRadius: 10,
-    },
-    difficultycontainer: {
-        backgroundColor: '#DEE9F8',
-        marginTop:1,
-        width: '97%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: 15,
-        padding:5,
-        margin:5,
-        marginBottom:10
-
-    },
-
-    difficultyinput: {
-        fontSize: 15,
-        width: '97%',
-        backgroundColor: '#DEE9F8',
-        paddingHorizontal: 5,
-        height: 20,
-        borderRadius: 15,
     }
 });
 
