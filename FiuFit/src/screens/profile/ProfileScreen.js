@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, FlatList, Image, TouchableWithoutFeedback, Modal} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Image, TouchableWithoutFeedback, Modal} from 'react-native';
 
 const ProfileScreen = ({ navigation }) => {
       const data = [

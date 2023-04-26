@@ -5,6 +5,7 @@ import {AntDesign} from "@expo/vector-icons";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import CreateTraining from "../screens/Search/CreateTraining/CreatreTraining";
 
 const Drawer = createDrawerNavigator();
 
@@ -65,7 +66,24 @@ function DrawerComponent() {
                     headerShown: true,
                 })}
             />
-        </Drawer.Navigator>
+
+
+        <Drawer.Screen
+            name="         New Post"
+            color="#F0A500"
+            component={CreateTraining}
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="plus"
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
+
+
+    </Drawer.Navigator>
     );
 }
 
