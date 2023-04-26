@@ -1,7 +1,6 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
 import {SelectList} from "react-native-dropdown-select-list/index";
-import CreateTraining from "../../screens/Search/CreateTraining/CreatreTraining";
 import {Ionicons} from "react-native-vector-icons";
 
 export function DifficultyList() {
@@ -17,22 +16,19 @@ export function DifficultyList() {
 
     return (
         <View style={styles.difficultycontainer}>
-            <Ionicons name="ios-stats-chart-outline" color={"black"} style={{marginHorizontal: 7}}/>
+            <Ionicons name="ios-stats-chart-outline" color={"black"} style={{marginLeft: 9, marginRight:-5}}/>
             <SelectList
-                selectedTextProps={{
-                    style: {
-                        fontSize: 20,
-                        color: 'blue',
-                    },
-                }}
-                boxStyles={{borderWidth: 0, width:"50%"}}
+                selectedTextProps={{style: {}}}
+
+                selectedTextStyle={{fontSize: 13, left:-20, color: 'red'}}
+                dropdownStyles={{borderWidth: 0, width:"66%", left:10}}
+                boxStyles={{borderWidth: 0, width:"67%"}}
+                dropdownTextStyles={{left:-20, width:"66%"}}
                 setSelected={(val) => setSelected(val)}
+
                 data={data}
                 search={false}
-                baseColor="rgba(255, 255, 255, 1)"
-                style = {{color: 'white'}}
                 save="value"
-                fontColor={"lightgrey"}
                 placeholder={"Difficulty"}
                 //defaultOption={{ key:'1', value:'Difficulty: 1' }}
             />
@@ -41,19 +37,6 @@ export function DifficultyList() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop:0,
-        backgroundColor: '#ffffff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    boxContainer: {
-        backgroundColor: 'lightsteelblue',
-        marginHorizontal:10,
-        zIndex:0,
-        padding: 15,
-        borderRadius: 10,
-    },
     difficultycontainer: {
         backgroundColor: '#DEE9F8',
         marginTop:1,
@@ -61,10 +44,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 15,
-        padding:5,
+        //padding:5,
         margin:5,
-        marginBottom:10
-
+        marginBottom:5,
     }
 });
 
