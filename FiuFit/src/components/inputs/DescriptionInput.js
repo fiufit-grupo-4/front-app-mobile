@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
         height:45,
         padding:5,
         margin:5,
+        zIndex:0,
+        elevation:0
     },
 
     input: {
@@ -67,6 +69,8 @@ const styles = StyleSheet.create({
         height: 20,
         borderRadius: 15,
         flex:1,
+        zIndex:0,
+        elevation:0
     },
     icon: {
         paddingHorizontal: 5,
