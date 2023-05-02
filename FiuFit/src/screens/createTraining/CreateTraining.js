@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import {View, Button, Image, Text, StyleSheet, error, TextInput} from 'react-native';
+import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity} from 'react-native';
 import axios, {options} from 'axios';
 import TitleInput from "../../components/inputs/TitleInput";
 import {useForm} from "react-hook-form";
 import DescriptionInput from "../../components/inputs/DescriptionInput";
 import { DifficultyList } from "../../components/inputs/DifficultyList";
+import {useNavigation} from "@react-navigation/native";
 
 
-export const CreateTraining = () => {
+export const CreateTraining = ({onPress}) => {
+    const [imageUri, setImageUri] = useState('');
     const [t_title, setTitle] = useState('');
     const [t_description, setDescription] = useState('');
     const [place, setPlace] = useState('');
+
 
     const { control} = useForm({
         defaultValues: {
@@ -19,9 +22,11 @@ export const CreateTraining = () => {
         }
     });
 
+    const navigation = useNavigation();
+
 
     const createPost = async () => {
-        const formData = new FormData();
+        /*const formData = new FormData();
         formData.append('image', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
         formData.append('description', t_description);
 
@@ -31,13 +36,17 @@ export const CreateTraining = () => {
         } catch (error) {
             console.log(error);
         }
+        */
+
+        // TODO:  faltan ENDPOINTS
+        onPress=onPress();
+
     };
 
 
     return (
         <View style={styles.container}>
             <Text style={{padding: 10, color: 'grey', fontSize: 20, paddingRight:280}}>New Post</Text>
-
 
             <View style={styles.boxContainer}>
 
@@ -79,9 +88,10 @@ export const CreateTraining = () => {
                     onChangeText={setPlace}
                 />
 
-
-                <Button title="Create post" onPress={createPost} />
-
+                <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
+                                  onPress={createPost} >
+                    <Text style={styles.buttonText}>Post!</Text>
+                </TouchableOpacity>
 
             </View>
         </View>
@@ -125,6 +135,16 @@ const styles = StyleSheet.create({
         flex:1,
         zIndex:0,
         elevation:0
+    },
+    nextButton: {
+        backgroundColor: '#DEE9F8FF',
+        alignItems: 'center',
+        borderRadius: 15,
+        padding: 10,
+        marginHorizontal: 5,
+        marginBottom:1,
+        marginTop:20,
+        width: 90
     },
     icon: {
         paddingHorizontal: 5,

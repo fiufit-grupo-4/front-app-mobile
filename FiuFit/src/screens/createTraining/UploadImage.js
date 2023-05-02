@@ -29,17 +29,17 @@ const UploadImage = ({onPress, setImage}) => {
 
             <View style={styles.boxContainer}>
 
-                <View style={{alignItems: 'baseline', justifyContent: 'center' }}>
+                <View style={{alignItems: 'center', justifyContent: 'center' }}>
                 {imageUri && (
-                    <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />
+                    <Image source={{ uri: imageUri }} style={{ marginTop: 90, width: 300, height: 300 }} />
                 )}
 
                     <TouchableOpacity style={[styles.button, { backgroundColor: '#DEE9F8FF' }]}  onPress={pickImage}>
                         <Text style={styles.buttonText}>Select an Image</Text>
                     </TouchableOpacity>
 
-                    {/* {imageUri && <Button title="Next Step" onPress={CreateTraining} style={[styles.button, { backgroundColor: '#F0A500' }]}/>} */}
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#F0A500' }]}
+
+                    <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
                                       onPress={() => {
                                           onPress()
                                       }}>
@@ -64,10 +64,8 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
         marginHorizontal: 20,
         marginVertical: 10,
-        height:30,
         marginTop:30
     },
     button: {
@@ -76,9 +74,19 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 10,
         marginHorizontal: 5,
-        marginBottom:10,
-        marginTop:30,
-        width: '89%'
+        marginBottom:1,
+        marginTop:120,
+        width: 400
+    },
+    nextButton: {
+        backgroundColor: '#DEE9F8FF',
+        alignItems: 'center',
+        borderRadius: 15,
+        padding: 10,
+        marginHorizontal: 5,
+        marginBottom:1,
+        marginTop:20,
+        width: 400
     },
     buttonText: {
         color: '#333b48',
