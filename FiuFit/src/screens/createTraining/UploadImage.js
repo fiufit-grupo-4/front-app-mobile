@@ -7,6 +7,7 @@ import {useNavigation} from "@react-navigation/native";
 
 const UploadImage = ({onPress, setImage}) => {
     const [imageUri, setImageUri] = useState('');
+    const [error, setError] = useState(false);
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -19,6 +20,15 @@ const UploadImage = ({onPress, setImage}) => {
         if (!result.canceled) {
             setImage(result.assets[0].uri);
             setImageUri(result.assets[0].uri);
+            setError(false);
+        }
+    };
+
+    const onNextPress = () => {
+        if (imageUri) {
+            onPress();
+        } else {
+            setError(true);
         }
     };
 
@@ -39,9 +49,13 @@ const UploadImage = ({onPress, setImage}) => {
                     </TouchableOpacity>
 
 
+                    {error && (
+                        <Text style={{color: 'red'}}>You must select an image first</Text>
+                    )}
+
                     <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
                                       onPress={() => {
-                                          onPress()
+                                          onNextPress()
                                       }}>
                         <Text style={styles.buttonText}>Next Step</Text>
                     </TouchableOpacity>
