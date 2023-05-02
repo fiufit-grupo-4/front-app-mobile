@@ -17,12 +17,16 @@ const CreateTrainingScreen = ({ navigation }) => {
         });
     }, [navigation]);
 
+    const handlePress = () => {
+        setConfiguration(false);
+        navigation.goBack();
+    };
+
+
     if (firstStep) {
         return <UploadImage onPress={() => setFirstStep(false)} setImage={setImage} />;
     } else if (configuration) {
-        return <CreateTraining onPress={() => setConfiguration(false)} />;
-    } else {
-        return <ProfileScreen />;
+        return <CreateTraining onPress={handlePress}  />;
     }
 };
 
