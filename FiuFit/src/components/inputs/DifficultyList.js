@@ -26,6 +26,7 @@ export function DifficultyList() {
                 setSelected={(val) => setSelected(val)}
                 dropdownStyles={{borderWidth: 0, width:"69%", left:10}}
                 arrowicon={<FontAwesome name="home"  size={0}/>}
+                defaultOption={{ key:'1', value:'1' }}
 
                 data={data}
                 search={false}

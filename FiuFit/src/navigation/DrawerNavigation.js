@@ -5,9 +5,9 @@ import {AntDesign} from "@expo/vector-icons";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import CreateTraining from "../screens/createTraining/CreateTraining";
-import UploadImage from "../screens/createTraining/UploadImage";
-import CreateTrainingScreen from "../screens/createTraining/CreateTrainingScreen";
+import CreateTraining from "../screens/training/CreateTraining";
+import UploadImage from "../screens/training/UploadImage";
+import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 
 const Drawer = createDrawerNavigator();
 
