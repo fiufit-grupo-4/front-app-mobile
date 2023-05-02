@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import {useNavigation} from "@react-navigation/native";
 
 
 const EditTraining = ({ onPress, route }) => {

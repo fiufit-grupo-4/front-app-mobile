@@ -2,6 +2,7 @@ import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 
+
 const ProfileScreen = ({ navigation }) => {
     const [posts, setPosts] = useState([
         {
@@ -30,6 +31,7 @@ const ProfileScreen = ({ navigation }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
+
 
     const toggleModal = (image) => {
         setSelectedImage(image);
