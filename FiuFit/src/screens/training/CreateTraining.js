@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity} from 'react-native';
+import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
 import axios, {options} from 'axios';
 import TitleInput from "../../components/inputs/TitleInput";
 import {useForm} from "react-hook-form";
 import DescriptionInput from "../../components/inputs/DescriptionInput";
 import { DifficultyList } from "../../components/inputs/DifficultyList";
 import {useNavigation} from "@react-navigation/native";
+import difficulty from "validator/es";
 
 
 export const CreateTraining = ({onPress}) => {
@@ -39,6 +40,10 @@ export const CreateTraining = ({onPress}) => {
         */
 
         // TODO:  faltan ENDPOINTS
+        if (!t_title.trim() || !t_description.trim() || !difficulty.trim() || !place.trim()) {
+            Alert.alert('Error', 'Please fill all fields');
+            return;
+        }
         onPress=onPress();
 
     };

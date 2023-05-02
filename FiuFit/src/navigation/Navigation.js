@@ -11,6 +11,7 @@ import ProfileScreen from '../screens/profile/ProfileScreen';
 import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import DrawerComponent from "./DrawerNavigation";
 import {HomeTab} from "../screens/home/HomeTab";
+import EditTraining from "../screens/training/EditTraining";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} />
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+                    <Stack.Screen name="EditTraining" component={EditTraining} />
                 </Stack.Navigator>
             </NavigationContainer>
         );
