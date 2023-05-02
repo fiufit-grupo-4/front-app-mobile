@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
-import axios, {options} from 'axios';
-import TitleInput from "../../components/inputs/TitleInput";
 import {useForm} from "react-hook-form";
+import TitleInput from "../../components/inputs/TitleInput";
 import DescriptionInput from "../../components/inputs/DescriptionInput";
 import { DifficultyList } from "../../components/inputs/DifficultyList";
-import {useNavigation} from "@react-navigation/native";
-import difficulty from "validator/es";
 
 
 export const CreateTraining = ({onPress}) => {
@@ -23,8 +20,6 @@ export const CreateTraining = ({onPress}) => {
         }
     });
 
-    const navigation = useNavigation();
-
 
     const createPost = async () => {
         /*const formData = new FormData();
@@ -39,11 +34,12 @@ export const CreateTraining = ({onPress}) => {
         }
         */
 
-
+        //todo: que no se pueda avanzar si no estan los campos completos
+        /*
         if (!t_title.trim() || !t_description.trim() ) {
             Alert.alert('Error', 'Please fill all fields');
             return;
-        }
+        }*/
         onPress=onPress();
 
     };

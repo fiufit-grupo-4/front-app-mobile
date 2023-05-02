@@ -1,9 +1,9 @@
 import React from 'react';
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import ProfileScreen from "./profile/ProfileScreen";
-import {HomeTab} from "./home/HomeTab";
-import {SearchScreen} from "./Search/SearchScreen";
 import {AntDesign} from "@expo/vector-icons";
+import {HomeTab} from "../screens/home/HomeTab";
+import {SearchScreen} from "../screens/Search/SearchScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +20,7 @@ const MainScreen = () => {
                         <AntDesign
                             name="home"
                             color={focused ? '#91AED4' : 'grey'}
-                            size={size}
+                            size={22}
                         />
                     ),
                 }}
@@ -35,7 +35,7 @@ const MainScreen = () => {
                         <AntDesign
                             name="search1"
                             color={focused ? '#91AED4' : 'grey'}
-                            size={size}
+                            size={22}
                         />
                     ),
                 }}
@@ -50,7 +50,7 @@ const MainScreen = () => {
                         <AntDesign
                             name="user"
                             color={focused ? '#91AED4' : 'grey'}
-                            size={size}
+                            size={22}
                         />
                     )
                 }}

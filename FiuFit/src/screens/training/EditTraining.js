@@ -2,74 +2,77 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const EditTraining = ({ navigation, route }) => {
+
+const EditTraining = ({ onPress, route }) => {
     const { post } = route.params;
     const [title, setTitle] = useState(post.title);
-    const [content, setContent] = useState(post.content);
+    const [description, setDescription] = useState(post.description);
     const [difficulty, setDifficulty] = useState(post.difficulty.toString());
     const [place, setPlace] = useState(post.place);
 
+    //const navigation = useNavigation();
+
     const handleSubmit = () => {
-        if (!title.trim() || !content.trim() || !difficulty.trim() || !place.trim()) {
+       /* if (!title.trim() || !description.trim() || !difficulty.trim() || !place.trim()) {
             Alert.alert('Error', 'Please fill all fields');
             return;
-        }
+        }*/
         const updatedPost = {
             ...post,
             //title: title.trim(),
-            //content: content.trim(),
+            //description: description.trim(),
             //difficulty: parseInt(difficulty),
             //place: place.trim(),
         };
-        //navigation.navigate('ProfileScreen', { post: updatedPost });
-        //onPress=onPress();
+        //navigation.navigate('Profile');
+        onPress=onPress();
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.inputContainer}>
-                <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Title"
-                    value={title}
-                    onChangeText={setTitle}
-                />
+            <View style={styles.container}>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Title"
+                        value={title}
+                        onChangeText={setTitle}
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Description"
+                        value={description}
+                        onChangeText={setDescription}
+                        multiline={true}
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Difficulty (1-5)"
+                        value={difficulty}
+                        onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
+                        keyboardType="numeric"
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Place"
+                        value={place}
+                        onChangeText={setPlace}
+                    />
+                </View>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Save</Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.inputContainer}>
-                <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Description"
-                    value={content}
-                    onChangeText={setContent}
-                    multiline={true}
-                />
-            </View>
-            <View style={styles.inputContainer}>
-                <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Difficulty (1-5)"
-                    value={difficulty}
-                    onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
-                    keyboardType="numeric"
-                />
-            </View>
-            <View style={styles.inputContainer}>
-                <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Place"
-                    value={place}
-                    onChangeText={setPlace}
-                />
-            </View>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
-        </View>
-    );
+        );
 };
 
 const styles = StyleSheet.create({
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     button: {
-        backgroundColor: '#3498DB',
+        backgroundColor: '#F0A500',
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 20,

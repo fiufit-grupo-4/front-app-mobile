@@ -1,12 +1,11 @@
-import CustomDrawer from "../components/utils/CustomDrawer";
-import {Image} from "react-native";
-import HomeScreen from "../screens/MainScreen";
-import {AntDesign} from "@expo/vector-icons";
-import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import React from "react";
+import {Image} from "react-native";
+import HomeScreen from "./MainScreen";
+import {AntDesign} from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
+import CustomDrawer from "../components/utils/CustomDrawer";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import CreateTraining from "../screens/training/CreateTraining";
-import UploadImage from "../screens/training/UploadImage";
+import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 
 const Drawer = createDrawerNavigator();
@@ -48,8 +47,8 @@ function DrawerComponent() {
                 component={HomeScreen}
                 options={() => ({
                     drawerIcon: () => (
-                        <AntDesign name="home"
-
+                        <Ionicons name="md-barbell-outline"
+                            style={{color:'#2C302E'}}
                         />
                     ),
                     headerShown: true,

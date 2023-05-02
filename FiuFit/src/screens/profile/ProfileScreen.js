@@ -38,7 +38,7 @@ const ProfileScreen = ({ navigation }) => {
 
     const handleEdit = (item) => {
         setSelectedPost(item);
-        navigation.navigate('EditTraining', { post: item });
+        navigation.navigate('EditTrainingScreen', { post: item });
     }
 
     return (
@@ -67,12 +67,12 @@ const ProfileScreen = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
                             <View style={{ backgroundColor: '#DEE9F8FF', padding: 5, flex: 1 }}>
-                                <Text style={{ fontSize: 20 }}>{item.title}</Text>
+                                <Text style={{ fontSize: 20, color:'#4A4F4C' }}>{item.title}</Text>
                             </View>
 
                             <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
                                 <View style={{ backgroundColor: '#DEE9F8FF', padding: 5}}>
-                                    <Ionicons name={'ellipsis-horizontal-outline'} size={20} />
+                                    <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
                                 </View>
                             </TouchableWithoutFeedback>
                         </View>
