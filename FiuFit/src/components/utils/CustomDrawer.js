@@ -46,7 +46,7 @@ const CustomDrawer = (props) => {
                 <StatusBar backgroundColor="#91AED4" />
                     <ImageBackground
 
-                        source={require('../../assets/images/background.png')}
+                        source={require('../../../assets/images/background.png')}
                         style={{padding: 50, flex:1}}
                         >
 
@@ -55,7 +55,7 @@ const CustomDrawer = (props) => {
                                 handleTouchableOpacity
                             }>
                             <Image
-                                source={require('../../assets/images/profilepic.jpeg')}
+                                source={require('../../../assets/images/profilepic.jpeg')}
                                 style={{
                                     height: 80,
                                     width: 80,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Controller} from 'react-hook-form';
-import {Ionicons} from "react-native-vector-icons";
+import {Ionicons} from "react-native-vector-icons"
 
 const DescriptionInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError}) => {
 

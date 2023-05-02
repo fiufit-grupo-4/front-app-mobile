@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Text,StyleSheet} from 'react-native';
+import React from 'react';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import ProfileScreen from "./profile/ProfileScreen";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {HomeTab} from "./HomeTab";
+import {HomeTab} from "./home/HomeTab";
 import {SearchScreen} from "./Search/SearchScreen";
 import {AntDesign} from "@expo/vector-icons";
 

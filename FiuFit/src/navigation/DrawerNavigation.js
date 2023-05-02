@@ -1,11 +1,13 @@
-import CustomDrawer from "../components/CustomDrawer";
+import CustomDrawer from "../components/utils/CustomDrawer";
 import {Image} from "react-native";
 import HomeScreen from "../screens/MainScreen";
 import {AntDesign} from "@expo/vector-icons";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import CreateTraining from "../screens/Search/CreateTraining/CreatreTraining";
+import CreateTraining from "../screens/createTraining/CreateTraining";
+import UploadImage from "../screens/createTraining/UploadImage";
+import CreateTrainingScreen from "../screens/createTraining/CreateTrainingScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -34,7 +36,7 @@ function DrawerComponent() {
                 headerRight: () => (
                     <Image
                         style={{ width: 50, height: 50, margin: 12 }}
-                        source={require("../../assets/images/logo-fiufit.png")}
+                        source={require("../../assets/images/fiticon.png")}
                     />
                 )}
             }>
@@ -71,7 +73,7 @@ function DrawerComponent() {
         <Drawer.Screen
             name="         New Post"
             color="#F0A500"
-            component={CreateTraining}
+            component={CreateTrainingScreen}
             options={() => ({
                 drawerIcon: () => (
                     <AntDesign

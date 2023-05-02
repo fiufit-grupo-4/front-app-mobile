@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import {View, Button, Image, Text, StyleSheet, error} from 'react-native';
-import ImagePicker from 'react-native-image-picker';
-import axios from 'axios';
-import TitleInput from "../../../components/inputs/TitleInput";
+import {View, Button, Image, Text, StyleSheet, error, TextInput} from 'react-native';
+import axios, {options} from 'axios';
+import TitleInput from "../../components/inputs/TitleInput";
 import {useForm} from "react-hook-form";
-import DescriptionInput from "../../../components/inputs/DescriptionInput";
-import {Ionicons} from "react-native-vector-icons";
-import { DifficultyList } from "../../../components/inputs/DifficultySelect"
+import DescriptionInput from "../../components/inputs/DescriptionInput";
+import { DifficultyList } from "../../components/inputs/DifficultyList";
 
-const CreateTraining = () => {
-    const [imageUri, setImageUri] = useState('');
+
+export const CreateTraining = () => {
     const [t_title, setTitle] = useState('');
     const [t_description, setDescription] = useState('');
-    const [difficulty, setDifficulty] = useState('');
     const [place, setPlace] = useState('');
 
     const { control} = useForm({
@@ -22,14 +19,8 @@ const CreateTraining = () => {
         }
     });
 
-    const pickImage = () => {
-        ImagePicker.launchImageLibrary( response => {
-            if (response.uri) {
-                setImageUri(response.uri);
-            }
-        });
-    };
-        const createPost = async () => {
+
+    const createPost = async () => {
         const formData = new FormData();
         formData.append('image', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
         formData.append('description', t_description);
@@ -42,9 +33,11 @@ const CreateTraining = () => {
         }
     };
 
+
     return (
         <View style={styles.container}>
             <Text style={{padding: 10, color: 'grey', fontSize: 20, paddingRight:280}}>New Post</Text>
+
 
             <View style={styles.boxContainer}>
 
@@ -87,7 +80,6 @@ const CreateTraining = () => {
                 />
 
 
-                <Button title="Pick the content" onPress={pickImage} />
                 <Button title="Create post" onPress={createPost} />
 
 
@@ -99,7 +91,7 @@ const CreateTraining = () => {
 const styles = StyleSheet.create({
     container: {
         marginTop:0,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#DEE9F8FF',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -109,8 +101,37 @@ const styles = StyleSheet.create({
         zIndex:0,
         padding: 15,
         borderRadius: 10,
-    }
+    },
+    imageContainer: {
+        backgroundColor: '#DEE9F8FF',
+        marginTop:1,
+        width: '97%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 15,
+        height:45,
+        padding:5,
+        margin:5,
+        zIndex:0,
+        elevation:0
+    },
+    input: {
+        fontSize: 15,
+        width: '100%',
+        backgroundColor: '#DEE9F8FF',
+        paddingHorizontal: 5,
+        height: 20,
+        borderRadius: 15,
+        flex:1,
+        zIndex:0,
+        elevation:0
+    },
+    icon: {
+        paddingHorizontal: 5,
+        color: "#222831",
+        alignItems:"center",
+        fontSize: 13
+    },
 });
-
 
 export default CreateTraining;

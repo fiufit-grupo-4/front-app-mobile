@@ -18,20 +18,19 @@ export function DifficultyList() {
     return (
         <View style={styles.difficultycontainer}>
             <Ionicons name="ios-stats-chart-outline" color={"black"} style={{marginLeft: 9, marginRight:-5}}/>
-            <Text style={{color:"dimgray "}}>      Difficulty</Text>
+            <Text style={{color:"dimgray"}}>      Difficulty</Text>
             <SelectList
                 selectedTextStyle={{left:-10}}
                 dropdownTextStyles={{left:-10, width:"66%"}}
-                boxStyles={{borderWidth: 0, width:"43%"}}
+                boxStyles={{borderWidth: 0, width:"44%"}}
                 setSelected={(val) => setSelected(val)}
-                dropdownStyles={{borderWidth: 0, width:"66%", left:10}}
+                dropdownStyles={{borderWidth: 0, width:"69%", left:10}}
                 arrowicon={<FontAwesome name="home"  size={0}/>}
 
                 data={data}
                 search={false}
                 save="value"
                 placeholder={" "}
-                //defaultOption={{ key:'1', value:'Difficulty: 1' }}
             />
         </View>
     );
@@ -45,10 +44,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 15,
-        //padding:5,
         margin:5,
         marginBottom:5,
     }
 });
-
-export default DifficultyList;
