@@ -4,12 +4,14 @@ import {useForm} from "react-hook-form";
 import TitleInput from "../../components/inputs/TitleInput";
 import DescriptionInput from "../../components/inputs/DescriptionInput";
 import { DifficultyList } from "../../components/inputs/DifficultyList";
+import {Ionicons} from "@expo/vector-icons";
 
 
 export const CreateTraining = ({onPress}) => {
     const [imageUri, setImageUri] = useState('');
-    const [t_title, setTitle] = useState('');
-    const [t_description, setDescription] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [difficulty, setDifficulty] = useState('');
     const [place, setPlace] = useState('');
 
 
@@ -21,27 +23,17 @@ export const CreateTraining = ({onPress}) => {
     });
 
 
-    const createPost = async () => {
-        /*const formData = new FormData();
-        formData.append('image', { uri: imageUri, name: 'image.jpg', type: 'image/jpeg' });
-        formData.append('description', t_description);
-
-        try {
-            const response = await axios.post('https://yourapi.com/posts', formData);
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-        */
-
-        //todo: que no se pueda avanzar si no estan los campos completos
-        /*
-        if (!t_title.trim() || !t_description.trim() ) {
+    const createPost = () => {
+        if (!title || !description || !difficulty || !place) {
             Alert.alert('Error', 'Please fill all fields');
             return;
-        }*/
-        onPress=onPress();
+        }
+        if (title.trim() === '' || description.trim() === '' || difficulty.trim() === '' || place.trim() === '') {
+            Alert.alert('Error', 'Please fill all fields');
+            return;
+        }
 
+        onPress=onPress();
     };
 
 
@@ -50,44 +42,48 @@ export const CreateTraining = ({onPress}) => {
             <Text style={{padding: 10, color: 'grey', fontSize: 20, paddingRight:280}}>New Post</Text>
 
             <View style={styles.boxContainer}>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Title"
+                        value={title}
+                        onChangeText={setTitle}
+                    />
+                </View>
 
-                <TitleInput
-                    name= "title"
-                    placeholder="Title"
-                    control={control}
-                    icon={"md-barbell-outline"}
-                    rules = {{
-                        required:"Title is Required",
-                    }}
-                    value={t_title}
-                    onChangeText={setTitle}
-                />
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Description"
+                        value={description}
+                        onChangeText={setDescription}
+                        multiline={true}
+                    />
+                </View>
 
-                <DescriptionInput
-                    name= "description"
-                    placeholder="Description"
-                    control={control}
-                    icon={"md-pencil-outline"}
-                    rules = {{
-                        required:"Description is Required",
-                    }}
-                    value={t_description}
-                    onChangeText={setDescription}
-                />
+                <View style={styles.inputContainer}>
+                    <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        maxLength={1}
+                        placeholder="Difficulty (1-5)"
+                        value={difficulty}
+                        onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
+                        keyboardType="numeric"
+                    />
+                </View>
 
-                <DifficultyList />
-
-                <DescriptionInput
-                    name= "place"
-                    placeholder="Place"
-                    control={control}
-                    icon={"md-pin-outline"}
-                    rules = {{
-                        required:"Place",
-                    }}
-                    value={place}
-                    onChangeText={setPlace}
-                />
+                <View style={styles.inputContainer}>
+                    <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Place"
+                        value={place}
+                        onChangeText={setPlace}
+                    />
+                </View>
 
                 <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
                                   onPress={createPost} >
@@ -103,8 +99,6 @@ const styles = StyleSheet.create({
     container: {
         marginTop:0,
         backgroundColor: '#DEE9F8FF',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     boxContainer: {
         backgroundColor: 'lightsteelblue',
@@ -113,29 +107,23 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
     },
-    imageContainer: {
-        backgroundColor: '#DEE9F8FF',
-        marginTop:1,
-        width: '97%',
+    inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderRadius: 15,
-        height:45,
-        padding:5,
-        margin:5,
-        zIndex:0,
-        elevation:0
+        borderColor: '#91AED4',
+        borderRadius: 10,
+        marginVertical: 13,
     },
     input: {
         fontSize: 15,
         width: '100%',
-        backgroundColor: '#DEE9F8FF',
+        backgroundColor: '#91AED4',
         paddingHorizontal: 5,
-        height: 20,
-        borderRadius: 15,
+        height: 30,
+        borderRadius: 6,
         flex:1,
-        zIndex:0,
         elevation:0
+
     },
     nextButton: {
         backgroundColor: '#DEE9F8FF',
@@ -149,9 +137,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         paddingHorizontal: 5,
-        color: "#222831",
+        color: "rgba(34,40,49,0.74)",
         alignItems:"center",
-        fontSize: 13
+        fontSize: 15,
+        marginVertical:8
     },
 });
 

@@ -3,7 +3,7 @@ import UploadImage from "./UploadImage";
 import CreateTraining from "./CreateTraining";
 import ProfileScreen from "../profile/ProfileScreen";
 
-const CreateTrainingScreen = ({ navigation }) => {
+const CreateTrainingScreen = ({ navigation, route }) => {
     const [firstStep, setFirstStep] = useState(true);
     const [image, setImage] = useState(null);
     const [configuration, setConfiguration] = useState(true);
@@ -24,9 +24,9 @@ const CreateTrainingScreen = ({ navigation }) => {
 
 
     if (firstStep) {
-        return <UploadImage onPress={() => setFirstStep(false)} setImage={setImage} />;
+        return <UploadImage onPress={() => setFirstStep(false)}  setImage={setImage} />;
     } else if (configuration) {
-        return <CreateTraining onPress={handlePress}  />;
+        return <CreateTraining onPress={handlePress}/>;
     }
 };
 

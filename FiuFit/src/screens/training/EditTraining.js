@@ -4,28 +4,30 @@ import { Ionicons } from '@expo/vector-icons';
 import {useNavigation} from "@react-navigation/native";
 
 
-const EditTraining = ({ onPress, route }) => {
+const EditTraining = ({ onPress , route}) => {
     const { post } = route.params;
     const [title, setTitle] = useState(post.title);
     const [description, setDescription] = useState(post.description);
     const [difficulty, setDifficulty] = useState(post.difficulty.toString());
     const [place, setPlace] = useState(post.place);
 
-    //const navigation = useNavigation();
 
     const handleSubmit = () => {
-       /* if (!title.trim() || !description.trim() || !difficulty.trim() || !place.trim()) {
+        if (!title || !description || !difficulty || !place) {
             Alert.alert('Error', 'Please fill all fields');
             return;
-        }*/
+        }
+        if (title.trim() === '' || description.trim() === '' || difficulty.trim() === '' || place.trim() === '') {
+            Alert.alert('Error', 'Please fill all fields');
+            return;
+        }
         const updatedPost = {
             ...post,
-            //title: title.trim(),
-            //description: description.trim(),
-            //difficulty: parseInt(difficulty),
-            //place: place.trim(),
+            title: title.trim(),
+            description: description.trim(),
+            difficulty: parseInt(difficulty),
+            place: place.trim(),
         };
-        //navigation.navigate('Profile');
         onPress=onPress();
     };
 
@@ -53,6 +55,7 @@ const EditTraining = ({ onPress, route }) => {
                 <View style={styles.inputContainer}>
                     <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                     <TextInput
+                        maxLength={1}
                         style={styles.input}
                         placeholder="Difficulty (1-5)"
                         value={difficulty}
