@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import CreateTraining from "./CreateTraining";
 import * as ImagePicker from "expo-image-picker";
-import {useNavigation} from "@react-navigation/native";
 
 
 const UploadImage = ({onPress, setImage}) => {

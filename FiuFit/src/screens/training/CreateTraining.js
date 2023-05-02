@@ -39,8 +39,8 @@ export const CreateTraining = ({onPress}) => {
         }
         */
 
-        // TODO:  faltan ENDPOINTS
-        if (!t_title.trim() || !t_description.trim() || !difficulty.trim() || !place.trim()) {
+
+        if (!t_title.trim() || !t_description.trim() ) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }

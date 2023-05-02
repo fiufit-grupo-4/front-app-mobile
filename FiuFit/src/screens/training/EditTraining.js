@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const EditTrainingScreen = ({ navigation, route }) => {
+const EditTraining = ({ navigation, route }) => {
     const { post } = route.params;
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
@@ -16,12 +16,13 @@ const EditTrainingScreen = ({ navigation, route }) => {
         }
         const updatedPost = {
             ...post,
-            title: title.trim(),
-            content: content.trim(),
-            difficulty: parseInt(difficulty),
-            place: place.trim(),
+            //title: title.trim(),
+            //content: content.trim(),
+            //difficulty: parseInt(difficulty),
+            //place: place.trim(),
         };
-        navigation.navigate('TrainingDetails', { post: updatedPost });
+        //navigation.navigate('ProfileScreen', { post: updatedPost });
+        //onPress=onPress();
     };
 
     return (
@@ -71,8 +72,6 @@ const EditTrainingScreen = ({ navigation, route }) => {
     );
 };
 
-export default EditTrainingScreen;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -107,3 +106,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
     }
 })
+
+export default EditTraining;
