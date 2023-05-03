@@ -22,44 +22,41 @@ const Training = ({item}) => {
     }
 
     return(
-        <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: 40, backgroundColor: 'rgba(217,227,240,0.75)' }}>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ padding: 5 }}>
+                <Text style={{ fontSize: 18, color:'rgba(23,29,52,0.93)' }}>{'Pepito Boxeador'}</Text>
+            </View>
 
-                <View style={{ backgroundColor: '#DEE9F8FF', padding: 5, flex: 1 }}>
-                    <Text style={{ fontSize: 20, color:'#4A4F4C' }}>{item.title}</Text>
-                </View>
-
-                <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
-                    <View style={{ backgroundColor: '#DEE9F8FF', padding: 5}}>
-                        <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
-                    </View>
-                </TouchableWithoutFeedback>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+                <Ionicons name={'md-pin-outline'} size={15} color='rgba(32,38,70,0.63)'/>
+                <Text style={styles.descriptions}>{item.place}</Text>
             </View>
 
             <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
                 <Image source={item.image} style={styles.postImage} />
             </TouchableWithoutFeedback>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name={'md-pencil-outline'} size={15} />
-                <Text style={{ marginLeft: 5 }}>{'Description: ' + item.description}</Text>
+
+            <View style={{ padding: 5 }}>
+                <Text style={{ fontSize: 15, color:'rgba(23,29,52,0.93)' }}>{item.title}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name={'fitness-outline'} size={15} />
-                <Text style={{ marginLeft: 5 }}>{'Training Type: ' + item.trainingType}</Text>
+                <Ionicons name={'md-pencil-outline'} size={15} color='rgba(32,38,70,0.63)' />
+                <Text style={styles.descriptions}>{'Description: ' + item.description}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name={'ios-stats-chart-outline'} size={15} />
-                <Text style={{ marginLeft: 5 }}>{'Difficulty: ' + item.difficulty}</Text>
+                <Ionicons name={'fitness-outline'} size={15} color='rgba(32,38,70,0.63)'/>
+                <Text style={styles.descriptions}>{'Training Type: ' + item.trainingType}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name={'md-pin-outline'} size={15} />
-                <Text style={{ marginLeft: 5 }}>{'Place: ' + item.place}</Text>
+                <Ionicons name={'ios-stats-chart-outline'} size={15} color='rgba(32,38,70,0.63)'/>
+                <Text style={styles.descriptions}>{'Difficulty: ' + item.difficulty}</Text>
             </View>
+
 
         </View>)
 }
@@ -74,7 +71,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(255,255,255,0.64)',
+        backgroundColor: 'rgb(255,255,255)',
+    },
+    descriptions: {
+        marginLeft: 5,
+        color:'rgba(32,38,70,0.63)'
     },
     enlargedProfileImage: {
         width: '80%',

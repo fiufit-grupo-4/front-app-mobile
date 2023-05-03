@@ -8,6 +8,7 @@ const ProfileScreen = ( ) => {
         {
             id: 1,
             title: 'Fuerza de brazos',
+            place: 'AreaX',
             description: 'Lorem ipsum dolor sit amet.',
             trainingType: 'Dolor',
             difficulty: 3,
@@ -16,6 +17,7 @@ const ProfileScreen = ( ) => {
         {
             id: 2,
             title: 'GAP',
+            place: 'Gimnasio de aca la vueltitta',
             description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
             trainingType: 'Localizada',
             difficulty: 5,
@@ -24,6 +26,7 @@ const ProfileScreen = ( ) => {
         {
             id: 3,
             title: 'Sentadillas',
+            place: 'Parque LasHeras',
             description: 'Excepteur sint occaecat cupidatat non proident.',
             trainingType: 'Cola',
             difficulty: 1,
