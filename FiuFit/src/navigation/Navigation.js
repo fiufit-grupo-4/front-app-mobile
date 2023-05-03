@@ -27,7 +27,6 @@ class Navigation extends React.Component {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
-                    
                     <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
@@ -36,6 +35,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
                     <Stack.Screen name="MenuProfile" component={MenuProfileScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
+
                 </Stack.Navigator>
             </NavigationContainer>
         );

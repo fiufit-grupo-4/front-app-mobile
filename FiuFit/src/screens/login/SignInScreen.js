@@ -17,6 +17,9 @@ import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
+import {Drawer} from "react-native-paper";
+import DrawerNavigator from "@react-navigation/drawer/src/navigators/createDrawerNavigator";
+import DrawerNavigation from "../../navigation/DrawerNavigation";
 const validator = require('validator');
 
 const SignInScreen = () => {
@@ -66,7 +69,7 @@ const SignInScreen = () => {
           setErrorMessage("Failed to connect with server")
         }
       } else {
-        navigation.navigate('Home');
+        navigation.navigate("Inicio");
       }
     })
     .catch(error => {
