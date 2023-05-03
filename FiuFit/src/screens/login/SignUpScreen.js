@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, Switch,StyleSheet,Dimensions,Image,ScrollView,TouchableOpacity} from 'react-native';
+import React, {useState,useEffect} from 'react';
+import {View, Text, Switch,StyleSheet,Dimensions,Image,ScrollView,TouchableOpacity,PermissionsAndroid} from 'react-native';
 import CustomInput from '../../components/inputs/CustomInput';
 import CustomPassword from '../../components/inputs/CustomPassword';
 import CustomButton from '../../components/buttons/CustomButton';
@@ -9,10 +9,11 @@ import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
+import Geolocation from 'react-native-geolocation-service';
+import FiuFitLogo from '../../../assets/images/fiticon.png';
+import * as Location from 'expo-location';
 
 const {height} = Dimensions.get("window")
-import FiuFitLogo from '../../../assets/images/fiticon.png';
-
 const validator = require('validator');
 
 const SignUpScreen = () => {
@@ -21,16 +22,54 @@ const SignUpScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
-
   const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
 
   const toggleSwitch = () => {
       setIsAthlete(previousState => !previousState); // Cambia el estado del botón
   };
 
+
+  
+  function getLocation() {
+    const result = requestLocationPermission();
+    result.then(async res => {
+      if (res) {
+        let location = await Location.getCurrentPositionAsync({});
+        console.log(location)
+        setLocation(location);
+      }
+    }).catch(error => {
+      console.warn(error);
+    })
+  }
+
+  async function requestLocationPermission() {
+    try {
+      const status = await Location.requestForegroundPermissionsAsync()
+      console.log(status)
+      if (status !== 'granted') {
+        console.log("Permiso concedido");
+        return true
+      } else {
+        setErrorMsg('Permission to access location was denied');
+        console.log("Permiso denegado");
+        return false
+      }
+    } catch(err) {
+      setErrorMsg('Permission to access location was denied');
+      console.warn(err)
+      return false
+    }
+  }
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+
   const navigation = useNavigation();
 
   const onRegisterPressed = (data) => {
+    /*
     var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
     console.log(data)
     setLoading(true)
@@ -56,8 +95,8 @@ const SignUpScreen = () => {
     .catch(error => {
       setError(true)
       setErrorMessage(error)
-    })
-   
+    })*/
+    getLocation()
   };
 
   const onSignInPress = () => {
@@ -75,11 +114,11 @@ const SignUpScreen = () => {
 
   const { control, handleSubmit, formState: { errors }, watch } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
-      username:'',
-      repeatPassword:'',
-      phoneNumber: '',
+      email: 'sofia@fi.uba.ar',
+      password: '1234',
+      username:'Sofi77',
+      repeatPassword:'1234',
+      phoneNumber: "800900",
     }
   });
 
@@ -101,7 +140,7 @@ const SignUpScreen = () => {
             style={ {width: "80%", height: height * 0.2,marginTop:10}}
             resizeMode="contain"
         />
-        
+
         {loading 
           ? <LoadingIndicator/>
           : <>
@@ -253,39 +292,20 @@ const signUpStyles = StyleSheet.create({
   },
 });
 
-{/**
+{/*
+import { PermissionsAndroid } from 'react-native';
 
-import {
-  Image,
-  StyleSheet,
-} from 'react-native';
-const {width,height} = Dimensions.get("window")
-
-
-import FiuFitLogo from '../../../assets/images/fiticon.png';
-
-const Logo = () => {
-    return (
-        <Image
-            source={FiuFitLogo}
-            style={[styles.logo, {width: "80%", height: height * 0.3}]}
-            resizeMode="contain"
-        />
-    );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        width: '80%',
-        
-      },
-    logo: {
-      width: '70%',
-      maxWidth: 300,
-      maxHeight: 200,
-    },
-});
-
-export default Logo;
-
-*/}
+async function requestLocationPermission() {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        'title': 'Permiso para acceder a la ubicación',
+        'message': 'Se necesita acceso a la ubicación para poder mostrar tu posición actual'
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Permiso concedido");
+    } else {*/
+  
+  }

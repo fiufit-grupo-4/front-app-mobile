@@ -2,6 +2,7 @@ import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 import Training from "../../components/trainings/Training";
+import { StatusBar } from 'expo-status-bar';
 
 const ProfileScreen = ({ navigation }) => {
     const [posts, setPosts] = useState([
@@ -44,9 +45,10 @@ const ProfileScreen = ({ navigation }) => {
     }
 
     return (
-        
-        <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:30,padding:10}}>
+
+        <View style={{ flex: 1,padding: 10 }}>
+        <StatusBar style="auto" />
+            <View style={{ flexDirection: 'row', alignItems: 'center',padding:10}}>
                 <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
                     <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                 </TouchableWithoutFeedback>
@@ -68,6 +70,7 @@ const ProfileScreen = ({ navigation }) => {
                     <Training item =  {item}></Training>
                 )}/>
             </View>
+
             )}
 
 const styles = StyleSheet.create({

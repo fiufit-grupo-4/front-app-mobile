@@ -2,7 +2,7 @@ import { Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "r
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 
-export default Training = ({item}) => {
+const Training = ({item}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -78,3 +78,5 @@ const styles = StyleSheet.create({
         height: 300,
     },
 });
+
+export default Training
