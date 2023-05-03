@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
       margin: 10,
       marginBottom:20
     },
+    subtitle: {
+      fontSize: 25,
+      fontWeight: 'bold',
+      color: 'black',
+      margin: 10,
+      marginBottom:20
+    },
     text: {
       color: 'black',
       marginVertical: 10,

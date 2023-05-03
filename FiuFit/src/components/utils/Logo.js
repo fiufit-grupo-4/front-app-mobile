@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  View,
   Image,
-  StyleSheet,useWindowDimensions,Dimensions
+  StyleSheet,Dimensions
 } from 'react-native';
 const {width,height} = Dimensions.get("window")
 

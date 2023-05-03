@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Pressable,TouchableOpacity} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 
-const CustomIconButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor,icon,iconColor}) => {
+const CustomIconButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor,icon,iconColor,containerWidth}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -10,6 +10,7 @@ const CustomIconButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor,ico
         styles.container,
         styles[`container_${type}`],
         bgColor ? {backgroundColor: bgColor} : {},
+        containerWidth ? {width:containerWidth} : {width:"80%"}
       ]}>
       <Text
         style={[
@@ -26,8 +27,6 @@ const CustomIconButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor,ico
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
-
     padding: 15,
     marginVertical: 5,
 

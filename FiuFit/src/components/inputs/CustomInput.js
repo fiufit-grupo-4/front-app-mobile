@@ -64,8 +64,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     height: 20,
     borderRadius: 15,
-    outlineStyle: 'none',
-    placeholderTextColor:"#AFC5E3",
     flex:1,
   },
   icon: {
