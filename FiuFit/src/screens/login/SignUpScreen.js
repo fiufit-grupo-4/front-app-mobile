@@ -9,7 +9,6 @@ import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
-import Geolocation from 'react-native-geolocation-service';
 import FiuFitLogo from '../../../assets/images/fiticon.png';
 import * as Location from 'expo-location';
 

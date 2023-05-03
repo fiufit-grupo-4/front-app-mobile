@@ -7,6 +7,7 @@ import CustomDrawer from "../components/utils/CustomDrawer";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
+import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -77,6 +78,21 @@ function DrawerComponent() {
                 drawerIcon: () => (
                     <AntDesign
                         name="plus"
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
+
+
+        <Drawer.Screen
+            name="         Favorites"
+            color="#F0A500"
+            component={FavoriteTrainingScreen}
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="staro"
                     />
                 ),
                 headerShown: true,

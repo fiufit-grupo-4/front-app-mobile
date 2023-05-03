@@ -1,8 +1,8 @@
-import { Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
+import { Image, Text, TouchableOpacity, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
-
+import CustomButton from '../buttons/CustomButton';
 
 const Training = ({item}) => {
     const [showModal, setShowModal] = useState(false);
@@ -21,8 +21,14 @@ const Training = ({item}) => {
         navigation.navigate('EditTrainingScreen', { post: item });
     }
 
+
+    function onPress(){
+        navigation.navigate("Training",{item})
+    }
+
     return(
         <View style={{backgroundColor: 'white'}}>
+           
             <View style={styles.postBackground}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5, justifyContent: 'space-between' }}>
@@ -65,9 +71,11 @@ const Training = ({item}) => {
                     <Ionicons name={'ios-stats-chart-outline'} size={15} color='rgba(32,38,70,0.63)'/>
                     <Text style={styles.descriptions}>{'Difficulty: ' + item.difficulty}</Text>
                 </View>
-
-            </View>
+                <TouchableOpacity onPress={onPress}></TouchableOpacity>
+                
+            </View>        
         </View>
+    
     )
 }
 

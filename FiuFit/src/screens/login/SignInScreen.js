@@ -148,6 +148,7 @@ const SignInScreen = () => {
                 type="TERTIARY"
               />
               <SocialSignInButtons />
+              
               <CustomButton
                 text="Don't have an account? Create one"
                 onPress={onSignUpPress}

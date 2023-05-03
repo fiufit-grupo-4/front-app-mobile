@@ -11,7 +11,9 @@ import ConfirmEmailScreen from '../screens/login/ConfirmEmailScreen';
 import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import EditTrainingScreen from "../screens/training/EditTrainingScreen";
 import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
+import TrainingScreen from '../screens/training/TrainingScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +37,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
                     <Stack.Screen name="MenuProfile" component={MenuProfileScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
-
+                    <Stack.Screen name="Training" component={TrainingScreen}  />
                 </Stack.Navigator>
             </NavigationContainer>
         );
