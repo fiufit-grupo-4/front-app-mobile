@@ -45,13 +45,21 @@ const ProfileScreen = ( ) => {
     };
 
     return (
-        <View style={{ flex: 1,padding: 10 }}>
+        <View style={{ flex: 1,padding: 1 }}>
             <StatusBar style="auto" />
-                <View style={{ flexDirection: 'row', alignItems: 'center',padding:9}}>
+                <View style={styles.profileBar}>
                     <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                     </TouchableWithoutFeedback>
-                    <Text style={{ marginLeft: 10, fontSize: 20 }}>Pepito Boxeador</Text>
+                    <View style={{flexDirection:'column'}}>
+                        <Text style={styles.profileName}>Pepito Boxeador</Text>
+
+                        <View style={{flexDirection:'row'}}>
+                            <Text style={styles.profileFollow}>3 Followers</Text>
+                            <Text style={styles.profileFollow}>213 Following</Text>
+                        </View>
+
+                    </View>
                 </View>
 
                 <Modal visible={showModal} transparent={true}>
@@ -78,6 +86,16 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
     },
+    profileName: {
+        marginLeft: 10,
+        fontSize: 20,
+        color:'rgba(23,29,52,0.93)'
+    },
+    profileBar: {
+        flexDirection: 'row',
+        alignItems: 'center',padding:9,
+        backgroundColor:'white'
+    },
     modalBackground: {
         flex: 1,
         justifyContent: 'center',
@@ -93,6 +111,11 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 300,
     },
+    profileFollow: {
+        marginLeft: 10,
+        fontSize: 15,
+        color:'rgba(23,29,52,0.93)'
+    }
 });
 
 export default ProfileScreen;
