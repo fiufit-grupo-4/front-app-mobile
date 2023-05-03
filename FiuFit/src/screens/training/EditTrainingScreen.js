@@ -11,11 +11,7 @@ const EditTrainingScreen = ({ navigation, route }) => {
         navigation.goBack();
     };
 
-    if (edit) {
-        return <EditTraining onPress={handlePress} route={route} />;
-    } //else {
-        //return <ProfileScreen />;
-    //}
+    if (edit) {return <EditTraining onPress={handlePress} route={route} />;}
 };
 
 export default EditTrainingScreen;

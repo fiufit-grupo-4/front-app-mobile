@@ -3,26 +3,29 @@ import {useState} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ( ) => {
     const [posts, setPosts] = useState([
         {
             id: 1,
             title: 'Fuerza de brazos',
-            content: 'Lorem ipsum dolor sit amet.',
+            description: 'Lorem ipsum dolor sit amet.',
+            trainingType: 'Dolor',
             difficulty: 3,
             image: require('../../../assets/images/post1.png')
         },
         {
             id: 2,
             title: 'GAP',
-            content: 'Sed ut perspiciatis unde omnis iste natus error.',
+            description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
+            trainingType: 'Localizada',
             difficulty: 5,
             image: require('../../../assets/images/post2.png')
         },
         {
             id: 3,
             title: 'Sentadillas',
-            content: 'Excepteur sint occaecat cupidatat non proident.',
+            description: 'Excepteur sint occaecat cupidatat non proident.',
+            trainingType: 'Cola',
             difficulty: 1,
             image: require('../../../assets/images/post3.png')
         },
@@ -30,7 +33,7 @@ const ProfileScreen = ({ navigation }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedPost, setSelectedPost] = useState(null);
+    //const [selectedPost, setSelectedPost] = useState(null);
 
 
     const toggleModal = (image) => {
@@ -39,33 +42,32 @@ const ProfileScreen = ({ navigation }) => {
     };
 
     return (
-
         <View style={{ flex: 1,padding: 10 }}>
-        <StatusBar style="auto" />
-            <View style={{ flexDirection: 'row', alignItems: 'center',padding:10}}>
-                <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
-                    <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
-                </TouchableWithoutFeedback>
-                <Text style={{ marginLeft: 10, fontSize: 20 }}>Pepito Boxeador</Text>
-            </View>
-
-            <Modal visible={showModal} transparent={true}>
-                <View style={styles.modalBackground}>
-                    <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
-                        <Image source={selectedImage} style={styles.enlargedProfileImage} />
+            <StatusBar style="auto" />
+                <View style={{ flexDirection: 'row', alignItems: 'center',padding:9}}>
+                    <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
+                        <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                     </TouchableWithoutFeedback>
+                    <Text style={{ marginLeft: 10, fontSize: 20 }}>Pepito Boxeador</Text>
                 </View>
-            </Modal>
 
-            <FlatList
-                data={posts}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <Training item =  {item}></Training>
-                )}/>
-            </View>
+                <Modal visible={showModal} transparent={true}>
+                    <View style={styles.modalBackground}>
+                        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
+                            <Image source={selectedImage} style={styles.enlargedProfileImage} />
+                        </TouchableWithoutFeedback>
+                    </View>
+                </Modal>
 
-            )}
+                <FlatList
+                    data={posts}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <Training item =  {item}></Training>
+                    )}/>
+        </View>
+     )
+}
 
 const styles = StyleSheet.create({
     profileImage: {

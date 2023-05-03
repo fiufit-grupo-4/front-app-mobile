@@ -7,6 +7,7 @@ const EditTraining = ({ onPress , route }) => {
     const { post } = route.params;
     const [title, setTitle] = useState(post.title);
     const [description, setDescription] = useState(post.description);
+    const [trainingType, setTrainingType] = useState(post. trainingType);
     const [difficulty, setDifficulty] = useState(post.difficulty.toString());
     const [place, setPlace] = useState(post.place);
 
@@ -41,6 +42,7 @@ const EditTraining = ({ onPress , route }) => {
                         onChangeText={setTitle}
                     />
                 </View>
+
                 <View style={styles.inputContainer}>
                     <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                     <TextInput
@@ -51,6 +53,18 @@ const EditTraining = ({ onPress , route }) => {
                         multiline={true}
                     />
                 </View>
+
+                <View style={styles.inputContainer}>
+                    <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Training Type"
+                        value={trainingType}
+                        onChangeText={setTrainingType}
+                        multiline={true}
+                    />
+                </View>
+
                 <View style={styles.inputContainer}>
                     <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                     <TextInput
@@ -62,6 +76,7 @@ const EditTraining = ({ onPress , route }) => {
                         keyboardType="numeric"
                     />
                 </View>
+
                 <View style={styles.inputContainer}>
                     <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                     <TextInput
@@ -71,6 +86,7 @@ const EditTraining = ({ onPress , route }) => {
                         onChangeText={setPlace}
                     />
                 </View>
+
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>

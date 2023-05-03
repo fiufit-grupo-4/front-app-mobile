@@ -8,6 +8,7 @@ export const CreateTraining = ({ onPress }) => {
     const [imageUri, setImageUri] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [trainingType, setTrainingType] = useState('');
     const [difficulty, setDifficulty] = useState('');
     const [place, setPlace] = useState('');
 
@@ -56,6 +57,17 @@ export const CreateTraining = ({ onPress }) => {
                         placeholder="Description"
                         value={description}
                         onChangeText={setDescription}
+                        multiline={true}
+                    />
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Training Type"
+                        value={trainingType}
+                        onChangeText={setTrainingType}
                         multiline={true}
                     />
                 </View>
@@ -110,6 +122,7 @@ const styles = StyleSheet.create({
         borderColor: '#91AED4',
         borderRadius: 10,
         marginVertical: 13,
+
     },
     input: {
         fontSize: 15,

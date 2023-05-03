@@ -43,7 +43,12 @@ const Training = ({item}) => {
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name={'md-pencil-outline'} size={15} />
-                <Text style={{ marginLeft: 5 }}>{'Description: ' + item.content}</Text>
+                <Text style={{ marginLeft: 5 }}>{'Description: ' + item.description}</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name={'fitness-outline'} size={15} />
+                <Text style={{ marginLeft: 5 }}>{'Training Type: ' + item.trainingType}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
