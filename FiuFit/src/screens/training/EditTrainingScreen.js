@@ -1,13 +1,10 @@
 import {useEffect, useState} from "react";
 import EditTraining from "./EditTraining";
-import ProfileScreen from "../profile/ProfileScreen";
-import { useNavigation } from '@react-navigation/native';
 
 
-
-const EditTrainingScreen = ({ route }) => {
+const EditTrainingScreen = ({ navigation, route }) => {
     const [edit, setEdit] = useState(true);
-    const navigation = useNavigation();
+    //const navigation = useNavigation();
 
     const handlePress = () => {
         setEdit(false);
@@ -16,9 +13,9 @@ const EditTrainingScreen = ({ route }) => {
 
     if (edit) {
         return <EditTraining onPress={handlePress} route={route} />;
-    } else {
-        return <ProfileScreen />;
-    }
+    } //else {
+        //return <ProfileScreen />;
+    //}
 };
 
 export default EditTrainingScreen;

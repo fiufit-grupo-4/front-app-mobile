@@ -1,5 +1,4 @@
 import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
-import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
@@ -38,11 +37,6 @@ const ProfileScreen = ({ navigation }) => {
         setSelectedImage(image);
         setShowModal(!showModal);
     };
-
-    const handleEdit = (item) => {
-        setSelectedPost(item);
-        navigation.navigate('EditTrainingScreen', { post: item });
-    }
 
     return (
 

@@ -20,12 +20,12 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     <Stack.Screen
                         name="Inicio"
                         component={DrawerComponent}
                         options={{ headerShown: false }}
                     />
+                    <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />

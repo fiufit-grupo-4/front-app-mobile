@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
 import {useForm} from "react-hook-form";
-import TitleInput from "../../components/inputs/TitleInput";
-import DescriptionInput from "../../components/inputs/DescriptionInput";
-import { DifficultyList } from "../../components/inputs/DifficultyList";
 import {Ionicons} from "@expo/vector-icons";
 
 
-export const CreateTraining = ({onPress}) => {
+export const CreateTraining = ({ onPress }) => {
     const [imageUri, setImageUri] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');

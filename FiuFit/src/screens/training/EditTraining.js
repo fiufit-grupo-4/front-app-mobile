@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {useNavigation} from "@react-navigation/native";
 
 
-const EditTraining = ({ onPress , route}) => {
+const EditTraining = ({ onPress , route }) => {
     const { post } = route.params;
     const [title, setTitle] = useState(post.title);
     const [description, setDescription] = useState(post.description);

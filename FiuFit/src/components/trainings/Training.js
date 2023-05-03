@@ -1,12 +1,15 @@
 import { Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
+import {useNavigation} from "@react-navigation/native";
+
 
 const Training = ({item}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
 
+    const navigation = useNavigation();
 
     const toggleModal = (image) => {
         setSelectedImage(image);
@@ -19,41 +22,41 @@ const Training = ({item}) => {
     }
 
     return(
-    <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: 40 }}>
 
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 
-        <View style={{ backgroundColor: '#DEE9F8FF', padding: 5, flex: 1 }}>
-            <Text style={{ fontSize: 20, color:'#4A4F4C' }}>{item.title}</Text>
-        </View>
+                <View style={{ backgroundColor: '#DEE9F8FF', padding: 5, flex: 1 }}>
+                    <Text style={{ fontSize: 20, color:'#4A4F4C' }}>{item.title}</Text>
+                </View>
 
-        <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
-            <View style={{ backgroundColor: '#DEE9F8FF', padding: 5}}>
-                <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
+                <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
+                    <View style={{ backgroundColor: '#DEE9F8FF', padding: 5}}>
+                        <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
+                    </View>
+                </TouchableWithoutFeedback>
             </View>
-        </TouchableWithoutFeedback>
-    </View>
 
-    <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
-        <Image source={item.image} style={styles.postImage} />
-    </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
+                <Image source={item.image} style={styles.postImage} />
+            </TouchableWithoutFeedback>
 
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name={'md-pencil-outline'} size={15} />
-        <Text style={{ marginLeft: 5 }}>{'Description: ' + item.content}</Text>
-    </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name={'md-pencil-outline'} size={15} />
+                <Text style={{ marginLeft: 5 }}>{'Description: ' + item.content}</Text>
+            </View>
 
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name={'ios-stats-chart-outline'} size={15} />
-        <Text style={{ marginLeft: 5 }}>{'Difficulty: ' + item.difficulty}</Text>
-    </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name={'ios-stats-chart-outline'} size={15} />
+                <Text style={{ marginLeft: 5 }}>{'Difficulty: ' + item.difficulty}</Text>
+            </View>
 
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name={'md-pin-outline'} size={15} />
-        <Text style={{ marginLeft: 5 }}>{'Place: ' + item.place}</Text>
-    </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name={'md-pin-outline'} size={15} />
+                <Text style={{ marginLeft: 5 }}>{'Place: ' + item.place}</Text>
+            </View>
 
-    </View>)
+        </View>)
 }
 
 const styles = StyleSheet.create({
@@ -79,4 +82,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Training
+export default Training;
