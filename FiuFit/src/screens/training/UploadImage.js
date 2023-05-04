@@ -33,7 +33,7 @@ const UploadImage = ({onPress, setImage}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{padding: 10, color: 'grey', fontSize: 20, paddingRight:280}}>New Post</Text>
+            <Text style={styles.botton}>NEW POST</Text>
 
             <View style={styles.boxContainer}>
 
@@ -67,6 +67,12 @@ const UploadImage = ({onPress, setImage}) => {
 };
 
 const styles = StyleSheet.create({
+    botton: {
+        padding: 10,
+        color: 'rgba(32,38,70,0.63)',
+        fontSize: 20,
+        marginTop:20,
+    },
     container: {
         marginTop:0,
         backgroundColor: '#fffff',

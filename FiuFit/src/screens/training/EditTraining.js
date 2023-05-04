@@ -32,6 +32,11 @@ const EditTraining = ({ onPress , route }) => {
     };
 
 
+    function handleDelete() {
+        //TODO handle this
+        onPress = onPress();
+    }
+
     return (
         <View style={{padding: 10, backgroundColor: 'white', flex:1}}>
 
@@ -107,6 +112,10 @@ const EditTraining = ({ onPress , route }) => {
                 <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                <Text style={styles.deleteButtonText}>Delete Post</Text>
+            </TouchableOpacity>
+
         </View>
     )
 
@@ -140,6 +149,18 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#DEE9F8FF',
+        borderRadius: 20,
+        paddingVertical: 10,
+        marginTop:30,
+        marginHorizontal: 40
+    },
+    deleteButtonText: {
+        fontSize: 18,
+        color: 'rgb(255,255,255)',
+        textAlign: 'center'
+    },
+    deleteButton: {
+        backgroundColor: 'black',
         borderRadius: 20,
         paddingVertical: 10,
         marginTop:30,

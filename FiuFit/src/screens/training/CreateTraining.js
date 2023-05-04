@@ -37,7 +37,7 @@ export const CreateTraining = ({ onPress }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{padding: 10, color: 'grey', fontSize: 20, paddingRight:280}}>New Post</Text>
+            <Text style={styles.botton}>NEW POST</Text>
 
             <View style={styles.boxContainer}>
                 <View style={styles.inputContainer}>
@@ -94,46 +94,57 @@ export const CreateTraining = ({ onPress }) => {
                     />
                 </View>
 
-                <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
-                                  onPress={createPost} >
-                    <Text style={styles.buttonText}>Post!</Text>
-                </TouchableOpacity>
-
             </View>
+
+            <TouchableOpacity style={styles.button} onPress={createPost}>
+                <Text style={styles.buttonText}>Post</Text>
+            </TouchableOpacity>
+
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    botton: {
+        padding: 10,
+        color: 'rgba(32,38,70,0.63)',
+        fontSize: 20,
+        marginTop:20,
+        alignContent: 'center',
+        textAlign: 'center'
+    },
     container: {
         marginTop:0,
-        backgroundColor: '#DEE9F8FF',
+        flex:1,
+        backgroundColor: 'white',
     },
     boxContainer: {
-        backgroundColor: 'lightsteelblue',
-        marginHorizontal:10,
+        marginVertical:20,
         zIndex:0,
         padding: 15,
         borderRadius: 10,
     },
     inputContainer: {
+
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#91AED4',
-        borderRadius: 10,
-        marginVertical: 13,
+        marginVertical: 16,
+        minHeight:40,
+        backgroundColor: 'rgba(163,205,255,0.42)',
+        paddingHorizontal: 5,
+        borderRadius: 18,
 
     },
     input: {
-        fontSize: 15,
-        width: '100%',
-        backgroundColor: '#91AED4',
+        fontSize: 18,
+        minHeight:25,
+    },
+    icon: {
         paddingHorizontal: 5,
-        height: 30,
-        borderRadius: 6,
-        flex:1,
-        elevation:0
-
+        color: "rgba(53,63,79,0.74)",
+        alignItems:"center",
+        fontSize: 15,
+        marginVertical:8
     },
     nextButton: {
         backgroundColor: '#DEE9F8FF',
@@ -145,13 +156,18 @@ const styles = StyleSheet.create({
         marginTop:20,
         width: 90
     },
-    icon: {
-        paddingHorizontal: 5,
-        color: "rgba(34,40,49,0.74)",
-        alignItems:"center",
-        fontSize: 15,
-        marginVertical:8
+    buttonText: {
+        fontSize: 18,
+        color: 'rgba(23,29,52,0.93)',
+        textAlign: 'center'
     },
+    button: {
+        backgroundColor: '#F0A500',
+        borderRadius: 20,
+        paddingVertical: 10,
+        marginTop:30,
+        marginHorizontal: 40
+    }
 });
 
 export default CreateTraining;
