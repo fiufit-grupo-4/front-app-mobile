@@ -1,8 +1,7 @@
-import {Image, Text, TouchableOpacity, TouchableWithoutFeedback, View, StyleSheet, Modal} from "react-native";
+import {Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
-import {useState, FC, Fragment} from "react";
+import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
-import {Card, Divider} from 'react-native-paper';
 
 const Training = ({item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
@@ -44,8 +43,6 @@ const Training = ({item, canEdit}) => {
         toggleCommentPopup();
     };
 
-
-    
     return (
         <View style={styles.background}>
             <View style={styles.postContainer}>
@@ -75,37 +72,35 @@ const Training = ({item, canEdit}) => {
                     <View style={{padding: 5}}>
                         <Text style={styles.title}>{item.title}</Text>
                     </View>
-
-
                     <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
                         <Image source={item.image} style={styles.postImage}/>
                     </TouchableWithoutFeedback>
 
 
-{/*
+
                     <View style={styles.bottomContent}>
                         <TouchableWithoutFeedback onPress={handleComment}>
-                            <Ionicons name={'chatbox-outline'} style={styles.commentIcon}/>
+                            <Ionicons name={'chatbubble-outline'} style={styles.commentIcon}/>
                         </TouchableWithoutFeedback>
                         <Text style={styles.commentText}>{item.comments.length}</Text>
                         <Modal visible={showCommentPopup}>
 
                             <View style={styles.commentPopUp}>
-                                {item.comments.map((comment) => (
-                                    <View style={styles.commentItem}>
-                                        <Text style={styles.commentUsername}>{comment.user}</Text>
-                                        <Text style={styles.commentContent}>{comment.content}</Text>
-                                    </View>
-                                ))}
+                                {item.comments && item.comments.map((comment) => {
+                                    return (<View key={comment.user + comment.content}>
+                                        <Text >{comment.user}</Text>
+                                        <Text>{comment.content}</Text>
+                                    </View>);
+                                })}
                                 <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
                                     <Ionicons name={'close-circle'} style={styles.closeIcon}/>
                                 </TouchableOpacity>
                             </View>
                         </Modal>
                     </View>
-*/}
 
-                    <View style={styles.bottomContent}>
+
+                    {/*<View style={styles.bottomContent}>
 
                         <View style={styles.like}>
                             <TouchableWithoutFeedback onPress={handleLike}>
@@ -113,7 +108,7 @@ const Training = ({item, canEdit}) => {
                             </TouchableWithoutFeedback>
                             <Text style={styles.likeText}>{item.likes.length}</Text>
                         </View>
-                    </View>
+                    </View>*/}
                     <TouchableOpacity onPress={onPress}></TouchableOpacity>
 
                     <View style={styles.item}>
@@ -259,7 +254,8 @@ const styles = StyleSheet.create({
     },
     commentIcon: {
         fontSize: 24,
-        marginRight: 5,
+        marginRight: 10,
+        padding:10,
         color: '#8B8B8B'
     },
     commentTitle: {
@@ -299,12 +295,14 @@ const styles = StyleSheet.create({
         padding: 20,
         maxHeight: '80%',
     },
-
     closeButton: {
         position: 'absolute',
         top: 10,
         right: 10,
         zIndex: 1,
+    },
+    closeIcon: {
+        fontSize:20,
     }
 });
 

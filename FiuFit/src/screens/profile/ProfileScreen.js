@@ -13,18 +13,16 @@ const ProfileScreen = ( ) => {
             trainingType: 'Dolor',
             difficulty: 3,
             image: require('../../../assets/images/post1.png'),
-            comments:{
-                comment1: {
+            comments: [
+                {
                     content:'muy piolita',
                     user:'pepito1',
-
                 },
-                comment2: {
+                {
                     content:'diy dificil',
                     user:'yoyo'
-                },
-                lenght:2,
-            },
+                }
+    ],
             likes: {
                 length:32
             }
@@ -37,18 +35,16 @@ const ProfileScreen = ( ) => {
             trainingType: 'Localizada',
             difficulty: 5,
             image: require('../../../assets/images/post2.png'),
-            comments:{
-                comment1: {
+            comments: [
+                {
                     content:'muy piolita',
                     user:'pepito1',
-
                 },
-                comment2: {
+                {
                     content:'diy dificil',
                     user:'yoyo'
-                },
-                lenght:2,
-            },
+                }
+            ],
             likes: {
                 length:32
             }
@@ -61,18 +57,16 @@ const ProfileScreen = ( ) => {
             trainingType: 'Cola',
             difficulty: 1,
             image: require('../../../assets/images/post3.png'),
-            comments:{
-                comment1: {
+            comments: [
+                {
                     content:'muy piolita',
                     user:'pepito1',
-
                 },
-                comment2: {
+                {
                     content:'diy dificil',
                     user:'yoyo'
-                },
-                lenght:2,
-            },
+                }
+            ],
             likes: {
                 length:32
             }
