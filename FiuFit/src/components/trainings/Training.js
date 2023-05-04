@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
     },
     descriptions: {
         marginLeft: 5,
+        fontSize:15,
+        padding: 6,
         color:'rgba(32,38,70,0.63)'
     },
     enlargedProfileImage: {
