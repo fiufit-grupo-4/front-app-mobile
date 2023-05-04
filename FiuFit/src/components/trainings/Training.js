@@ -4,7 +4,7 @@ import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import CustomButton from '../buttons/CustomButton';
 
-const Training = ({item}) => {
+const Training = ({item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -36,11 +36,13 @@ const Training = ({item}) => {
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                         <Text style={{ fontSize: 18, color:'rgba(23,29,52,0.93)', marginHorizontal: 10}}>{'Pepito Boxeador'}</Text>
                     </View>
-                    <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
-                        <View style={{ flexDirection:'row', padding: 5}}>
+
+                    {canEdit && <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
+                        <View style={{flexDirection: 'row', padding: 5}}>
                             <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
                         </View>
                     </TouchableWithoutFeedback>
+                    }
                 </View>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>

@@ -13,6 +13,7 @@ import EditTrainingScreen from "../screens/training/EditTrainingScreen";
 import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import TrainingScreen from '../screens/training/TrainingScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import EditProfileScreen from "../screens/profile/EditProfileScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,8 @@ class Navigation extends React.Component {
                     <Stack.Screen name="MenuProfile" component={MenuProfileScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
+                    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}  />
+
                 </Stack.Navigator>
             </NavigationContainer>
         );

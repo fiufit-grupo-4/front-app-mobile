@@ -74,7 +74,7 @@ const ProfileScreen = ( ) => {
                     data={posts}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
-                        <Training item =  {item}></Training>
+                        <Training item =  {item} canEdit={true}></Training>
                     )}/>
         </View>
      )

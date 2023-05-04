@@ -42,7 +42,7 @@ const FavoriteTrainingScreen = ( ) => {
         const onPress = () => navigation.navigate("Training", { item });
         return (
             <>
-                <Training item = {item}></Training>
+                <Training item = {item} canEdit={false}></Training>
                 <CustomButton onPress = {onPress} text={"Ver Entrenamiento"} containerWidth={"100%"}></CustomButton>
             </>
         );

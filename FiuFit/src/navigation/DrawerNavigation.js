@@ -8,6 +8,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
+import EditProfileScreen from "../screens/profile/EditProfileScreen";
 
 const Drawer = createDrawerNavigator();
 

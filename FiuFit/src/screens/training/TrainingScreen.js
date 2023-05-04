@@ -8,7 +8,7 @@ const TrainingScreen = ( {route} ) => {
     const navigation = useNavigation();
     return (
         <View style={{ flex: 1,padding: 1,  }}>
-            <Training item =  {item}> </Training> 
+            <Training item =  {item} canEdit={true}> </Training>
                        
         </View>
      )
