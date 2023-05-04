@@ -2,7 +2,7 @@ import { Image, Text, TouchableOpacity, TouchableWithoutFeedback, View, StyleShe
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
-import CustomButton from '../buttons/CustomButton';
+import { Card, Divider} from 'react-native-paper';
 
 const Training = ({item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
@@ -27,65 +27,114 @@ const Training = ({item, canEdit}) => {
     }
 
     return(
-        <View style={{backgroundColor: 'white'}}>
-           
-            <View style={styles.postBackground}>
+        <View style={styles.background}>
+            <View style={styles.postContainer}>
+                <View style={styles.postBackground}>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5, justifyContent: 'space-between' }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
-                        <Text style={{ fontSize: 18, color:'rgba(23,29,52,0.93)', marginHorizontal: 10}}>{'Pepito Boxeador'}</Text>
+                    <View style={styles.topContent}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
+                            <Text style={styles.name}>{'Pepito Boxeador'}</Text>
+                        </View>
+
+
+                        {canEdit && <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
+                            <View style={styles.edit}>
+                                <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        }
                     </View>
 
-                    {canEdit && <TouchableWithoutFeedback onPress={() => handleEdit(item)}>
-                        <View style={{flexDirection: 'row', padding: 5}}>
-                            <Ionicons name={'ellipsis-vertical-outline'} size={20} color={'#5B635F'}/>
-                        </View>
+                    <View style={{ padding: 5 }}>
+                        <Text style={styles.title}>{item.title}</Text>
+                    </View>
+
+                    <View style={styles.item}>
+                        <Ionicons name={'md-pin-outline'}  style={styles.icon}/>
+                        <Text style={styles.place}>{item.place}</Text>
+                    </View>
+
+
+                    <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
+                        <Image source={item.image} style={styles.postImage} />
                     </TouchableWithoutFeedback>
-                    }
+
+
+                    <View style={styles.item}>
+                        <Ionicons name={'md-pencil-outline'} style={styles.icon} />
+                        <Text style={styles.itemText}>{'Description: ' + item.description}</Text>
+                    </View>
+
+                    <View style={styles.item}>
+                        <Ionicons name={'fitness-outline'} style={styles.icon}/>
+                        <Text style={styles.itemText}>{'Training Type: ' + item.trainingType}</Text>
+                    </View>
+
+                    <View style={styles.item}>
+                        <Ionicons name={'ios-stats-chart-outline'}  style={styles.icon}/>
+                        <Text style={styles.itemText}>{'Difficulty: ' + item.difficulty}</Text>
+                    </View>
+                    <TouchableOpacity onPress={onPress}></TouchableOpacity>
+
                 </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-                    <Ionicons name={'md-pin-outline'} size={15} color='rgba(32,38,70,0.63)'/>
-                    <Text style={styles.descriptions}>{item.place}</Text>
-                </View>
-
-                <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
-                    <Image source={item.image} style={styles.postImage} />
-                </TouchableWithoutFeedback>
-
-                <View style={{ padding: 5 }}>
-                    <Text style={{ fontSize: 15, color:'rgba(23,29,52,0.93)' }}>{item.title}</Text>
-                </View>
-
-
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Ionicons name={'md-pencil-outline'} size={15} color='rgba(32,38,70,0.63)' />
-                    <Text style={styles.descriptions}>{'Description: ' + item.description}</Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Ionicons name={'fitness-outline'} size={15} color='rgba(32,38,70,0.63)'/>
-                    <Text style={styles.descriptions}>{'Training Type: ' + item.trainingType}</Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Ionicons name={'ios-stats-chart-outline'} size={15} color='rgba(32,38,70,0.63)'/>
-                    <Text style={styles.descriptions}>{'Difficulty: ' + item.difficulty}</Text>
-                </View>
-                <TouchableOpacity onPress={onPress}></TouchableOpacity>
-                
-            </View>        
+            </View>
         </View>
-    
     )
 }
 
 const styles = StyleSheet.create({
+    background: {
+        paddingVertical: 6,
+        backgroundColor: 'rgba(222,233,248,0.29)'
+    },
+    postContainer: {
+        backgroundColor: 'white',
+        //borderRadius: 10,
+        overflow: 'hidden'
+    },
+    topContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
     profileImage: {
-        width: 25,
-        height: 25,
+        width: 22,
+        height: 22,
         borderRadius: 30,
+        marginLeft:5
+    },
+    name: {
+        fontSize: 16,
+        color:'rgba(23,29,52,0.93)',
+        marginHorizontal: 10
+    },
+    edit: {
+        flexDirection: 'row',
+        padding: 5
+    },
+    title: {
+        borderTopWidth:1,
+        borderTopColor: 'orange',
+        fontSize: 18,
+        //marginLeft:7,
+        color:'rgba(23,29,52,0.76)'
+    },
+    item: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    itemText: {
+        marginLeft: 5,
+        marginRight: 14,
+        fontSize:15,
+        padding: 6,
+        color:'rgba(32,38,70,0.63)'
+    },
+    icon: {
+        fontSize:15,
+        color:'rgba(32,38,70,0.63)',
+        marginLeft:8
     },
     modalBackground: {
         flex: 1,
@@ -98,10 +147,9 @@ const styles = StyleSheet.create({
         //backgroundColor: 'rgba(217,227,240,0.75)'
         backgroundColor: 'white'
     },
-    descriptions: {
+    place: {
         marginLeft: 5,
         fontSize:15,
-        padding: 6,
         color:'rgba(32,38,70,0.63)'
     },
     enlargedProfileImage: {
