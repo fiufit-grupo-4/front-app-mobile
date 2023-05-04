@@ -22,7 +22,7 @@ const ProfileScreen = ( ) => {
                     content:'diy dificil',
                     user:'yoyo'
                 }
-    ],
+                ],
             likes: {
                 length:32
             }

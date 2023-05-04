@@ -1,4 +1,13 @@
-import {Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
+import {
+    Image,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
@@ -8,6 +17,7 @@ const Training = ({item, canEdit}) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
+
 
     const navigation = useNavigation();
 
@@ -42,6 +52,8 @@ const Training = ({item, canEdit}) => {
     const handleComment = () => {
         toggleCommentPopup();
     };
+
+
 
     return (
         <View style={styles.background}>
@@ -82,7 +94,7 @@ const Training = ({item, canEdit}) => {
                         <TouchableWithoutFeedback onPress={handleComment}>
                             <Ionicons name={'chatbubble-outline'} style={styles.commentIcon}/>
                         </TouchableWithoutFeedback>
-                        <Text style={styles.commentText}>{item.comments.length}</Text>
+                        <Text style={styles.commentText}> {item.comments ? item.comments.length : 0} </Text>
                         <Modal visible={showCommentPopup}>
 
                             <View style={styles.commentPopUp}>
@@ -92,7 +104,12 @@ const Training = ({item, canEdit}) => {
                                         <Text>{comment.content}</Text>
                                     </View>);
                                 })}
-                                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+
+                                {/*NUEVO COMENTARIO*/}
+
+
+                                {/*Cerrar comentarios*/}
+                                 <TouchableOpacity onPress={toggleCommentPopup}  style={styles.closeButton}>
                                     <Ionicons name={'close-circle'} style={styles.closeIcon}/>
                                 </TouchableOpacity>
                             </View>
@@ -109,7 +126,8 @@ const Training = ({item, canEdit}) => {
                             <Text style={styles.likeText}>{item.likes.length}</Text>
                         </View>
                     </View>*/}
-                    <TouchableOpacity onPress={onPress}></TouchableOpacity>
+
+
 
                     <View style={styles.item}>
                         <Ionicons name={'md-pencil-outline'} style={styles.icon}/>
@@ -137,7 +155,8 @@ const Training = ({item, canEdit}) => {
 const styles = StyleSheet.create({
     background: {
         paddingVertical: 6,
-        backgroundColor: 'rgba(222,233,248,0.29)'
+        //backgroundColor: 'rgba(222,233,248,0.29)'
+        backgroundColor: 'white'
     },
     postContainer: {
         backgroundColor: 'white',
