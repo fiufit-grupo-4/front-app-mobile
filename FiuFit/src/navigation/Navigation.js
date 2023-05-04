@@ -14,6 +14,7 @@ import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import TrainingScreen from '../screens/training/TrainingScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
+import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -40,6 +41,8 @@ class Navigation extends React.Component {
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
                     <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}  />
+                    <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen}  />
+                    <Stack.Screen name="MenuProfileScreen" component={MenuProfileScreen}  />
 
                 </Stack.Navigator>
             </NavigationContainer>

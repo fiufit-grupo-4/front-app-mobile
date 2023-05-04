@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from "@expo/vector-icons";
+import {StackActions, useNavigation} from "@react-navigation/native";
 
 export const EditProfileScreen = () => {
     const [name, setName] = useState('Pepito');
@@ -18,6 +19,8 @@ export const EditProfileScreen = () => {
     const [profilePicture, setProfilePicture] = useState(require('../../../assets/images/profilepic.jpeg'));
     const [email, setEmail] = useState('pepitoboxeador@gmail.com');
     const [number, setNumber] = useState('');
+
+    const navigation = useNavigation();
 
     const handleImagePicker = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -38,6 +41,10 @@ export const EditProfileScreen = () => {
 
     const handleSaveChanges = () => {
       // handle saving changes to user profile
+        //TODO: fetch
+        navigation.dispatch(
+            StackActions.pop(1)
+        );
     };
 
     return (

@@ -12,7 +12,22 @@ const ProfileScreen = ( ) => {
             description: 'Lorem ipsum dolor sit amet.',
             trainingType: 'Dolor',
             difficulty: 3,
-            image: require('../../../assets/images/post1.png')
+            image: require('../../../assets/images/post1.png'),
+            comments:{
+                comment1: {
+                    content:'muy piolita',
+                    user:'pepito1',
+
+                },
+                comment2: {
+                    content:'diy dificil',
+                    user:'yoyo'
+                },
+                lenght:2,
+            },
+            likes: {
+                length:32
+            }
         },
         {
             id: 2,
@@ -21,7 +36,22 @@ const ProfileScreen = ( ) => {
             description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
             trainingType: 'Localizada',
             difficulty: 5,
-            image: require('../../../assets/images/post2.png')
+            image: require('../../../assets/images/post2.png'),
+            comments:{
+                comment1: {
+                    content:'muy piolita',
+                    user:'pepito1',
+
+                },
+                comment2: {
+                    content:'diy dificil',
+                    user:'yoyo'
+                },
+                lenght:2,
+            },
+            likes: {
+                length:32
+            }
         },
         {
             id: 3,
@@ -30,7 +60,22 @@ const ProfileScreen = ( ) => {
             description: 'Excepteur sint occaecat cupidatat non proident.',
             trainingType: 'Cola',
             difficulty: 1,
-            image: require('../../../assets/images/post3.png')
+            image: require('../../../assets/images/post3.png'),
+            comments:{
+                comment1: {
+                    content:'muy piolita',
+                    user:'pepito1',
+
+                },
+                comment2: {
+                    content:'diy dificil',
+                    user:'yoyo'
+                },
+                lenght:2,
+            },
+            likes: {
+                length:32
+            }
         },
     ]);
 
