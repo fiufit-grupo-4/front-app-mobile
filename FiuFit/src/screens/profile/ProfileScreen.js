@@ -64,7 +64,7 @@ const ProfileScreen = ( ) => {
                 }
                 ],
             likes: {
-                length:32
+                length:4
             }
         },
         {

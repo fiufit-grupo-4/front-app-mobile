@@ -1,34 +1,31 @@
-import {
-    Image,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text, TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View
-} from "react-native";
+import {Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React, {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
+import Rating from  "./../../screens/training/RateTraining";
+import axios from "axios";
 
 const Training = ({item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
-    const [isLiked, setIsLiked] = useState(false);
+    const [rating, setRating] = useState(0);
     const [commentText, setCommentText] = useState('');
-
+    const [showCommentPopup, setShowCommentPopup] = useState(false);
+    const [showStars, setShowStars] = useState(false);
+    const [selectedStars, setSelectedStars] = useState(0);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const navigation = useNavigation();
 
-    const [showCommentPopup, setShowCommentPopup] = useState(false);
 
     const toggleModal = (image) => {
         setSelectedImage(image);
         setShowModal(!showModal);
     };
 
+
+    // EDITA POST
     const handleEdit = (item) => {
         setSelectedPost(item);
         navigation.navigate('EditTrainingScreen', {post: item});
@@ -38,13 +35,8 @@ const Training = ({item, canEdit}) => {
         navigation.navigate("Training", {item})
     }
 
-    const handleLike = (postId) => {
-        setIsLiked(!isLiked);
-    };
-    // Logic to handle a user liking a post with the given postId
 
-
-    // add function to toggle comment popup
+    // COMENTARIOS
     const toggleCommentPopup = () => {
         setShowCommentPopup(!showCommentPopup);
     };
@@ -63,6 +55,39 @@ const Training = ({item, canEdit}) => {
         //setItem({ ...item, comments: updatedComments });
         setCommentText('');
     };
+
+
+    // CALIFICACION
+    const handleRate = (value) => {
+        setRating(value);
+
+        axios.post('/api/posts/rate', {
+            postId: item.id,
+            rating: value,
+        }).then((response) => {
+            // Handle the response from the server
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+
+    const handleStarPress = (value) => {
+        setSelectedStars(value);
+        setShowStars(false);
+    };
+
+    // AGREGAR/SACAR DE FAVORITOS
+
+    const handleFavoritePress = () => {
+        //todo meter o sacar de los favs wacho
+        setIsFavorite(!isFavorite);
+    };
+
+    const renderStars = () => {
+        if (!showStars) {
+            return null;
+        }
+    }
 
     return (
         <View style={styles.background}>
@@ -98,30 +123,31 @@ const Training = ({item, canEdit}) => {
                     </TouchableWithoutFeedback>
 
 
-                    {/* COMENTARIOS */}
-                    <View>
+                    <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems: 'center'}}>
+
+                        {/* COMENTARIOS */}
                         <TouchableWithoutFeedback onPress={handleComment}>
                             <Ionicons name={'chatbubble-outline'} style={styles.commentIcon}/>
                         </TouchableWithoutFeedback>
                         <Modal visible={showCommentPopup}>
                         <Text style={styles.commentTitle}>Comments</Text>
-                            {/*Cerrar comentarios*/}
+                            {/* Cerrar comentarios */}
 
                             <TouchableOpacity onPress={toggleCommentPopup}  style={styles.closeButton}>
                                 <Ionicons name={'close-circle'} style={styles.closeIcon}/>
                             </TouchableOpacity>
 
                             <View style={styles.commentPopUp}>
-                                        <ScrollView>
+                                <ScrollView>
                                     {item.comments && item.comments.map((comment) => {
                                     return (<View key={comment.user + comment.content}>
                                         <Text style={styles.commentUsername}>{comment.user}</Text>
                                         <Text style={styles.commentContent}>{comment.content}</Text>
                                     </View>);
-                                })}
-                                        </ScrollView>
+                                     })}
+                                </ScrollView>
 
-                                {/*NUEVO COMENTARIO*/}
+                                {/* NUEVO COMENTARIO */}
                                 <View style={styles.newComment}>
                                 <TextInput
                                     style={styles.commentInput}
@@ -133,23 +159,21 @@ const Training = ({item, canEdit}) => {
                                     <Ionicons name={'send-outline'} style={styles.sendCommentIcon}/>
                                 </TouchableWithoutFeedback>
                                 </View>
-
-
-
                             </View>
                         </Modal>
+
+                        {/* FAVORITOS */}
+                        <TouchableWithoutFeedback onPress={handleFavoritePress}>
+                            <View>
+                                <Ionicons
+                                    name={isFavorite ? 'md-star-sharp' : 'md-star-outline'}
+                                    style={{fontSize:24, padding:7, alignItems:'center'}}
+                                />
+                            </View>
+                        </TouchableWithoutFeedback>
+
                     </View>
 
-
-                    {/*<View style={styles.bottomContent}>
-
-                        <View style={styles.like}>
-                            <TouchableWithoutFeedback onPress={handleLike}>
-                                <Ionicons name={isLiked ? 'heart' : 'heart-outline'} style={[styles.likeIcon, {color: isLiked ? 'red' : '#5B635F'}]}/>
-                            </TouchableWithoutFeedback>
-                            <Text style={styles.likeText}>{item.likes.length}</Text>
-                        </View>
-                    </View>*/}
 
 
 
@@ -169,6 +193,17 @@ const Training = ({item, canEdit}) => {
                     </View>
 
                     <TouchableOpacity onPress={onPress}></TouchableOpacity>
+
+
+                    {/* Calificacion */}
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableWithoutFeedback onPress={handleStarPress}>
+                            <Ionicons name={"md-ribbon-outline"} style={styles.qualifyIcon}/>
+                        </TouchableWithoutFeedback>
+                        <Rating onRate={handleRate} />
+                        <Text style={{alignContent: 'center', paddingVertical:15, color:'rgba(23,29,52,0.71)'}}>{'Average:  ' + item.likes.length}</Text>
+                    </View>
+
 
                 </View>
             </View>
@@ -259,25 +294,18 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 300,
     },
-    like: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
-        fontSize:19
-    },
-    likeIcon: {
-        color: '#ccc',
-        marginRight: 5,
-        fontSize:22
-    },
-    liked: {
-        color: 'red',
-    },
     commentIcon: {
         fontSize: 24,
-        marginRight: 10,
-        padding:10,
+        marginRight: 3,
+        padding:8,
         color: '#000000'
+    },
+    qualifyIcon :{
+        fontSize: 12,
+        marginRight: 10,
+        padding:8,
+        marginTop:12,
+        color: 'rgba(32,38,70,0.7)'
     },
     commentTitle: {
         padding: 5,
@@ -336,7 +364,11 @@ const styles = StyleSheet.create({
     commentButtonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    favIcon:{
+
     }
+
 });
 
 export default Training;
