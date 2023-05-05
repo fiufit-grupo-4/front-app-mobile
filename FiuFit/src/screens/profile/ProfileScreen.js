@@ -19,8 +19,48 @@ const ProfileScreen = ( ) => {
                     user:'pepito1',
                 },
                 {
-                    content:'diy dificil',
+                    content:'dificil',
                     user:'yoyo'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito2',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo2'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito3',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo3'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito4',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo8'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito7',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo9'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito8',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo6'
                 }
                 ],
             likes: {
@@ -37,11 +77,11 @@ const ProfileScreen = ( ) => {
             image: require('../../../assets/images/post2.png'),
             comments: [
                 {
-                    content:'muy piolita',
+                    content:'horror',
                     user:'pepito1',
                 },
                 {
-                    content:'diy dificil',
+                    content:'facil',
                     user:'yoyo'
                 }
             ],
@@ -59,11 +99,11 @@ const ProfileScreen = ( ) => {
             image: require('../../../assets/images/post3.png'),
             comments: [
                 {
-                    content:'muy piolita',
+                    content:'eeee meshi',
                     user:'pepito1',
                 },
                 {
-                    content:'diy dificil',
+                    content:'colores?',
                     user:'yoyo'
                 }
             ],

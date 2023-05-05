@@ -3,13 +3,13 @@ import {
     Modal,
     ScrollView,
     StyleSheet,
-    Text,
+    Text, TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from "react-native";
 import {Ionicons} from "react-native-vector-icons";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 
 const Training = ({item, canEdit}) => {
@@ -17,6 +17,7 @@ const Training = ({item, canEdit}) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
+    const [commentText, setCommentText] = useState('');
 
 
     const navigation = useNavigation();
@@ -53,7 +54,15 @@ const Training = ({item, canEdit}) => {
         toggleCommentPopup();
     };
 
-
+    const handleAddComment = () => {
+        const newComment = {
+            user: 'Your Username', // Replace with actual username
+            content: commentText,
+        };
+        const updatedComments = [...item.comments, newComment];
+        //setItem({ ...item, comments: updatedComments });
+        setCommentText('');
+    };
 
     return (
         <View style={styles.background}>
@@ -89,29 +98,44 @@ const Training = ({item, canEdit}) => {
                     </TouchableWithoutFeedback>
 
 
-
-                    <View style={styles.bottomContent}>
+                    {/* COMENTARIOS */}
+                    <View>
                         <TouchableWithoutFeedback onPress={handleComment}>
                             <Ionicons name={'chatbubble-outline'} style={styles.commentIcon}/>
                         </TouchableWithoutFeedback>
-                        <Text style={styles.commentText}> {item.comments ? item.comments.length : 0} </Text>
                         <Modal visible={showCommentPopup}>
+                        <Text style={styles.commentTitle}>Comments</Text>
+                            {/*Cerrar comentarios*/}
+
+                            <TouchableOpacity onPress={toggleCommentPopup}  style={styles.closeButton}>
+                                <Ionicons name={'close-circle'} style={styles.closeIcon}/>
+                            </TouchableOpacity>
 
                             <View style={styles.commentPopUp}>
-                                {item.comments && item.comments.map((comment) => {
+                                        <ScrollView>
+                                    {item.comments && item.comments.map((comment) => {
                                     return (<View key={comment.user + comment.content}>
-                                        <Text >{comment.user}</Text>
-                                        <Text>{comment.content}</Text>
+                                        <Text style={styles.commentUsername}>{comment.user}</Text>
+                                        <Text style={styles.commentContent}>{comment.content}</Text>
                                     </View>);
                                 })}
+                                        </ScrollView>
 
                                 {/*NUEVO COMENTARIO*/}
+                                <View style={styles.newComment}>
+                                <TextInput
+                                    style={styles.commentInput}
+                                    placeholder="Add a comment..."
+                                    onChangeText={(text) => setCommentText(text)}
+                                    value={commentText}
+                                />
+                                <TouchableWithoutFeedback onPress={handleAddComment}>
+                                    <Ionicons name={'send-outline'} style={styles.sendCommentIcon}/>
+                                </TouchableWithoutFeedback>
+                                </View>
 
 
-                                {/*Cerrar comentarios*/}
-                                 <TouchableOpacity onPress={toggleCommentPopup}  style={styles.closeButton}>
-                                    <Ionicons name={'close-circle'} style={styles.closeIcon}/>
-                                </TouchableOpacity>
+
                             </View>
                         </Modal>
                     </View>
@@ -160,7 +184,6 @@ const styles = StyleSheet.create({
     },
     postContainer: {
         backgroundColor: 'white',
-        //borderRadius: 10,
         overflow: 'hidden'
     },
     topContent: {
@@ -250,78 +273,69 @@ const styles = StyleSheet.create({
     liked: {
         color: 'red',
     },
-    bottomContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    comment: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    commentContainer: {
-        backgroundColor: '#F0F0F0',
-        borderRadius: 10,
-        padding: 10,
-        margin: 10
-    },
-    commentHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 5
-    },
     commentIcon: {
         fontSize: 24,
         marginRight: 10,
         padding:10,
-        color: '#8B8B8B'
+        color: '#000000'
     },
     commentTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333333'
+        padding: 5,
+        color: 'rgba(32,38,70,0.63)',
+        fontSize: 20,
+        marginTop:20,
+        marginLeft:18
     },
-    commentList: {
-        marginTop: 10
-    },
-    commentItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 5
-    },
-    commentAuthor: {
-        fontWeight: 'bold',
-        marginRight: 5,
-        color: '#333333'
-    },
-    commentText: {
-        fontSize: 16,
-        color: '#333333'
+    commentPopUp: {
+        padding: 20,
+        maxHeight: '92%',
     },
     commentUsername: {
+        marginTop:10,
         fontWeight: 'bold',
         marginRight: 5,
+        fontSize:15,
+        padding:7,
+        borderTopWidth:1,
+        borderTopColor: 'sandybrown',
     },
-
     commentContent: {
         marginLeft: 5,
-    },
-
-    commentPopUp: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        maxHeight: '80%',
+        marginBottom:10,
     },
     closeButton: {
         position: 'absolute',
+        padding:9,
         top: 10,
         right: 10,
         zIndex: 1,
     },
     closeIcon: {
+        fontSize:25,
+    },
+    newComment: {
+        flexDirection: 'row',
+        padding:1,
+        borderRadius: 20,
+        backgroundColor: '#ffffff',
+    },
+    commentInput: {
+        minHeight: 20,
+        flex: 1,
+        marginRight: 10,
+        marginLeft:10,
+        padding:10,
+        marginTop:20,
+    },
+    sendCommentIcon:{
         fontSize:20,
+        marginVertical:30,
+        marginRight: 18,
+        alignSelf: 'flex-end',
+    },
+    commentButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
     }
 });
 
