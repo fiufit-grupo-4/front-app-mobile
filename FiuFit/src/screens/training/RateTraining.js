@@ -11,7 +11,7 @@ const Rating = ({ onRate }) => {
     };
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
             {[1, 2, 3, 4, 5].map((value) => (
                 <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
                     <Icon name={value <= rating ? 'star' : 'star-outline'} size={20} color="#FDB813" />

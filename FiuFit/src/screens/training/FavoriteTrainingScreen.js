@@ -14,7 +14,60 @@ const FavoriteTrainingScreen = ( ) => {
             description: 'Lorem ipsum dolor sit amet.',
             trainingType: 'Dolor',
             difficulty: 3,
-            image: require('../../../assets/images/post1.png')
+            image: require('../../../assets/images/post1.png'),
+            comments: [
+                {
+                    content:'muy piolita',
+                    user:'pepito1',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito2',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo2'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito3',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo3'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito4',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo8'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito7',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo9'
+                },
+                {
+                    content:'muy piolita',
+                    user:'pepito8',
+                },
+                {
+                    content:'dificil',
+                    user:'yoyo6'
+                }
+            ],
+            likes: {
+                length:4
+            }
         },
         {
             id: 2,
@@ -23,19 +76,22 @@ const FavoriteTrainingScreen = ( ) => {
             description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
             trainingType: 'Localizada',
             difficulty: 5,
-            image: require('../../../assets/images/post2.png')
-        },
-        {
-            id: 3,
-            title: 'Sentadillas',
-            place: 'Parque LasHeras',
-            description: 'Excepteur sint occaecat cupidatat non proident.',
-            trainingType: 'Cola',
-            difficulty: 1,
-            image: require('../../../assets/images/post3.png')
-        },
+            image: require('../../../assets/images/post2.png'),
+            comments: [
+                {
+                    content:'horror',
+                    user:'pepito1',
+                },
+                {
+                    content:'facil',
+                    user:'yoyo'
+                }
+            ],
+            likes: {
+                length:32
+            }
+        }
     ]);
-
     const navigation = useNavigation();
 
     const renderItem = ({ item }) => {
