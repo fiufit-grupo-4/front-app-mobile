@@ -9,6 +9,7 @@ import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
+import CertifyScreen from "../screens/certify/CertifyScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -94,6 +95,20 @@ function DrawerComponent() {
                 drawerIcon: () => (
                     <AntDesign
                         name="staro"
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
+
+        <Drawer.Screen
+            name="         Verify"
+            color="#F0A500"
+            component={CertifyScreen}
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="checkcircleo"
                     />
                 ),
                 headerShown: true,
