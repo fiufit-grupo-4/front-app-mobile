@@ -1,25 +1,63 @@
 import React, { useState } from 'react';
-import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View,Button, Image, StyleSheet, Text, TouchableOpacity, ActivityIndicator,Alert} from 'react-native';
 import * as ImagePicker from "expo-image-picker";
+import {firebase} from '../../config/firebase'
 
 
 const UploadImage = ({onPress, setImage}) => {
     const [imageUri, setImageUri] = useState('');
     const [error, setError] = useState(false);
+    const [uploading, setUploading] = useState(false)
+    /*
+    const uploadImage = async (uri) => {
+        const response = await fetch(uri);
+
+        const blob = await response.blob();
+        console.log(blob)
+        const ref = firebase.storage().ref().child(`images/${new Date().getTime()}`);
+        const snapshot = await ref.put(blob);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+      
+        return downloadURL;
+      };*/
+
+      const uploadImage = async () => {
+        let image = pickImage()
+        if (image){
+            setUploading(true)
+            //console.log(imageUri)
+            const response = await fetch(imageUri);
+            const blob = await response.blob();
+            const ref = firebase.storage().ref().child(`images/${new Date().getTime()}`).put(blob);    
+            try {
+                await ref
+            } catch(e){
+                console.log(e)
+            }
+            setUploading(false)
+            Alert.alert("Photo uploaded correctly!")  
+        } else {
+            setError(true)
+        }
+        
+    }
+    
+    
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            setImageUri(result.assets[0].uri);
-            setError(false);
+        if (!result.canceled) {     
+            setImage(result.assets[0].uri)
+            setImageUri(result.assets[0].uri)
+            setError(false)
+            return true
         }
+        return false
     };
 
     const onNextPress = () => {
@@ -57,6 +95,11 @@ const UploadImage = ({onPress, setImage}) => {
                                       }}>
                         <Text style={styles.buttonText}>Next Step</Text>
                     </TouchableOpacity>
+
+
+                    <View style={styles.container}>
+                    {!uploading ? <Button title='Upload Image' onPress={uploadImage} />: <ActivityIndicator size={'small'} color='black' />}
+                    </View>
 
                 </View>
             </View>

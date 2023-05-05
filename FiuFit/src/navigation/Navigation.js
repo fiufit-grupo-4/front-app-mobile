@@ -12,6 +12,7 @@ import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import EditTrainingScreen from "../screens/training/EditTrainingScreen";
 import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import TrainingScreen from '../screens/training/TrainingScreen';
+import LocationScreen from '../screens/training/LocationScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 
@@ -23,6 +24,7 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
+                    
                     <Stack.Screen
                         name="Inicio"
                         component={DrawerComponent}

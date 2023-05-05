@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "880473744329",
+    "project_id": "react-native-fiufit",
+    "storage_bucket": "react-native-fiufit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880473744329:android:a612796bf3c8bf1cfc3e18",
+        "android_client_info": {
+          "package_name": "fiu.fit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880473744329-uss4iunqsvevkmd2hbafh7q5hblkgeg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiwHRBfRb3a_LFFls62MsUNNaXarn7iIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880473744329-uss4iunqsvevkmd2hbafh7q5hblkgeg5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
