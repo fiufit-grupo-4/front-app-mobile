@@ -12,6 +12,7 @@ const SocialSignInButtons = () => {
 
   return (
     <>
+      {/* 
       <CustomIconButton
         text="Sign In with Facebook "
         onPress={onSignInFacebook}
@@ -20,6 +21,7 @@ const SocialSignInButtons = () => {
         icon= "logo-facebook"
         iconColor="white"
       />
+      */}
       <CustomIconButton
         text="Sign In with Google "
         onPress={onSignInGoogle}

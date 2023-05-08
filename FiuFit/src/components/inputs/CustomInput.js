@@ -47,7 +47,7 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'powderblue',
+    backgroundColor: '#AFC5E3',
     width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -60,12 +60,10 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 15,
     width: '100%',
-    backgroundColor: 'powderblue',
+    backgroundColor: '#AFC5E3',
     paddingHorizontal: 5,
     height: 20,
     borderRadius: 15,
-    outlineStyle: 'none',
-    placeholderTextColor:"#222831",
     flex:1,
   },
   icon: {

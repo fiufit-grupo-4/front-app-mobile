@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
+const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, containerWidth}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -9,6 +9,7 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
         styles.container,
         styles[`container_${type}`],
         bgColor ? {backgroundColor: bgColor} : {},
+        containerWidth ? {width:containerWidth} : {width:"80%"} 
       ]}>
       <Text
         style={[
@@ -24,8 +25,6 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
-
     padding: 15,
     marginVertical: 5,
 

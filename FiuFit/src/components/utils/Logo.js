@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  View,
   Image,
-  StyleSheet,useWindowDimensions,Dimensions
+  StyleSheet,Dimensions
 } from 'react-native';
 const {width,height} = Dimensions.get("window")
 
 
-import FiuFitLogo from '../../../assets/images/FiuFit.png';
+import FiuFitLogo from '../../../assets/images/fiticon.png';
 
 const Logo = () => {
     return (

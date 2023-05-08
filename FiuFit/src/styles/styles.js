@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
       flex:1,
       alignItems: 'center',
       padding: 20,
-      backgroundColor:"skyblue",
+      backgroundColor:"#91AED4",
       justifyContent: "center"
     },
     container: {
@@ -16,6 +16,13 @@ const styles = StyleSheet.create({
     },
     title: {
       fontSize: 30,
+      fontWeight: 'bold',
+      color: 'black',
+      margin: 10,
+      marginBottom:20
+    },
+    subtitle: {
+      fontSize: 25,
       fontWeight: 'bold',
       color: 'black',
       margin: 10,

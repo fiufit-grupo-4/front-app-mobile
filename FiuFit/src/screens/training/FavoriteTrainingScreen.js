@@ -1,9 +1,11 @@
-import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
+import {FlatList, TouchableOpacity, View, StyleSheet} from "react-native";
 import {useState} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
+import {useNavigation} from '@react-navigation/native';
+import CustomButton from '../../components/buttons/CustomButton';
 
-const ProfileScreen = ( ) => {
+const FavoriteTrainingScreen = ( ) => {
     const [posts, setPosts] = useState([
         {
             id: 1,
@@ -62,7 +64,7 @@ const ProfileScreen = ( ) => {
                     content:'dificil',
                     user:'yoyo6'
                 }
-                ],
+            ],
             likes: {
                 length:4
             }
@@ -88,73 +90,27 @@ const ProfileScreen = ( ) => {
             likes: {
                 length:32
             }
-        },
-        {
-            id: 3,
-            title: 'Sentadillas',
-            place: 'Parque LasHeras',
-            description: 'Excepteur sint occaecat cupidatat non proident.',
-            trainingType: 'Cola',
-            difficulty: 1,
-            image: require('../../../assets/images/post3.png'),
-            comments: [
-                {
-                    content:'eeee meshi',
-                    user:'pepito1',
-                },
-                {
-                    content:'colores?',
-                    user:'yoyo'
-                }
-            ],
-            likes: {
-                length:32
-            }
-        },
+        }
     ]);
+    const navigation = useNavigation();
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-    //const [selectedPost, setSelectedPost] = useState(null);
-
-
-    const toggleModal = (image) => {
-        setSelectedImage(image);
-        setShowModal(!showModal);
-    };
+    const renderItem = ({ item }) => {
+        const onPress = () => navigation.navigate("Training", { item });
+        return (
+            <>
+                <Training item = {item} canEdit={false}></Training>
+                <CustomButton onPress = {onPress} text={"Ver Entrenamiento"} containerWidth={"100%"}></CustomButton>
+            </>
+        );
+      };
 
     return (
         <View style={{ flex: 1,padding: 1 }}>
             <StatusBar style="auto" />
-                <View style={styles.profileBar}>
-                    <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
-                        <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
-                    </TouchableWithoutFeedback>
-                    <View style={{flexDirection:'column'}}>
-                        <Text style={styles.profileName}>Pepito Boxeador</Text>
-
-                        <View style={{flexDirection:'row'}}>
-                            <Text style={styles.profileFollow}>3 Followers</Text>
-                            <Text style={styles.profileFollow}>213 Following</Text>
-                        </View>
-
-                    </View>
-                </View>
-
-                <Modal visible={showModal} transparent={true}>
-                    <View style={styles.modalBackground}>
-                        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
-                            <Image source={selectedImage} style={styles.enlargedProfileImage} />
-                        </TouchableWithoutFeedback>
-                    </View>
-                </Modal>
-
                 <FlatList
                     data={posts}
                     keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <Training item =  {item} canEdit={true}></Training>
-                    )}/>
+                    renderItem={renderItem}/>
         </View>
      )
 }
@@ -197,4 +153,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProfileScreen;
+export default FavoriteTrainingScreen;

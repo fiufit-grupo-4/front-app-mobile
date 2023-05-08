@@ -1,15 +1,18 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState,useEffect} from 'react';
+import {View, Text, Switch,StyleSheet,Dimensions,Image,ScrollView,TouchableOpacity,PermissionsAndroid} from 'react-native';
 import CustomInput from '../../components/inputs/CustomInput';
 import CustomPassword from '../../components/inputs/CustomPassword';
 import CustomButton from '../../components/buttons/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../../components/utils/Logo';
 import { PasswordVisibility } from '../../utils/PasswordVisibility';
 import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
+import {Ionicons} from 'react-native-vector-icons'
+import FiuFitLogo from '../../../assets/images/fiticon.png';
+import * as Location from 'expo-location';
 
+const {height} = Dimensions.get("window")
 const validator = require('validator');
 
 const SignUpScreen = () => {
@@ -18,10 +21,53 @@ const SignUpScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
     PasswordVisibility();
+  const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
+
+  const toggleSwitch = () => {
+      setIsAthlete(previousState => !previousState); // Cambia el estado del botón
+  };
+
+
+  function getLocation() {
+    const result = requestLocationPermission();
+    result.then(async res => {
+      if (res) {
+        let location = await Location.getCurrentPositionAsync({});
+        console.log(location)
+        setLocation(location);
+      }
+    }).catch(error => {
+      console.warn(error);
+    })
+  }
+
+  async function requestLocationPermission() {
+    try {
+      const status = await Location.requestForegroundPermissionsAsync()
+      console.log(status)
+      if (status !== 'granted') {
+        console.log("Permiso concedido");
+        return true
+      } else {
+        setErrorMsg('Permission to access location was denied');
+        console.log("Permiso denegado");
+        return false
+      }
+    } catch(err) {
+      setErrorMsg('Permission to access location was denied');
+      console.warn(err)
+      return false
+    }
+  }
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
 
   const navigation = useNavigation();
 
   const onRegisterPressed = (data) => {
+    /*
     var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
     console.log(data)
     setLoading(true)
@@ -47,8 +93,8 @@ const SignUpScreen = () => {
     .catch(error => {
       setError(true)
       setErrorMessage(error)
-    })
-   
+    })*/
+    getLocation()
   };
 
   const onSignInPress = () => {
@@ -66,11 +112,11 @@ const SignUpScreen = () => {
 
   const { control, handleSubmit, formState: { errors }, watch } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
-      username:'',
-      repeatPassword:'',
-      phoneNumber: '',
+      email: 'sofia@fi.uba.ar',
+      password: '1234',
+      username:'Sofi77',
+      repeatPassword:'1234',
+      phoneNumber: "800900",
     }
   });
 
@@ -85,14 +131,21 @@ const SignUpScreen = () => {
   };
 
   return (
+    
       <View style={styles.root}>
-        <Logo/>
+        <Image
+            source={FiuFitLogo}
+            style={ {width: "80%", height: height * 0.2,marginTop:10}}
+            resizeMode="contain"
+        />
 
         {loading 
           ? <LoadingIndicator/>
           : <>
               <Text style={styles.title}>Create an Account</Text>
-                {/* 
+                
+
+              <ScrollView contentContainerStyle ={{alignItems: 'center',flexGrow:1 ,borderRadius:10,width:"100%",padding:5 }} showsHorizontalScrollIndicator={false}>
               <CustomInput
                 name= "username" 
                 placeholder="Username"
@@ -100,8 +153,8 @@ const SignUpScreen = () => {
                 control={control}
                 rules = {{required:"This field is Required"}}
               />
-              */}
-            
+              
+        
               <CustomInput
                 name= "email"
                 placeholder="Email"
@@ -114,7 +167,7 @@ const SignUpScreen = () => {
                 otherError={error}
               />
 
-              {/* 
+              
               <CustomInput
                 name= "phoneNumber"
                 placeholder="Phone number"
@@ -124,7 +177,7 @@ const SignUpScreen = () => {
                   required:"This field is required",
                   validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
               />
-              */}
+              
             
               <CustomPassword
                 name="password"
@@ -150,7 +203,26 @@ const SignUpScreen = () => {
                   validate: value => value === pwd || "Passwords do not match"
                 }}
                 otherError={error}
-              />
+              /> 
+
+              <View style={[signUpStyles.container, isAthlete ? {} : {backgroundColor:"orange"} ]}>
+                  <Ionicons name={isAthlete ? 'basketball' : 'bicycle'} style= {signUpStyles.icon} size ={25}/>
+                  < Text style={[signUpStyles.text,isAthlete ? {color: "#708090"} : {color:"black"}]}  >
+                    Choose your role:    
+                  </Text>
+                  < Text style={signUpStyles.label}  >
+                    {isAthlete ? 'Athlete' : 'Trainer'}   
+                  </Text> 
+                  <Switch
+                    onValueChange={toggleSwitch}
+                    value={isAthlete}
+                    thumbColor={isAthlete ? '#ffffff' : '#000000'}
+                    trackColor={{ true: '#000000', false: '#ffffff' }}
+                    style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                  />      
+              </View>
+                
+              </ScrollView>
 
               <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
               
@@ -158,7 +230,7 @@ const SignUpScreen = () => {
                 <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
               )}
 
-              <View style={styles.container} > 
+              <View style={[styles.container]} > 
                 <Text style={styles.text}>
                   By registering, you confirm that you accept our{' '}
                   <Text style={styles.link} onPress={onTermsOfUsePressed}>
@@ -171,17 +243,67 @@ const SignUpScreen = () => {
                   .
                 </Text>
               </View>
-
+              
               <CustomButton
                 text="Have an account? Sign in"
                 onPress={onSignInPress}
                 type="TERTIARY"
               /> 
-            </>
-        }       
-      </View>
+            
 
+            </>
+        }   
+          
+      </View>
+      
   );
 };
 
 export default SignUpScreen;
+
+
+const signUpStyles = StyleSheet.create({
+  container: {
+    
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor:"#AFC5E3",
+    width: '80%',
+    borderRadius: 15,
+    padding:5,
+    margin:5,
+    height:45
+  },
+  label: {
+    fontSize: 15,
+    fontWeight:"bold",
+  },
+  text: {
+    fontSize: 15,
+    marginRight:10,
+    marginLeft:5
+  }, 
+  icon: {
+    color: "#222831",
+    alignItems:"center",
+    paddingHorizontal:5
+  },
+});
+
+{/*
+import { PermissionsAndroid } from 'react-native';
+
+async function requestLocationPermission() {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        'title': 'Permiso para acceder a la ubicación',
+        'message': 'Se necesita acceso a la ubicación para poder mostrar tu posición actual'
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Permiso concedido");
+    } else {*/
+  
+  }
