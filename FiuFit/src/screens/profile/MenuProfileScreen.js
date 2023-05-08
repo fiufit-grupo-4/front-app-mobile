@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {StackActions} from "@react-navigation/native";
+import {Screens} from "../../navigation/Screens";
 
 function MenuProfileScreen({ navigation }) {
 
-    const handleEditPassword = () => {
-            // handle saving changes to user profile
-    };
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -19,7 +18,7 @@ function MenuProfileScreen({ navigation }) {
                 <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={handleEditPassword}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Screens.ChangePassword)}>
                 <Text style={styles.buttonText}>Create New Password</Text>
             </TouchableOpacity>
         </View>
