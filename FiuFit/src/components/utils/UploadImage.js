@@ -52,7 +52,7 @@ const UploadImage = ({onPress, setImage}) => {
             quality: 1,
         });
         if (!result.canceled) {     
-            setImage(result.assets[0].uri)
+            //setImage(result.assets[0].uri)
             setImageUri(result.assets[0].uri)
             setError(false)
             return true
@@ -60,25 +60,23 @@ const UploadImage = ({onPress, setImage}) => {
         return false
     };
 
+    /*
     const onNextPress = () => {
         if (imageUri) {
             onPress();
         } else {
             setError(true);
         }
-    };
+    };*/
 
 
     return (
         <View style={styles.container}>
-            <Text style={styles.botton}>NEW POST</Text>
 
             <View style={styles.boxContainer}>
 
                 <View style={{alignItems: 'center', justifyContent: 'center' }}>
-                {imageUri && (
-                    <Image source={{ uri: imageUri }} style={{ marginTop: 90, width: 300, height: 300 }} />
-                )}
+                
 
                     <TouchableOpacity style={[styles.button, { backgroundColor: '#DEE9F8FF' }]}  onPress={pickImage}>
                         <Text style={styles.buttonText}>Select an Image</Text>
@@ -88,17 +86,17 @@ const UploadImage = ({onPress, setImage}) => {
                     {error && (
                         <Text style={{color: 'red'}}>You must select an image first</Text>
                     )}
-
-                    <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]}
-                                      onPress={() => {
-                                          onNextPress()
-                                      }}>
-                        <Text style={styles.buttonText}>Next Step</Text>
-                    </TouchableOpacity>
-
+                    {imageUri && (
+                    <Image source={{ uri: imageUri }} style={{ marginTop: 90, width: 300, height: 300 }} />
+                
+                    )}
 
                     <View style={styles.container}>
-                    {!uploading ? <Button title='Upload Image' onPress={uploadImage} />: <ActivityIndicator size={'small'} color='black' />}
+                    {!uploading 
+                     ? <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]} onPress={uploadImage}>
+                            <Text style={styles.buttonText}>Send</Text>
+                        </TouchableOpacity>
+                     : <ActivityIndicator size={'large'} color='black' />}
                     </View>
 
                 </View>

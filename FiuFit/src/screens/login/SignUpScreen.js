@@ -28,7 +28,6 @@ const SignUpScreen = () => {
   };
 
 
-  
   function getLocation() {
     const result = requestLocationPermission();
     result.then(async res => {
