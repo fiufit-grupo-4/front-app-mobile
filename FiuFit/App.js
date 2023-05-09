@@ -1,24 +1,26 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import Navigation from './src/navigation/Navigation';
+import { firebase } from './src/config/firebase';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style = {styles.titulo}> Bienvenido</Text>
-      <Text style = {styles.titulo}> Inicia sesión con tu cuenta </Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+class App extends React.Component {
+  render() {
+      return (
+        <SafeAreaView style={styles.root}>
+          <StatusBar style="auto" />
+                <Navigation/>
+        </SafeAreaView>
+      )
+  }
 }
 
+
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    backgroundColor: 'tomato',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'skyblue',
   },
-  titulo :{
-    fontSize:30
-  }
 });
+
+export default App;
