@@ -97,9 +97,6 @@ const UploadImage = ({onPress, setImage}) => {
                     </TouchableOpacity>
 
 
-                    <View style={styles.container}>
-                    {!uploading ? <Button title='Upload Image' onPress={uploadImage} />: <ActivityIndicator size={'small'} color='black' />}
-                    </View>
 
                 </View>
             </View>
