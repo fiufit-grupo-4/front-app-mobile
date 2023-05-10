@@ -28,8 +28,8 @@ const ConfirmEmailScreen = () => {
   return (
       <View style={styles.root}>
         <Logo/>
-        <Text style={styles.title}>Confirm your Email</Text>
-
+        <Text style={styles.title}>Confirm your Account</Text>
+        
         <CustomInput
           name= "code"
           placeholder="Enter your confirmation code"

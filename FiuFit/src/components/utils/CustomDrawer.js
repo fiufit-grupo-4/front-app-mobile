@@ -4,7 +4,7 @@ import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-naviga
 import {useNavigation} from '@react-navigation/native';import { TouchableOpacity } from 'react-native';
 import {StatusBar} from "expo-status-bar";
 import {AntDesign} from "@expo/vector-icons";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const CustomDrawer = (props) => {
@@ -28,8 +28,10 @@ const CustomDrawer = (props) => {
                     text: 'OK',
                     onPress: () => {
                         console.log('User logged out');
-                        ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT);
-                        navigation.navigate("SignIn")
+                        AsyncStorage.removeItem("accessToken").then(() => {
+                            ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
+                            navigation.navigate("SignIn")
+                        })
                         // Add code to log the user out here
                     }
                 }

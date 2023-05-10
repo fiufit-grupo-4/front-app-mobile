@@ -1,7 +1,8 @@
-import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
-import {useState} from "react";
+import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet, ActivityIndicator} from "react-native";
+import {useState,useEffect} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = ( ) => {
     const [posts, setPosts] = useState([
@@ -115,6 +116,11 @@ const ProfileScreen = ( ) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [user, setUser] = useState({});
+    const [training, setTraining] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     //const [selectedPost, setSelectedPost] = useState(null);
 
 
@@ -123,9 +129,63 @@ const ProfileScreen = ( ) => {
         setShowModal(!showModal);
     };
 
+
+    useEffect(() => {
+        const url = 'https://api-gateway-fiufit.herokuapp.com/users/me/'
+   
+        async function getUsers() {
+          setLoading(true)
+          AsyncStorage.getItem('accesToken').then( token =>{
+            console.log(token)
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,    
+                }
+                }).then(response => {
+                
+                setLoading(false)  
+                if (!response.ok) {
+                    setError(true)
+                    console.log(response.status)
+                    if(response.status == 401){
+                        setErrorMessage("Unhautorized, not valid access token")
+                    } else {
+                        setErrorMessage("Failed to connect with server")
+                    }
+                } else {
+                    response.json().then(data => {
+                        console.log(data)
+                        setUser(data);
+                    }).catch(error => {
+                        setError(true)
+                        setErrorMessage(error)
+                    })
+                }
+                })
+                .catch(error => {
+                    setError(true)
+                    setErrorMessage(error)
+                })  
+          }
+          ).catch(error => {
+            setError(true)
+            setErrorMessage(error)
+          }) 
+        }
+        getUsers();
+    }, [])  
+
     return (
         <View style={{ flex: 1,padding: 1 }}>
-            <StatusBar style="auto" />
+
+            { loading 
+             ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                <ActivityIndicator size="large" color = "black"/>
+               </View>
+             : <>
+             <StatusBar style="auto" />
                 <View style={styles.profileBar}>
                     <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
@@ -154,7 +214,20 @@ const ProfileScreen = ( ) => {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <Training item =  {item} canEdit={true}></Training>
-                    )}/>
+                )}/>
+
+                {error && (
+                    <View style = {{alignItems:"center"}}>
+                    <Text style = {{fontSize:18,color : "crimson",padding:5}}> {errorMessage} </Text>
+                    </View>
+                )}
+             
+               </>
+            }
+            
+            
+
+                
         </View>
      )
 }

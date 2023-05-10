@@ -14,6 +14,8 @@ import * as Location from 'expo-location';
 
 const {height} = Dimensions.get("window")
 const validator = require('validator');
+const ATHLETE = 3;
+const TRAINER = 2;
 
 const SignUpScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -66,8 +68,13 @@ const SignUpScreen = () => {
 
   const navigation = useNavigation();
 
+  function getRole(){
+    console.log(isAthlete)
+    return isAthlete ? ATHLETE : TRAINER
+  }
+
   const onRegisterPressed = (data) => {
-    /*
+    
     var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
     console.log(data)
     setLoading(true)
@@ -78,7 +85,8 @@ const SignUpScreen = () => {
       },
       body: JSON.stringify({
         "mail": data.email,
-        "password": data.password
+        "password": data.password,
+        "role":getRole()
       })
     })
     .then(response => {
@@ -93,8 +101,8 @@ const SignUpScreen = () => {
     .catch(error => {
       setError(true)
       setErrorMessage(error)
-    })*/
-    getLocation()
+    })
+    //getLocation()
   };
 
   const onSignInPress = () => {
@@ -114,7 +122,6 @@ const SignUpScreen = () => {
     defaultValues: {
       email: 'sofia@fi.uba.ar',
       password: '1234',
-      username:'Sofi77',
       repeatPassword:'1234',
       phoneNumber: "800900",
     }
@@ -145,14 +152,16 @@ const SignUpScreen = () => {
               <Text style={styles.title}>Create an Account</Text>
                 
 
-              <ScrollView contentContainerStyle ={{alignItems: 'center',flexGrow:1 ,borderRadius:10,width:"100%",padding:5 }} showsHorizontalScrollIndicator={false}>
+             
+              
+              {/*
               <CustomInput
                 name= "username" 
                 placeholder="Username"
                 icon={"person-outline"}
                 control={control}
                 rules = {{required:"This field is Required"}}
-              />
+              />*/}
               
         
               <CustomInput
@@ -174,7 +183,7 @@ const SignUpScreen = () => {
                 control={control}
                 icon={"call-outline"}
                 rules = {{
-                  required:"This field is required",
+                  required:"This field is Required",
                   validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
               />
               
@@ -222,7 +231,7 @@ const SignUpScreen = () => {
                   />      
               </View>
                 
-              </ScrollView>
+              
 
               <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
               

@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import {
   View,
-  ToastAndroid,
   StyleSheet,
   Text,
-  Switch
+  Switch,
 } from 'react-native';
 import Logo from '../../components/utils/Logo';
 import CustomInput from '../../components/inputs/CustomInput';
@@ -17,10 +16,11 @@ import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
-import {Drawer} from "react-native-paper";
-import DrawerNavigator from "@react-navigation/drawer/src/navigators/createDrawerNavigator";
-import DrawerNavigation from "../../navigation/DrawerNavigation";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const validator = require('validator');
+const ATHLETE = 3;
+const TRAINER = 2;
 
 const SignInScreen = () => {
   //{route}
@@ -37,12 +37,20 @@ const SignInScreen = () => {
   const toggleSwitch = () => {
       setIsAthlete(previousState => !previousState); // Cambia el estado del botón
   };
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: 'sofia@fi.uba.ar',
-      password: '123456e'
+      email: 'username@mail.com',
+      password: 'secure'
     }
   });
+
+
+
+  function getRole(){
+      console.log(isAthlete)
+      return isAthlete ? ATHLETE : TRAINER
+  }
 
   
   const onSignInPressed = (data) => {
@@ -56,7 +64,8 @@ const SignInScreen = () => {
       },
       body: JSON.stringify({
         "mail": data.email,
-        "password": data.password
+        "password": data.password,
+        "role": getRole()
       })
     })
     .then(response => {
@@ -69,7 +78,21 @@ const SignInScreen = () => {
           setErrorMessage("Failed to connect with server")
         }
       } else {
-        navigation.navigate("Inicio");
+        response.json().then(json => {
+          const accesToken = json.access_token
+          console.log(json.access_token)
+          AsyncStorage.setItem('accesToken', accesToken).then(
+            navigation.navigate("Inicio")
+          ).catch(error => {
+            setError(true)
+            setErrorMessage(error)
+          })
+          ;
+        }).catch(error => {
+          setError(true)
+          setErrorMessage(error)
+        })
+        
       }
     })
     .catch(error => {
