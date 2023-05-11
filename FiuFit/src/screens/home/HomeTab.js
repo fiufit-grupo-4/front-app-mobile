@@ -1,14 +1,18 @@
 import React from 'react';
-import {View, Text,StyleSheet} from 'react-native';
+import {View, Text,StyleSheet,ActivityIndicator} from 'react-native';
+import Logo from '../../components/utils/Logo';
 
 export const HomeTab = () => {
     return (
-        <View styles ={styles.root}>
-            <Text styles ={{fontSize: 30,
+        <View style ={styles.root}>
+
+            <Text style ={{fontSize: 30,
                 fontWeight: 'bold',
                 color: 'black',
                 margin: 10,
                 marginBottom:20}}>Bienvenido a FiuFit</Text>
+            <Logo></Logo>
+              
         </View>
     )
 }
@@ -18,9 +22,9 @@ const styles = StyleSheet.create({
     root: {
       flex:1,
       alignItems: 'center',
-      padding: 20,
-      backgroundColor:"blue",
-      justifyContent: "center"
+      padding: 30,
+      backgroundColor:"#f6f6f6",
+      
     },
     container: {
       width: '85%',

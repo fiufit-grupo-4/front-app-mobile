@@ -17,10 +17,9 @@ import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { ATHLETE,TRAINER,API_GATEWAY,TOKEN,ROLE } from '../../utils/constants';
 const validator = require('validator');
-const ATHLETE = 3;
-const TRAINER = 2;
+
 
 const SignInScreen = () => {
   //{route}
@@ -54,7 +53,7 @@ const SignInScreen = () => {
 
   
   const onSignInPressed = (data) => {
-    var url = 'https://api-gateway-fiufit.herokuapp.com/login/';
+    var url = API_GATEWAY + 'login/';
     console.log(data)
     setLoading(true)
     fetch(url, {
@@ -80,14 +79,32 @@ const SignInScreen = () => {
       } else {
         response.json().then(json => {
           const accesToken = json.access_token
+          const role = getRole().toString()
           console.log(json.access_token)
-          AsyncStorage.setItem('accesToken', accesToken).then(
+
+
+          AsyncStorage.multiSet([[TOKEN, accesToken],[ROLE, role]]).then(
+            navigation.navigate("Inicio")
+          ).catch(() => {
+            navigation.navigate("Inicio")
+          })
+
+          {/* 
+          AsyncStorage.setItem(TOKEN, accesToken).then(
             navigation.navigate("Inicio")
           ).catch(error => {
             setError(true)
             setErrorMessage(error)
           })
-          ;
+          AsyncStorage.setItem(ROLE, role).then(
+            navigation.navigate("Inicio")
+          ).catch(error => {
+            setError(true)
+            setErrorMessage(error)
+          })*/}
+
+          
+          
         }).catch(error => {
           setError(true)
           setErrorMessage(error)

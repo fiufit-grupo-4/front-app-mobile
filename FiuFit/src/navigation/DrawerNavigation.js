@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {Image} from "react-native";
 import HomeScreen from "./MainScreen";
 import {AntDesign} from "@expo/vector-icons";
@@ -10,10 +10,33 @@ import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import CertifyScreen from "../screens/certify/CertifyScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ATHLETE,TRAINER,ROLE} from '../utils/constants';
+
 
 const Drawer = createDrawerNavigator();
 
 function DrawerComponent() {
+    const [isTrainer, setRole] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        async function getRole() {
+            AsyncStorage.getItem(ROLE).then( role =>{
+                console.log(role)
+                setRole(role == TRAINER.toString())
+            }
+            ).catch(error => {
+                setError(true)
+                setErrorMessage(error)
+            })
+        }
+        getRole();
+    }, [])
+
+
+
     return (
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {... props} />}
@@ -73,21 +96,6 @@ function DrawerComponent() {
 
 
         <Drawer.Screen
-            name="         New Post"
-            color="#F0A500"
-            component={CreateTrainingScreen}
-            options={() => ({
-                drawerIcon: () => (
-                    <AntDesign
-                        name="plus"
-                    />
-                ),
-                headerShown: true,
-            })}
-        />
-
-
-        <Drawer.Screen
             name="         Favorites"
             color="#F0A500"
             component={FavoriteTrainingScreen}
@@ -95,6 +103,22 @@ function DrawerComponent() {
                 drawerIcon: () => (
                     <AntDesign
                         name="staro"
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
+
+        { isTrainer &&(
+            <>
+            <Drawer.Screen
+            name="         New Post"
+            color="#F0A500"
+            component={CreateTrainingScreen}
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="plus"
                     />
                 ),
                 headerShown: true,
@@ -114,6 +138,12 @@ function DrawerComponent() {
                 headerShown: true,
             })}
         />
+            
+            </>
+        )}
+
+        
+        
 
 
     </Drawer.Navigator>

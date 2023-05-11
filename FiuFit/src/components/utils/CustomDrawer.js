@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';import { TouchableOpacity
 import {StatusBar} from "expo-status-bar";
 import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { ROLE,TOKEN } from '../../utils/constants';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
@@ -28,11 +28,13 @@ const CustomDrawer = (props) => {
                     text: 'OK',
                     onPress: () => {
                         console.log('User logged out');
-                        AsyncStorage.removeItem("accessToken").then(() => {
+                        AsyncStorage.multiRemove(TOKEN,ROLE).then(() => {
                             ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
                             navigation.navigate("SignIn")
-                        })
-                        // Add code to log the user out here
+                        }).catch(error => {
+                            navigation.navigate("SignIn")
+                        }) 
+                    
                     }
                 }
             ]

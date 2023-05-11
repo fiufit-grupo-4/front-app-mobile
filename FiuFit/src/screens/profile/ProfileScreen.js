@@ -3,6 +3,8 @@ import {useState,useEffect} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ROLE,TOKEN, API_GATEWAY } from '../../utils/constants';
+
 
 const ProfileScreen = ( ) => {
     const [posts, setPosts] = useState([
@@ -131,11 +133,11 @@ const ProfileScreen = ( ) => {
 
 
     useEffect(() => {
-        const url = 'https://api-gateway-fiufit.herokuapp.com/users/me/'
+        const url = API_GATEWAY + 'users/me/'
    
         async function getUsers() {
           setLoading(true)
-          AsyncStorage.getItem('accesToken').then( token =>{
+          AsyncStorage.getItem(TOKEN).then( token =>{
             console.log(token)
             fetch(url, {
                 method: 'GET',

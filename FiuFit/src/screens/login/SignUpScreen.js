@@ -11,11 +11,11 @@ import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
 import FiuFitLogo from '../../../assets/images/fiticon.png';
 import * as Location from 'expo-location';
+import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
 
 const {height} = Dimensions.get("window")
 const validator = require('validator');
-const ATHLETE = 3;
-const TRAINER = 2;
+
 
 const SignUpScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -75,7 +75,7 @@ const SignUpScreen = () => {
 
   const onRegisterPressed = (data) => {
     
-    var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
+    var url = API_GATEWAY + 'signup/';
     console.log(data)
     setLoading(true)
     fetch(url, {
