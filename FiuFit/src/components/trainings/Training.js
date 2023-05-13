@@ -8,8 +8,7 @@ import {favouriteTraining} from "../../screens/training/FavouriteTraining";
 import {getComments} from "../../screens/training/CommentTraining";
 import {editPostDots} from "../../screens/training/EditTrainingButton";
 import {topBarPost, topContent, trainingPlace} from "../../screens/training/TopBarTraining";
-import {trainingContent} from "../../screens/training/ContentTraining";
-
+import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
 
 
 const Training = ({item, canEdit}) => {
@@ -99,12 +98,7 @@ const Training = ({item, canEdit}) => {
 
                     {trainingPlace(item)}
 
-                    <View style={{padding: 5}}>
-                        <Text style={styles.title}>{item.title}</Text>
-                    </View>
-                    <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
-                        <Image source={item.image} style={styles.postImage}/>
-                    </TouchableWithoutFeedback>
+                    {trainingPrincipalContent(item, toggleModal)}
 
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -140,41 +134,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         overflow: 'hidden'
     },
-    name: {
-        fontSize: 16,
-        color: 'rgba(23,29,52,0.93)',
-        marginHorizontal: 10
-    },
-    edit: {
-        flexDirection: 'row',
-        padding: 5
-    },
-    title: {
-        borderTopWidth: 1,
-        borderTopColor: 'orange',
-        fontSize: 18,
-        //marginLeft:7,
-        color: 'rgba(23,29,52,0.76)'
-    },
-    modalBackground: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgb(255,255,255)',
-    },
     postBackground: {
         marginBottom: 40,
         //backgroundColor: 'rgba(217,227,240,0.75)'
         backgroundColor: 'white'
-    },
-    enlargedProfileImage: {
-        width: '80%',
-        height: '80%',
-        resizeMode: 'contain',
-    },
-    postImage: {
-        width: '100%',
-        height: 300,
     }
 });
 
