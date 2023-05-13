@@ -1,6 +1,6 @@
+import React from "react";
 import {TouchableWithoutFeedback, View} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
-import React from "react";
 
 
 export function favouriteTraining(handleFavoritePress, isFavorite) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
 import {useForm} from "react-hook-form";
 import {Ionicons} from "@expo/vector-icons";
 

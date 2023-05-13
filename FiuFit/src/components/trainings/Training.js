@@ -1,13 +1,11 @@
-import {Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
-import {Ionicons} from "react-native-vector-icons";
-import React, {useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import Rating, {getCalification} from "./../../screens/training/RateTraining";
 import axios from "axios";
-import {favouriteTraining} from "../../screens/training/FavouriteTraining";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {editPostDots} from "../../screens/training/EditTrainingButton";
-import {topBarPost, topContent, trainingPlace} from "../../screens/training/TopBarTraining";
+import {getCalification} from "../../screens/training/RateTraining";
+import {favouriteTraining} from "../../screens/training/FavouriteTraining";
+import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
 import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
 
 

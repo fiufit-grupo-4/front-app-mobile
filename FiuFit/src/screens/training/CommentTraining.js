@@ -8,8 +8,8 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import {Ionicons} from "react-native-vector-icons";
 import React from "react";
+import {Ionicons} from "react-native-vector-icons";
 
 export function getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment) {
     return <>

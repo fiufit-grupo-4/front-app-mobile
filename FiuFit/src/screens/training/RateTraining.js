@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, Text, TouchableWithoutFeedback, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Ionicons} from "react-native-vector-icons";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Rating = ({ onRate }) => {
     const [rating, setRating] = useState(0);
@@ -51,5 +51,3 @@ const styles = StyleSheet.create({
     }
 });
 
-
-export default Rating;

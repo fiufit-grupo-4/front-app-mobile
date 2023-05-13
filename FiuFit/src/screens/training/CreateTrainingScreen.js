@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import UploadImage from "./UploadImage";
 import CreateTraining from "./CreateTraining";
-import ProfileScreen from "../profile/ProfileScreen";
 
 const CreateTrainingScreen = ({ navigation, route }) => {
     const [firstStep, setFirstStep] = useState(true);

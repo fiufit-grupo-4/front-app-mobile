@@ -3,8 +3,6 @@ import {Ionicons} from "react-native-vector-icons";
 import React from "react";
 import {editPostDots} from "./EditTrainingButton";
 
-
-
 export function topContent(canEdit, handleEdit, item) {
     return <View style={styles.topContent}>
         {topBarPost()}

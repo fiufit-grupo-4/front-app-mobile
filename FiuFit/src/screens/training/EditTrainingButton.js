@@ -18,5 +18,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginLeft:30,
         color : 'rgba(91,99,95,0.77)',
+    },
+    edit: {
+        flexDirection: 'row',
+        padding: 5
     }
 });
