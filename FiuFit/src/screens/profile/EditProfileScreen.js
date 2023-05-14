@@ -7,18 +7,25 @@ import {
     Image,
     TouchableWithoutFeedback,
     TouchableOpacity,
+    ActivityIndicator,
     StyleSheet
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from "@expo/vector-icons";
 import {StackActions, useNavigation} from "@react-navigation/native";
+import { API_GATEWAY,TOKEN } from '../../utils/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export const EditProfileScreen = () => {
     const [name, setName] = useState('Pepito');
     const [lastName, setLastName] = useState('Boxeador');
     const [profilePicture, setProfilePicture] = useState(require('../../../assets/images/profilepic.jpeg'));
-    const [email, setEmail] = useState('pepitoboxeador@gmail.com');
+    const [age, setAge] = useState();
     const [number, setNumber] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const navigation = useNavigation();
 
@@ -40,8 +47,54 @@ export const EditProfileScreen = () => {
     };
 
     const handleSaveChanges = () => {
-      // handle saving changes to user profile
-        //TODO: fetch
+        const url = API_GATEWAY + 'users/645ed9cf5544e4af38873c29'
+        setLoading(true)
+        AsyncStorage.getItem(TOKEN).then( token =>{
+            console.log(token)
+            fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,    
+                },
+                body: JSON.stringify({
+                    "name": name,
+                    "lastname":lastName,
+                    "age": age,
+                    "mail": "username@mail.com",
+                    "password": "secure",
+                    "image": profilePicture
+                  })
+                }).then(response => {
+                    setLoading(false)  
+                    if (!response.ok) {
+                        setError(true)
+                        console.log(response.status)
+                        if(response.status == 401){
+                            setErrorMessage("Unhautorized, not valid access token")
+                        } else {
+                            setErrorMessage("Failed to connect with server")
+                        }
+                    } else {
+                        response.json().then(data => {
+                            console.log(data)
+                            setUser(data);
+                        }).catch(error => {
+                            setError(true)
+                            setErrorMessage(error)
+                        })
+                    }
+                })
+                .catch(error => {
+                    setError(true)
+                    setErrorMessage(error)
+                })  
+            }
+            ).catch(error => {
+                setError(true)
+                setErrorMessage(error)
+            }) 
+
         navigation.dispatch(
             StackActions.pop(1)
         );
@@ -81,14 +134,16 @@ export const EditProfileScreen = () => {
             </View>
 
             <View style={styles.inputContainer}>
-                <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Email</Text>
-                <TextInput
-                    style={{ fontSize: 16, color: '#333' }}
-                    placeholder="Enter your email"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-            </View>
+            <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Age</Text>
+                    <TextInput
+                        style={styles.input}
+                        maxLength={2}
+                        placeholder="Enter your age"
+                        value={age}
+                        onChangeText={ (value) => setAge(value.replace(/[^10-99]/g, ''))}
+                        keyboardType="numeric"
+                    />
+                </View>
 
             <View style={styles.inputContainer}>
                 <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Number</Text>
@@ -97,12 +152,26 @@ export const EditProfileScreen = () => {
                     placeholder="Enter your phone number"
                     value={number}
                     onChangeText={setNumber}
+                    keyboardType="numeric"
                 />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                <Text style={styles.buttonText}>Save Changes</Text>
-            </TouchableOpacity>
+            { loading 
+              ? <View style={{}}>
+                    <ActivityIndicator size="large" color = "black"/>
+                </View>
+              : <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+                  <Text style={styles.buttonText}>Save Changes</Text>
+                </TouchableOpacity>
+            }
+
+            {error && (
+                <View style = {{alignItems:"center"}}>
+                    <Text style = {{fontSize:18,color : "crimson",padding:5}}> {errorMessage} </Text>
+                </View>
+            )}
+
+            
 
         </View>
 

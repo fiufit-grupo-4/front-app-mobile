@@ -133,10 +133,12 @@ const ProfileScreen = ( ) => {
 
 
     useEffect(() => {
-        const url = API_GATEWAY + 'users/me/'
+        const url = API_GATEWAY + 'users/me'
    
-        async function getUsers() {
+         function getUsers() {
           setLoading(true)
+
+          
           AsyncStorage.getItem(TOKEN).then( token =>{
             console.log(token)
             fetch(url, {
@@ -193,7 +195,7 @@ const ProfileScreen = ( ) => {
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                     </TouchableWithoutFeedback>
                     <View style={{flexDirection:'column'}}>
-                        <Text style={styles.profileName}>Pepito Boxeador</Text>
+                        <Text style={styles.profileName}>{user.mail}</Text>
 
                         <View style={{flexDirection:'row'}}>
                             <Text style={styles.profileFollow}>3 Followers</Text>
