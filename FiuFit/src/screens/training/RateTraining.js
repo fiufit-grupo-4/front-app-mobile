@@ -32,11 +32,12 @@ export function getCalification(handleStarPress, handleRate, item) {
                 <Ionicons name={"md-ribbon-outline"} style={styles.qualifyIcon}/>
             </TouchableWithoutFeedback>
             <Rating onRate={handleRate}/>
-            <Text style={{
+            {/*<Text style={{
                 paddingHorizontal: 20,
                 paddingVertical: 15,
                 color: 'rgba(23,29,52,0.71)'
             }}>{'Average:  ' + item.likes.length}</Text>
+            */}
         </View>
     </>;
 }

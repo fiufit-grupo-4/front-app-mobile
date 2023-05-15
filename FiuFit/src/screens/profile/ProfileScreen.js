@@ -7,7 +7,7 @@ import {ROLE,TOKEN, API_GATEWAY } from '../../utils/constants';
 
 
 const ProfileScreen = ( ) => {
-    const [posts, setPosts] = useState([
+    /*const [posts1, setPosts1] = useState([
         {
             id: 1,
             title: 'Fuerza de brazos',
@@ -114,7 +114,7 @@ const ProfileScreen = ( ) => {
                 length:32
             }
         },
-    ]);
+    ]);*/
 
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -124,7 +124,7 @@ const ProfileScreen = ( ) => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     //const [selectedPost, setSelectedPost] = useState(null);
-
+    const [posts, setPosts] = useState([]);
 
     const toggleModal = (image) => {
         setSelectedImage(image);
@@ -134,52 +134,75 @@ const ProfileScreen = ( ) => {
 
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
-   
-         function getUsers() {
-          setLoading(true)
 
-          
-          AsyncStorage.getItem(TOKEN).then( token =>{
-            console.log(token)
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,    
-                }
-                }).then(response => {
-                
-                setLoading(false)  
-                if (!response.ok) {
-                    setError(true)
-                    console.log(response.status)
-                    if(response.status == 401){
-                        setErrorMessage("Unhautorized, not valid access token")
-                    } else {
-                        setErrorMessage("Failed to connect with server")
-                    }
-                } else {
-                    response.json().then(data => {
-                        console.log(data)
-                        setUser(data);
-                    }).catch(error => {
-                        setError(true)
-                        setErrorMessage(error)
-                    })
-                }
+        function getUsers() {
+            setLoading(true);
+
+            AsyncStorage.getItem(TOKEN)
+                .then((token) => {
+                    console.log("TOKEN: ", token);
+                    Promise.all([
+                        fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token,
+                            },
+                        }).then((response) => {
+                            setLoading(false);
+                            if (!response.ok) {
+                                setError(true);
+                                console.log(response.status);
+                                if (response.status === 401) {
+                                    setErrorMessage('Unauthorized, not a valid access token');
+                                } else {
+                                    setErrorMessage('Failed to connect with the server');
+                                }
+                            } else {
+                                response.json().then((data) => {
+                                    console.log(data);
+                                    setUser(data);
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        }),
+                        fetch(API_GATEWAY + 'trainers/me/trainings', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token,
+                            },
+                        }).then((response) => {
+                            if (response.ok) {
+                                response.json().then((data) => {
+                                    console.log("POSTS: ", data);
+                                    setPosts(data);
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            } else {
+                                setError(true);
+                                setErrorMessage('Failed to fetch posts');
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        }),
+                    ]);
                 })
-                .catch(error => {
-                    setError(true)
-                    setErrorMessage(error)
-                })  
-          }
-          ).catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          }) 
+                .catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
         }
         getUsers();
-    }, [])  
+    }, [])
 
     return (
         <View style={{ flex: 1,padding: 1 }}>
@@ -213,12 +236,13 @@ const ProfileScreen = ( ) => {
                     </View>
                 </Modal>
 
-                <FlatList
-                    data={posts}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <Training item =  {item} canEdit={true}></Training>
-                )}/>
+                    <FlatList
+                        data={posts}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <Training item={item} canEdit={true} />
+                        )}
+                    />
 
                 {error && (
                     <View style = {{alignItems:"center"}}>
@@ -228,9 +252,6 @@ const ProfileScreen = ( ) => {
              
                </>
             }
-            
-            
-
                 
         </View>
      )
