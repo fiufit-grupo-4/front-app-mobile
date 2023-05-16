@@ -46,8 +46,7 @@ const CustomDrawer = (props) => {
                     text: 'OK',
                     onPress: () => {
                         console.log('User logged out');
-                        AsyncStorage.removeItem()
-                        AsyncStorage.multiRemove(USER).then(() => {
+                        AsyncStorage.removeItem(USER).then(() => {
                             ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
                             navigation.navigate("SignIn")
                         }).catch(() => {

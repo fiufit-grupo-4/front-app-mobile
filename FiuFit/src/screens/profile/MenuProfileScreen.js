@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from 'react-native';
 import {StackActions} from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Screens} from "../../navigation/Screens";
@@ -11,7 +11,6 @@ function MenuProfileScreen({ navigation }) {
     const [errorMessage, setErrorMessage] = useState("");
 
     function handleSetUser(newData,oldData){
-        setUser(data)
         const updateUser = {
             "name":newData.name,
             "lastname":newData.lastname,
@@ -25,6 +24,12 @@ function MenuProfileScreen({ navigation }) {
             "access_token":oldData.access_token,
             "token_type":oldData.token_type
         }
+        setUser(updateUser)
+        AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
+        .catch(error => {
+            setError(true)
+            setErrorMessage(error)
+          }) 
 
     }
 
@@ -44,7 +49,6 @@ function MenuProfileScreen({ navigation }) {
                     setLoading(false);
                     if (!response.ok) {
                         setError(true);
-                        console.log("RESPONSE: ", response.status);
                         if (response.status === 401) {
                             setErrorMessage('Unauthorized, not a valid access token');
                         } else {
@@ -53,6 +57,7 @@ function MenuProfileScreen({ navigation }) {
                     } else {
                         response.json().then((data) => {
                             console.log(JSON.stringify(data))
+                            handleSetUser(data,userInfo)
                         }).catch((error) => {
                             setError(true);
                             setErrorMessage(error);
@@ -68,21 +73,30 @@ function MenuProfileScreen({ navigation }) {
         getUser();
         }, [])
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <View style={{ alignItems: 'center', padding: 20, marginVertical:100 }}>
-                <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
-                <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>Pepito Boxeador</Text>
-                <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Mail: pepitocampeon@yahoo.com</Text>
-                <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20,  alignItems: 'flex-start' }}>Number: 19937472342</Text>
-            </View>
-            <TouchableOpacity style={{ backgroundColor: '#DEE9F8FF', borderRadius: 20, marginHorizontal: 40, paddingVertical: 10 }} onPress={() => navigation.navigate('EditProfileScreen')}>
-                <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
-            </TouchableOpacity>
+        <>
+        { loading 
+            ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                <ActivityIndicator size="large" color = "black"/>
+              </View>
+            : <ScrollView style={{ flex: 1, backgroundColor: '#91AED4' }}>
+                <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
+                    <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                    <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
+                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Age: {user.age}</Text>
+                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
+                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20,  alignItems: 'flex-start' }}>Number: {user.phone_number}</Text>
+                </View>
+                <TouchableOpacity style={{ backgroundColor: '#DEE9F8FF', borderRadius: 20, marginHorizontal: 40, paddingVertical: 10 }} onPress={() => navigation.navigate('Edit Profile',{user : user})}>
+                    <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Screens.ChangePassword)}>
-                <Text style={styles.buttonText}>Create New Password</Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Screens.ChangePassword)}>
+                    <Text style={styles.buttonText}>Create New Password</Text>
+                </TouchableOpacity>
+            </ScrollView>
+          }
+          </>
+        
     );
 }
 export default MenuProfileScreen;

@@ -40,7 +40,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Profile" component={MenuProfileScreen} />
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
-                    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}  />
+                    <Stack.Screen name="Edit Profile" component={EditProfileScreen}  />
                     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen}  />
                     
                 </Stack.Navigator>

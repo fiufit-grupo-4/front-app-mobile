@@ -13,16 +13,17 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from "@expo/vector-icons";
 import {StackActions, useNavigation} from "@react-navigation/native";
-import { API_GATEWAY,TOKEN } from '../../utils/constants';
+import { API_GATEWAY,USER } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export const EditProfileScreen = () => {
-    const [name, setName] = useState('Pepito');
-    const [lastName, setLastName] = useState('Boxeador');
+export const EditProfileScreen = ({route}) => {
+    const {user} = route.params
+    const [name, setName] = useState(user.name);
+    const [lastName, setLastName] = useState(user.lastname);
     const [profilePicture, setProfilePicture] = useState(require('../../../assets/images/profilepic.jpeg'));
-    const [age, setAge] = useState();
-    const [number, setNumber] = useState('');
+    const [age, setAge] = useState(user.age);
+    const [number, setNumber] = useState(user.phone_number);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -41,67 +42,21 @@ export const EditProfileScreen = () => {
             aspect: [4, 3],
             quality: 1,
         });
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setProfilePicture(result.uri);
         }
     };
 
-    const handleSaveChanges = () => {
-        const url = API_GATEWAY + 'users/645ed9cf5544e4af38873c29'
-        setLoading(true)
-        AsyncStorage.getItem(TOKEN).then( token =>{
-            console.log(token)
-            fetch(url, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,    
-                },
-                body: JSON.stringify({
-                    "name": name,
-                    "lastname":lastName,
-                    "age": age,
-                    "mail": "username@mail.com",
-                    "password": "secure",
-                    "image": profilePicture
-                  })
-                }).then(response => {
-                    setLoading(false)  
-                    if (!response.ok) {
-                        setError(true)
-                        console.log(response.status)
-                        if(response.status == 401){
-                            setErrorMessage("Unhautorized, not valid access token")
-                        } else {
-                            setErrorMessage("Failed to connect with server")
-                        }
-                    } else {
-                        response.json().then(data => {
-                            console.log(data)
-                            setUser(data);
-                        }).catch(error => {
-                            setError(true)
-                            setErrorMessage(error)
-                        })
-                    }
-                })
-                .catch(error => {
-                    setError(true)
-                    setErrorMessage(error)
-                })  
-            }
-            ).catch(error => {
-                setError(true)
-                setErrorMessage(error)
-            }) 
 
-        navigation.dispatch(
-            StackActions.pop(1)
-        );
-    };
+    const handleSaveChanges = () => {
+          
+    }
+
+    
+    
 
     return (
-        <View style={{padding: 20 }}>
+        <View style={{flex:1,padding:30,backgroundColor: '#91AED4'}}>
 
             <View style={{ alignItems: 'center', padding: 20 }}>
                 <TouchableOpacity onPress={handleImagePicker}>
@@ -112,31 +67,31 @@ export const EditProfileScreen = () => {
                 </TouchableOpacity>
             </View>
 
-
+            <Text style={{ fontSize: 17, color: 'black',  marginBottom: 5,marginLeft:10 }}>Name</Text>
             <View style={styles.inputContainer}>
-                <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Name</Text>
                 <TextInput
-                    style={{ fontSize: 16, color: '#333' }}
+                    style={{ fontSize: 16, color: 'black',marginLeft:10 }}
                     placeholder="Enter your name"
                     value={name}
                     onChangeText={setName}
                 />
             </View>
 
+            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Last Name</Text>
             <View style={styles.inputContainer}>
-                <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Last Name</Text>
                 <TextInput
-                    style={{ fontSize: 16, color: '#333' }}
+                    style={{ fontSize: 16, color: 'black',marginLeft:10 }}
                     placeholder="Enter your last name"
                     value={lastName}
                     onChangeText={setLastName}
                 />
             </View>
 
+            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Age</Text>
             <View style={styles.inputContainer}>
-            <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Age</Text>
+            
                     <TextInput
-                        style={styles.input}
+                       style={{ fontSize: 16, color: 'black',marginLeft:10 }}
                         maxLength={2}
                         placeholder="Enter your age"
                         value={age}
@@ -145,10 +100,11 @@ export const EditProfileScreen = () => {
                     />
                 </View>
 
+            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Number</Text>
             <View style={styles.inputContainer}>
-                <Text style={{ fontSize: 16, color: '#666', marginBottom: 10 }}>Number</Text>
+                
                 <TextInput
-                    style={{ fontSize: 16, color: '#333' }}
+                    style={{ fontSize: 16, color: 'black',marginLeft:10 }}
                     placeholder="Enter your phone number"
                     value={number}
                     onChangeText={setNumber}
@@ -171,8 +127,6 @@ export const EditProfileScreen = () => {
                 </View>
             )}
 
-            
-
         </View>
 
     );
@@ -183,18 +137,22 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
     inputContainer: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        marginVertical: 10,
-        marginTop:20
+        backgroundColor: '#AFC5E3',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 15,
+        height:45,
+        padding:5,
+        margin:5,
     },
     buttonText: {
         fontSize: 18,
-        color: 'rgba(23,29,52,0.93)',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'bold',
+    color: 'white',
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
+        backgroundColor: 'black',
         borderRadius: 20,
         paddingVertical: 10,
         marginTop:110,

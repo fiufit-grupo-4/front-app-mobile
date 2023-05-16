@@ -47,7 +47,6 @@ const SignInScreen = () => {
 
 
   function getRole(){
-      console.log(isAthlete)
       return isAthlete ? ATHLETE : TRAINER
   }
 
