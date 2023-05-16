@@ -16,8 +16,6 @@ import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
 const {height} = Dimensions.get("window")
 const validator = require('validator');
 
-///ENDPOINT signUpValidate
-
 const SignUpScreen = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -75,10 +73,8 @@ const SignUpScreen = () => {
     }
 
     const onRegisterPressed = (data) => {
-
         var url = API_GATEWAY + 'signup/';
         console.log(data)
-        console.log(url)
         setLoading(true)
         fetch(url, {
             method: 'POST',
@@ -102,8 +98,7 @@ const SignUpScreen = () => {
                     setError(true)
                     setErrorMessage("Failed to connect with server")
                 } else {
-                    navigation.navigate('CodeValidation');
-                    //navigation.navigate('ConfirmEmail');
+                    navigation.navigate('ConfirmEmail',{phone : data.phone_number});
                 }
             })
             .catch(error => {
@@ -128,12 +123,12 @@ const SignUpScreen = () => {
 
     const { control, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
-            email: 'sofia@fi.uba.ar',
+            mail: 'dante@fi.uba.ar',
             password: '1234',
             repeatPassword:'1234',
-            phone_number: "800900",
-            name: "sofi",
-            lastname: "piolita",
+            phone_number: "+5491161637747",
+            name: "Dante",
+            lastname: "420",
             age: "24"
         }
     });
@@ -161,9 +156,6 @@ const SignUpScreen = () => {
                 ? <LoadingIndicator/>
                 : <>
                     <Text style={styles.title}>Create an Account</Text>
-
-
-
                     <CustomInput
                         name= "mail"
                         placeholder="Email"

@@ -56,6 +56,7 @@ const SignInScreen = () => {
     var url = API_GATEWAY + 'login/';
     console.log(data)
     setLoading(true)
+    setError(false)
     fetch(url, {
       method: 'POST',
       headers: {
