@@ -155,7 +155,9 @@ const SignUpScreen = () => {
             {loading
                 ? <LoadingIndicator/>
                 : <>
-                    <Text style={styles.title}>Create an Account</Text>
+                <Text style={styles.title}>Create an Account</Text>
+                <ScrollView >
+                    <View style={{alignItems:"center",width:"100%"}}>
                     <CustomInput
                         name= "mail"
                         placeholder="Email"
@@ -166,24 +168,27 @@ const SignUpScreen = () => {
                             validate : value => validateEmail(value) || "Not a valid email address",
                         }}
                         otherError={error}
+                        width={"100%"}
                     />
 
                     <CustomInput
                         name= "name"
                         placeholder="Name"
                         control={control}
-                        icon={"pencil"}
+                        icon={"person-outline"}
                         rules = {{required:"This field is Required"}}
                         otherError={error}
+                        width={"100%"}
                     />
 
                     <CustomInput
                         name= "lastname"
                         placeholder="Last Name"
                         control={control}
-                        icon={"pencil"}
+                        icon={"person-outline"}
                         rules = {{required:"This field is Required"}}
                         otherError={error}
+                        width={"100%"}
                     />
 
                     <CustomInput
@@ -193,6 +198,7 @@ const SignUpScreen = () => {
                         icon={"fitness"}
                         rules = {{required:"This field is Required"}}
                         otherError={error}
+                        width={"100%"}
                     />
 
                     <CustomInput
@@ -200,6 +206,7 @@ const SignUpScreen = () => {
                         placeholder="Phone number"
                         control={control}
                         icon={"call-outline"}
+                        width={"100%"}
                         rules = {{
                             required:"This field is Required",
                             validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
@@ -215,6 +222,7 @@ const SignUpScreen = () => {
                         rightIcon={rightIcon}
                         rules = {{required:"This field is Required"}}
                         otherError={error}
+                        width={"100%"}
                     />
 
 
@@ -230,8 +238,10 @@ const SignUpScreen = () => {
                             validate: value => value === pwd || "Passwords do not match"
                         }}
                         otherError={error}
+                        width={"100%"}
                     />
 
+                    
                     <View style={[signUpStyles.container, isAthlete ? {} : {backgroundColor:"orange"} ]}>
                         <Ionicons name={isAthlete ? 'basketball' : 'bicycle'} style= {signUpStyles.icon} size ={25}/>
                         < Text style={[signUpStyles.text,isAthlete ? {color: "#708090"} : {color:"black"}]}  >
@@ -248,13 +258,14 @@ const SignUpScreen = () => {
                             style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
                         />
                     </View>
-
+                    </View>
+                    </ScrollView>
                     <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
-
                     {error && (
                         <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
                     )}
 
+                {/* 
                     <View style={[styles.container]} >
                         <Text style={styles.text}>
                             By registering, you confirm that you accept our{' '}
@@ -267,7 +278,7 @@ const SignUpScreen = () => {
                             </Text>
                             .
                         </Text>
-                    </View>
+                    </View>*/}
 
                     <CustomButton
                         text="Have an account? Sign in"
@@ -289,7 +300,7 @@ const signUpStyles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor:"#AFC5E3",
-        width: '80%',
+        width: '100%',
         borderRadius: 15,
         padding:5,
         margin:5,
