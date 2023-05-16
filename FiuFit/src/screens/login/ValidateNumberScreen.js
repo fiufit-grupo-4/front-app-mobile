@@ -9,9 +9,11 @@ import {Ionicons} from "@expo/vector-icons";
 const CodeValidationScreen = () => {
     const [code, setCode] = useState('');
     const [error, setError] = useState(false);
-    const { control, handleSubmit, formState: { errors }, watch } = useForm({
+
+    const { control, handlePress, formState: { errors }, watch } = useForm({
         defaultValues: {}
     });
+
 
     const validateCode = async () => {
         // Make a network request to validate the code
@@ -44,14 +46,6 @@ const CodeValidationScreen = () => {
 
     return (
         <View style={styles.root}>
-        <View style={{alignItems: 'center',
-            //backgroundColor: '#194D33',
-            width: '100%',
-            padding:5,
-            //margin:5,
-            //marginTop:'50%',
-            height:45}}>
-
             <Text style={{fontSize:20, marginTop:10, color: "rgba(32,38,70,0.76)" }}>Validate Code</Text>
 
             <CustomInput
@@ -66,7 +60,7 @@ const CodeValidationScreen = () => {
 
             <CustomButton text="Validate" onPress={validateCode} />
         </View>
-        </View>
+
     );
 };
 
