@@ -141,6 +141,7 @@ const ProfileScreen = ( ) => {
             AsyncStorage.getItem(TOKEN)
                 .then((token) => {
                     console.log("TOKEN: ", token);
+                    //console.log("USER: ", user);
                     Promise.all([
                         fetch(url, {
                             method: 'GET',
@@ -152,7 +153,7 @@ const ProfileScreen = ( ) => {
                             setLoading(false);
                             if (!response.ok) {
                                 setError(true);
-                                console.log(response.status);
+                                console.log("RESPONSE: ", response.status);
                                 if (response.status === 401) {
                                     setErrorMessage('Unauthorized, not a valid access token');
                                 } else {
@@ -160,7 +161,6 @@ const ProfileScreen = ( ) => {
                                 }
                             } else {
                                 response.json().then((data) => {
-                                    console.log(data);
                                     setUser(data);
                                 }).catch((error) => {
                                     setError(true);
@@ -218,7 +218,7 @@ const ProfileScreen = ( ) => {
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                     </TouchableWithoutFeedback>
                     <View style={{flexDirection:'column'}}>
-                        <Text style={styles.profileName}>{user.mail}</Text>
+                        <Text style={styles.profileName}>{user.name + " " + user.lastname}</Text>
 
                         <View style={{flexDirection:'row'}}>
                             <Text style={styles.profileFollow}>3 Followers</Text>
