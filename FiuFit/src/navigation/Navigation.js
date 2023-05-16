@@ -35,14 +35,14 @@ class Navigation extends React.Component {
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
-                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                    
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
-                    <Stack.Screen name="MenuProfile" component={MenuProfileScreen} options={{ headerShown: false }} />
+                    <Stack.Screen name="Profile" component={MenuProfileScreen} />
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
                     <Stack.Screen name="EditProfileScreen" component={EditProfileScreen}  />
                     <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen}  />
-                    <Stack.Screen name="MenuProfileScreen" component={MenuProfileScreen}  />
+                    
                 </Stack.Navigator>
             </NavigationContainer>
         );

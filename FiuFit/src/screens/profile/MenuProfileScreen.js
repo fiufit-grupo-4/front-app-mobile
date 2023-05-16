@@ -1,11 +1,72 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {StackActions} from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Screens} from "../../navigation/Screens";
-
+import {USER, API_GATEWAY } from '../../utils/constants';
 function MenuProfileScreen({ navigation }) {
+    const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
+    function handleSetUser(newData,oldData){
+        setUser(data)
+        const updateUser = {
+            "name":newData.name,
+            "lastname":newData.lastname,
+            "age":newData.age,
+            "mail":newData.mail,
+            "role":newData.role,
+            "image":newData.image,
+            "blocked":newData.blocked,
+            "phone_number":newData.phone_number,
+            "trainings":newData.trainings,
+            "access_token":oldData.access_token,
+            "token_type":oldData.token_type
+        }
 
+    }
+
+    useEffect(() => {
+        const url = API_GATEWAY + 'users/me'
+        function getUser() {
+            setLoading(true);
+            AsyncStorage.getItem(USER).then((item) => {
+            let userInfo = JSON.parse(item)
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userInfo.access_token,
+                },
+                }).then((response) => {
+                    setLoading(false);
+                    if (!response.ok) {
+                        setError(true);
+                        console.log("RESPONSE: ", response.status);
+                        if (response.status === 401) {
+                            setErrorMessage('Unauthorized, not a valid access token');
+                        } else {
+                            setErrorMessage('Failed to connect with the server');
+                        }
+                    } else {
+                        response.json().then((data) => {
+                            console.log(JSON.stringify(data))
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        });
+                    }}).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                })}).catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
+        }
+        getUser();
+        }, [])
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ alignItems: 'center', padding: 20, marginVertical:100 }}>

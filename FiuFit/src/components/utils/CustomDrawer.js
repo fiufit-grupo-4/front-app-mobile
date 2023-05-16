@@ -1,11 +1,12 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import {View, Text, Image, ImageBackground, Alert, ToastAndroid} from 'react-native'
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
-import {useNavigation} from '@react-navigation/native';import { TouchableOpacity } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
 import {StatusBar} from "expo-status-bar";
 import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ROLE,TOKEN } from '../../utils/constants';
+import { USER } from '../../utils/constants';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
@@ -13,6 +14,23 @@ const CustomDrawer = (props) => {
     const handleTouchableOpacity = () => {
         navigation.navigate("Profile")
     };
+
+    const [userInfo,setUserInfo] = useState({})
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    useEffect(() => {
+        async function getUser() {
+            AsyncStorage.getItem(USER).then( user => {
+                console.log(user)
+                setUserInfo(JSON.parse(user))          
+            }
+            ).catch(error => {
+                setError(true)
+                setErrorMessage(error)
+            })
+        }
+        getUser();
+    }, [])
 
     const handleLogOut = () => {
         Alert.alert(
@@ -28,10 +46,11 @@ const CustomDrawer = (props) => {
                     text: 'OK',
                     onPress: () => {
                         console.log('User logged out');
-                        AsyncStorage.multiRemove(TOKEN,ROLE).then(() => {
+                        AsyncStorage.removeItem()
+                        AsyncStorage.multiRemove(USER).then(() => {
                             ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
                             navigation.navigate("SignIn")
-                        }).catch(error => {
+                        }).catch(() => {
                             navigation.navigate("SignIn")
                         }) 
                     
@@ -73,10 +92,10 @@ const CustomDrawer = (props) => {
                             onPress={
                                 handleTouchableOpacity
                             }>
-                        <Text style={{color: 'black', fontSize: 20}}>Pepito Boxeador</Text>
+                        <Text style={{color: 'black', fontSize: 20}}>{userInfo.name + " " + userInfo.lastname}</Text>
                         </TouchableOpacity>
 
-                        <Text style={{color: 'black', fontSize: 13}}>32 Seguidores</Text>
+                        <Text style={{color: 'black', fontSize: 13}}>{userInfo.age} Seguidores</Text>
                     </ImageBackground>
 
                 <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>

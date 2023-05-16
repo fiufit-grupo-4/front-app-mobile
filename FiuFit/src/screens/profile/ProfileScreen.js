@@ -3,95 +3,11 @@ import {useState,useEffect} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ROLE,TOKEN, API_GATEWAY } from '../../utils/constants';
+import {USER, API_GATEWAY } from '../../utils/constants';
 
 
 const ProfileScreen = ( ) => {
-    /*const [posts1, setPosts1] = useState([
-        {
-            id: 1,
-            title: 'Fuerza de brazos',
-            place: 'AreaX',
-            description: 'Lorem ipsum dolor sit amet.',
-            trainingType: 'Dolor',
-            difficulty: 3,
-            image: require('../../../assets/images/post1.png'),
-            comments: [
-                {
-                    content:'muy piolita',
-                    user:'pepito1',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito2',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo2'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito3',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo3'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito4',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo8'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito7',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo9'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito8',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo6'
-                }
-                ],
-            likes: {
-                length:4
-            }
-        },
-        {
-            id: 2,
-            title: 'GAP',
-            place: 'Gimnasio de aca la vueltitta',
-            description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
-            trainingType: 'Localizada',
-            difficulty: 5,
-            image: require('../../../assets/images/post2.png'),
-            comments: [
-                {
-                    content:'horror',
-                    user:'pepito1',
-                },
-                {
-                    content:'facil',
-                    user:'yoyo'
-                }
-            ],
-            likes: {
-                length:32
-            }
-        },
+   /*
         {
             id: 3,
             title: 'Sentadillas',
@@ -134,20 +50,17 @@ const ProfileScreen = ( ) => {
 
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
-
         function getUsers() {
             setLoading(true);
-
-            AsyncStorage.getItem(TOKEN)
-                .then((token) => {
-                    console.log("TOKEN: ", token);
-                    //console.log("USER: ", user);
+            AsyncStorage.getItem(USER)
+                .then((item) => {
+                    let user = JSON.parse(item)
                     Promise.all([
                         fetch(url, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + token,
+                                'Authorization': 'Bearer ' + user.access_token,
                             },
                         }).then((response) => {
                             setLoading(false);
@@ -175,7 +88,7 @@ const ProfileScreen = ( ) => {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + token,
+                                'Authorization': 'Bearer ' + user.access_token,
                             },
                         }).then((response) => {
                             if (response.ok) {

@@ -17,7 +17,7 @@ import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ATHLETE,TRAINER,API_GATEWAY,TOKEN,ROLE } from '../../utils/constants';
+import { ATHLETE,TRAINER,API_GATEWAY,USER } from '../../utils/constants';
 const validator = require('validator');
 
 
@@ -39,8 +39,8 @@ const SignInScreen = () => {
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: 'username@mail.com',
-      password: 'secure'
+      email: 'dante@hotmail.com',
+      password: '1234'
     }
   });
 
@@ -79,33 +79,20 @@ const SignInScreen = () => {
         }
       } else {
         response.json().then(json => {
-          const accesToken = json.access_token
-          const role = getRole().toString()
-          console.log(json.access_token)
-
-
+          const user_info = JSON.stringify(json)
+          AsyncStorage.setItem(USER,user_info).then(
+            
+            navigation.navigate("Inicio")
+          ).catch(error => {
+            setError(true)
+            setErrorMessage(error)
+          }) 
+          {/* 
           AsyncStorage.multiSet([[TOKEN, accesToken],[ROLE, role]]).then(
             navigation.navigate("Inicio")
           ).catch(() => {
             navigation.navigate("Inicio")
-          })
-
-          {/* 
-          AsyncStorage.setItem(TOKEN, accesToken).then(
-            navigation.navigate("Inicio")
-          ).catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          })
-          AsyncStorage.setItem(ROLE, role).then(
-            navigation.navigate("Inicio")
-          ).catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          })*/}
-
-          
-          
+          })*/}      
         }).catch(error => {
           setError(true)
           setErrorMessage(error)
