@@ -85,7 +85,7 @@ export const EditProfileScreen = ({route}) => {
                 "image" : image 
             })
         }).then((response) => {
-            //setLoading(false);
+            setLoading(false);
             console.log(JSON.stringify(response))
             if (!response.ok) {
                 setError(true);
@@ -96,16 +96,8 @@ export const EditProfileScreen = ({route}) => {
                 }
             } else {
                 response.json().then((data) => {
-                    console.log(JSON.stringify(data))
-                    uploadImage().then((uploaded)=>{
-                        if (uploaded){
-                            navigation.navigate("Profile",{reload:!reload})
-                        }
-                        
-                    }).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });  
+                    console.log(JSON.stringify(data))                
+                    navigation.navigate("Profile",{reload:!reload})
                 }).catch((error) => {
                     setError(true);
                     setErrorMessage(error);

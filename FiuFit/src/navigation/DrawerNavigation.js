@@ -13,6 +13,7 @@ import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import CertifyScreen from "../screens/certify/CertifyScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ATHLETE,TRAINER,USER} from '../utils/constants';
+import CreateTraining from "../screens/training/CreateTraining";
 
 const Drawer = createDrawerNavigator();
 
@@ -127,7 +128,7 @@ function DrawerComponent() {
                 <Drawer.Screen
                 name="         New Post"
                 color="#F0A500"
-                component={CreateTrainingScreen}
+                component={CreateTraining}
                 options={() => ({
                     drawerIcon: () => (
                         <AntDesign

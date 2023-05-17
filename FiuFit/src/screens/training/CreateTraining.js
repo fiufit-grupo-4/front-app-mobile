@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,TouchableWithoutFeedback} from 'react-native';
 import {useForm} from "react-hook-form";
 import {Ionicons} from "@expo/vector-icons";
+import UploadImage from '../../components/utils/UploadImage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MultiSelect from 'react-native-multiple-select';
 
-
-export const CreateTraining = ({ onPress }) => {
+export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [trainingType, setTrainingType] = useState('');
     const [difficulty, setDifficulty] = useState('');
     const [place, setPlace] = useState('');
+    const [rating, setRating] = useState(0);
 
+    const handleRate = (value) => {
+        setRating(value);;
+    };
+
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const items = [
+        { id: '1', name: 'Item 1' },
+        { id: '2', name: 'Item 2' },
+        { id: '3', name: 'Item 3' },
+        { id: '4', name: 'Item 4' },
+    ];
 
     const { control} = useForm({
         defaultValues: {
@@ -31,14 +46,17 @@ export const CreateTraining = ({ onPress }) => {
             return;
         }
 
-        onPress=onPress();
+        navigation.goBack();
     };
 
 
     return (
         <View style={styles.container}>
             <Text style={styles.botton}>NEW POST</Text>
-
+        <View>
+        
+        
+    </View>
             <View style={styles.boxContainer}>
                 <View style={styles.inputContainer}>
                     <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon}/>
@@ -74,6 +92,7 @@ export const CreateTraining = ({ onPress }) => {
 
                 <View style={styles.inputContainer}>
                     <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                    {/* 
                     <TextInput
                         style={styles.input}
                         maxLength={1}
@@ -81,8 +100,18 @@ export const CreateTraining = ({ onPress }) => {
                         value={difficulty}
                         onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
                         keyboardType="numeric"
-                    />
+                    />*/}
+                    <Text style={styles.input}> Difficulty:  </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                        {[1, 2, 3, 4, 5].map((value) => (
+                            <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
+                                <Icon name={value <= rating ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                            </TouchableWithoutFeedback>
+                        ))}
+                        <Text style={{ marginLeft: 10 }}>{rating > 0 ? ' ' + ' ' : ' '}</Text>
+                    </View>
                 </View>
+
 
                 <View style={styles.inputContainer}>
                     <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
@@ -95,6 +124,8 @@ export const CreateTraining = ({ onPress }) => {
                 </View>
 
             </View>
+
+            <UploadImage setImage={setImageUri}></UploadImage>
 
             <TouchableOpacity style={styles.button} onPress={createPost}>
                 <Text style={styles.buttonText}>Post</Text>
@@ -138,6 +169,9 @@ const styles = StyleSheet.create({
     input: {
         fontSize: 18,
         minHeight:25,
+        maxWidth:320,
+        margin:3,
+        color:"rgba(53,63,79,0.74)"
     },
     icon: {
         paddingHorizontal: 5,
@@ -159,7 +193,8 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 18,
         color: 'rgba(23,29,52,0.93)',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight:"bold"
     },
     button: {
         backgroundColor: '#F0A500',
@@ -171,3 +206,60 @@ const styles = StyleSheet.create({
 });
 
 export default CreateTraining;
+
+/*
+import React, { useState } from 'react';
+import { View, Button, Text } from 'react-native';
+import MultiSelect from 'react-native-multi-select';
+
+const MyComponent = () => {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const items = [
+    { id: '1', name: 'Item 1' },
+    { id: '2', name: 'Item 2' },
+    { id: '3', name: 'Item 3' },
+    { id: '4', name: 'Item 4' },
+  ];
+
+  const onSelectedItemChange = (selectedItem) => {
+    setSelectedItem(selectedItem);
+  };
+
+  const onConfirmSelection = () => {
+    // Aquí puedes realizar acciones con el elemento seleccionado
+    console.log(selectedItem);
+  };
+
+  return (
+    <View>
+      <MultiSelect
+        items={items}
+        uniqueKey="id"
+        onSelectedItemsChange={onSelectedItemChange}
+        selectedItems={[selectedItem]}
+        selectText="Seleccionar"
+        searchInputPlaceholderText="Buscar..."
+        onChangeInput={(text) => console.log(text)}
+        tagRemoveIconColor="#CCC"
+        tagBorderColor="#CCC"
+        tagTextColor="#CCC"
+        selectedItemTextColor="#CCC"
+        selectedItemIconColor="#CCC"
+        itemTextColor="#000"
+        displayKey="name"
+        searchInputStyle={{ color: '#CCC' }}
+        submitButtonColor="#CCC"
+        submitButtonText="Confirmar"
+        fixedHeight={false}
+        hideTags
+        onConfirm={onConfirmSelection}
+        single
+      />
+    </View>
+  );
+};
+
+export default MyComponent;
+
+*/

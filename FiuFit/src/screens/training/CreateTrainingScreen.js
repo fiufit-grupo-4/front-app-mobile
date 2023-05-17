@@ -21,6 +21,7 @@ const CreateTrainingScreen = ({ navigation, route }) => {
         navigation.goBack();
     };
 
+    
 
     if (firstStep) {
         return <UploadImage onPress={() => setFirstStep(false)}  setImage={setImage} />;
