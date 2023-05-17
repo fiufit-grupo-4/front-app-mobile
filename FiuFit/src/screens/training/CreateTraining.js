@@ -34,7 +34,7 @@ export const CreateTraining = ({ navigation }) => {
 
     
     const handleDifficulty = (value) => {
-        setDifficulty(value);;
+        setDifficulty(value);
     };
 
 
@@ -67,11 +67,11 @@ export const CreateTraining = ({ navigation }) => {
 
     const createPost = () => {
         console.log(type)
-        if (!title || !description  || !place) {
+        if (!title || !description  || !place || !type || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || place.trim() === '') {
+        if (title.trim() === '' || description.trim() === '' || place.trim() === '' || type.trim() === '' || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
@@ -126,7 +126,6 @@ export const CreateTraining = ({ navigation }) => {
                 setError(true);
                 setErrorMessage(error);
         })
-         
     };
 
 
