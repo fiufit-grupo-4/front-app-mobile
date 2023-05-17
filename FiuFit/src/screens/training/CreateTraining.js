@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -65,6 +65,8 @@ export const CreateTraining = ({ navigation }) => {
     }
 */
 
+
+
     const createPost = () => {
         console.log(type)
         if (!title || !description  || !place || !type || !difficulty) {
@@ -126,8 +128,18 @@ export const CreateTraining = ({ navigation }) => {
                 setError(true);
                 setErrorMessage(error);
         })
+        //TODO: a mejorar
+        setImageUri('');
+        setTitle('');
+        setDescription('');
+        setType('');
+        setDifficulty(0);
+        setPlace('');
+        setLoading(false);
+        setUser({});
+        setError(false);
+        setErrorMessage("");
     };
-
 
     return (
         <View style={styles.container}>
