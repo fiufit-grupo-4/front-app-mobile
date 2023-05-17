@@ -101,8 +101,39 @@ const EditTraining = ({ onPress , route }) => {
 
 
     function handleDelete() {
-        //TODO handle this
-        onPress = onPress();
+        let url = API_GATEWAY + "trainers/me/trainings/" + post.id
+        setLoading(true);
+        setError(false)
+        AsyncStorage.getItem(USER).then((item) => {
+            let userInfo = JSON.parse(item)
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userInfo.access_token,
+                },
+            }).then((response) => {
+                setLoading(false);
+                console.log(JSON.stringify(response))
+                if (!response.ok) {
+                    setError(true);
+                    if (response.status === 401) {
+                        setErrorMessage('Unauthorized, not a valid access token');
+                    } else {
+                        setErrorMessage('Failed to connect with the server');
+                    }
+                } else {
+                    response.json().then((data) => {
+                        console.log(JSON.stringify(data))
+                        navigation.navigate("Profile",{reload:!reload})
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    });
+                }})}).catch((error) => {
+            setError(true);
+            setErrorMessage(error);
+        })
     }
 
     return (
