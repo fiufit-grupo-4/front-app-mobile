@@ -1,94 +1,13 @@
-import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet} from "react-native";
-import {useState} from "react";
+import {FlatList, Image, Text, Modal, TouchableWithoutFeedback, View, StyleSheet, ActivityIndicator} from "react-native";
+import {useState,useEffect} from "react";
 import Training from "../../components/trainings/Training";
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {USER, API_GATEWAY } from '../../utils/constants';
+
 
 const ProfileScreen = ( ) => {
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            title: 'Fuerza de brazos',
-            place: 'AreaX',
-            description: 'Lorem ipsum dolor sit amet.',
-            trainingType: 'Dolor',
-            difficulty: 3,
-            image: require('../../../assets/images/post1.png'),
-            comments: [
-                {
-                    content:'muy piolita',
-                    user:'pepito1',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito2',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo2'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito3',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo3'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito4',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo8'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito7',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo9'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito8',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo6'
-                }
-                ],
-            likes: {
-                length:4
-            }
-        },
-        {
-            id: 2,
-            title: 'GAP',
-            place: 'Gimnasio de aca la vueltitta',
-            description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
-            trainingType: 'Localizada',
-            difficulty: 5,
-            image: require('../../../assets/images/post2.png'),
-            comments: [
-                {
-                    content:'horror',
-                    user:'pepito1',
-                },
-                {
-                    content:'facil',
-                    user:'yoyo'
-                }
-            ],
-            likes: {
-                length:32
-            }
-        },
+   /*
         {
             id: 3,
             title: 'Sentadillas',
@@ -111,27 +30,108 @@ const ProfileScreen = ( ) => {
                 length:32
             }
         },
-    ]);
+    ]);*/
 
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [user, setUser] = useState({});
+    const [training, setTraining] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     //const [selectedPost, setSelectedPost] = useState(null);
-
+    const [posts, setPosts] = useState([]);
 
     const toggleModal = (image) => {
         setSelectedImage(image);
         setShowModal(!showModal);
     };
 
+
+    useEffect(() => {
+        const url = API_GATEWAY + 'users/me'
+        function getUsers() {
+            setLoading(true);
+            AsyncStorage.getItem(USER)
+                .then((item) => {
+                    let user = JSON.parse(item)
+                    Promise.all([
+                        fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + user.access_token,
+                            },
+                        }).then((response) => {
+                            setLoading(false);
+                            if (!response.ok) {
+                                setError(true);
+                                console.log("RESPONSE: ", response.status);
+                                if (response.status === 401) {
+                                    setErrorMessage('Unauthorized, not a valid access token');
+                                } else {
+                                    setErrorMessage('Failed to connect with the server');
+                                }
+                            } else {
+                                response.json().then((data) => {
+                                    setUser(data);
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        }),
+                        fetch(API_GATEWAY + 'trainers/me/trainings', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + user.access_token,
+                            },
+                        }).then((response) => {
+                            if (response.ok) {
+                                response.json().then((data) => {
+                                    console.log("POSTS: ", data);
+                                    setPosts(data);
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            } else {
+                                setError(true);
+                                setErrorMessage('Failed to fetch posts');
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        }),
+                    ]);
+                })
+                .catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
+        }
+        getUsers();
+    }, [])
+
     return (
         <View style={{ flex: 1,padding: 1 }}>
-            <StatusBar style="auto" />
+
+            { loading 
+             ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                <ActivityIndicator size="large" color = "black"/>
+               </View>
+             : <>
+             <StatusBar style="auto" />
                 <View style={styles.profileBar}>
                     <TouchableWithoutFeedback onPress={() => toggleModal(require('../../../assets/images/profilepic.jpeg'))}>
                         <Image source={require('../../../assets/images/profilepic.jpeg')} style={styles.profileImage} />
                     </TouchableWithoutFeedback>
                     <View style={{flexDirection:'column'}}>
-                        <Text style={styles.profileName}>Pepito Boxeador</Text>
+                        <Text style={styles.profileName}>{user.name + " " + user.lastname}</Text>
 
                         <View style={{flexDirection:'row'}}>
                             <Text style={styles.profileFollow}>3 Followers</Text>
@@ -149,12 +149,23 @@ const ProfileScreen = ( ) => {
                     </View>
                 </Modal>
 
-                <FlatList
-                    data={posts}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <Training item =  {item} canEdit={true}></Training>
-                    )}/>
+                    <FlatList
+                        data={posts}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <Training user={user} item={item} canEdit={true} />
+                        )}
+                    />
+
+                {error && (
+                    <View style = {{alignItems:"center"}}>
+                    <Text style = {{fontSize:18,color : "crimson",padding:5}}> {errorMessage} </Text>
+                    </View>
+                )}
+             
+               </>
+            }
+                
         </View>
      )
 }

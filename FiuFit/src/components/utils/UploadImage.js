@@ -4,23 +4,11 @@ import * as ImagePicker from "expo-image-picker";
 import {firebase} from '../../config/firebase'
 
 
-const UploadImage = ({onPress, setImage}) => {
+const UploadImage = ({setImage}) => {
     const [imageUri, setImageUri] = useState('');
     const [error, setError] = useState(false);
     const [uploading, setUploading] = useState(false)
-    /*
-    const uploadImage = async (uri) => {
-        const response = await fetch(uri);
-
-        const blob = await response.blob();
-        console.log(blob)
-        const ref = firebase.storage().ref().child(`images/${new Date().getTime()}`);
-        const snapshot = await ref.put(blob);
-        const downloadURL = await snapshot.ref.getDownloadURL();
-      
-        return downloadURL;
-      };*/
-
+    
       const uploadImage = async () => {
         let image = pickImage()
         if (image){
@@ -52,7 +40,7 @@ const UploadImage = ({onPress, setImage}) => {
             quality: 1,
         });
         if (!result.canceled) {     
-            //setImage(result.assets[0].uri)
+            setImage(result.assets[0].uri)
             setImageUri(result.assets[0].uri)
             setError(false)
             return true
@@ -60,46 +48,34 @@ const UploadImage = ({onPress, setImage}) => {
         return false
     };
 
-    /*
-    const onNextPress = () => {
-        if (imageUri) {
-            onPress();
-        } else {
-            setError(true);
-        }
-    };*/
-
 
     return (
         <View style={styles.container}>
+           
+                <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: 40}}>
 
-            <View style={styles.boxContainer}>
-
-                <View style={{alignItems: 'center', justifyContent: 'center' }}>
+                {imageUri && (
+                    <Image source={{ uri: imageUri }} style={{  width: 120, height: 120 }} />
                 
-
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#DEE9F8FF' }]}  onPress={pickImage}>
+                    )}
+                    <TouchableOpacity style={styles.button} onPress={pickImage}>
                         <Text style={styles.buttonText}>Select an Image</Text>
                     </TouchableOpacity>
-
 
                     {error && (
                         <Text style={{color: 'red'}}>You must select an image first</Text>
                     )}
-                    {imageUri && (
-                    <Image source={{ uri: imageUri }} style={{ marginTop: 90, width: 300, height: 300 }} />
-                
-                    )}
+                    
 
+                {/* 
                     <View style={styles.container}>
                     {!uploading 
                      ? <TouchableOpacity style={[styles.nextButton, { backgroundColor: '#F0A500' }]} onPress={uploadImage}>
                             <Text style={styles.buttonText}>Send</Text>
                         </TouchableOpacity>
                      : <ActivityIndicator size={'large'} color='black' />}
-                    </View>
+                    </View>*/}
 
-                </View>
             </View>
         </View>
 
@@ -119,6 +95,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fffff',
         alignItems: 'center',
         justifyContent: 'center',
+        //width: '100%'
     },
     buttonsContainer: {
         flexDirection: 'row',
@@ -128,24 +105,15 @@ const styles = StyleSheet.create({
         marginTop:30
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
         alignItems: 'center',
         borderRadius: 15,
-        padding: 10,
-        marginHorizontal: 5,
-        marginBottom:1,
-        marginTop:120,
-        width: 400
-    },
-    nextButton: {
-        backgroundColor: '#DEE9F8FF',
-        alignItems: 'center',
-        borderRadius: 15,
-        padding: 10,
-        marginHorizontal: 5,
-        marginBottom:1,
-        marginTop:20,
-        width: 400
+        padding: 13,
+        //marginBottom:1,
+        marginTop:10,
+        //width: '90%',
+        backgroundColor: 'rgba(217,227,240,0.75)',
+        //marginHorizontal: 40
+
     },
     buttonText: {
         color: '#333b48',

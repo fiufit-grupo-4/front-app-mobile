@@ -5,27 +5,69 @@ import {
     TouchableOpacity,
     Text,
     StyleSheet,
+    ActivityIndicator
 } from 'react-native';
 import {StackActions, useNavigation} from "@react-navigation/native";
+import { API_GATEWAY,USER } from '../../utils/constants';
 
-const ChangePasswordScreen = () => {
-    const [oldPassword, setOldPassword] = useState('');
+const ChangePasswordScreen = ({route}) => {
+    const {user,reload} = route.params
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatchError, setPasswordMatchError] = useState(false);
     const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
-    const [passwordChangeError, setPasswordChangeError] = useState(false);
-
+    const [passwordNullError, setPasswordNullError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigation = useNavigation();
 
     const handlePasswordChange = () => {
+        if (newPassword == '' ){
+            setPasswordNullError(true)
+            return
+        } 
         if (newPassword !== confirmPassword) {
             setPasswordMatchError(true);
+            return
         } else {
-            // Here, you would add code to verify the old password before changing to the new one
-            // For example, you could call a backend API to verify the old password before allowing the new one to be set
-
-            // If the old password is verified, set the new password and show a success message
+            setPasswordMatchError(false);
+            setPasswordNullError(false)
+            let url = API_GATEWAY + "users/" + user.id
+            setLoading(true);
+            setError(false)
+            fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + user.access_token,
+                },
+                body: JSON.stringify({
+                    "password": newPassword,
+                })
+            }).then((response) => {
+                setLoading(false);
+                console.log(JSON.stringify(response))
+                if (!response.ok) {
+                    setError(true);
+                    if (response.status === 401) {
+                        setErrorMessage('Unauthorized, not a valid access token');
+                    } else {
+                        setErrorMessage('Failed to connect with the server');
+                    }
+                } else {
+                    response.json().then((data) => {
+                        console.log(JSON.stringify(data))                
+                        navigation.navigate("Profile",{reload:!reload})
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    });
+                }}).catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                })
+            /*
             setPasswordChangeSuccess(true);
             setPasswordChangeError(false);
             setPasswordMatchError(false);
@@ -34,7 +76,7 @@ const ChangePasswordScreen = () => {
             setConfirmPassword('');
             navigation.dispatch(
                 StackActions.pop(1)
-            );
+            );*/
         }
     };
 
@@ -44,36 +86,51 @@ const ChangePasswordScreen = () => {
             {passwordChangeSuccess && (
                 <Text style={styles.successMessage}>Password changed successfully!</Text>
             )}
-            {passwordChangeError && (
-                <Text style={styles.errorMessage}>There was an error changing your password.</Text>
-            )}
-            <TextInput
-                style={styles.input}
-                placeholder="Old Password"
-                value={oldPassword}
-                secureTextEntry={true}
-                onChangeText={(text) => setOldPassword(text)}
-            />
+
             <TextInput
                 style={styles.input}
                 placeholder="New Password"
                 value={newPassword}
-                secureTextEntry={true}
-                onChangeText={(text) => setNewPassword(text)}
+                secureTextEntry={false}
+                onChangeText={(text) =>{
+                    setPasswordNullError(false)
+                    setPasswordMatchError(false)
+                    setNewPassword(text)
+                }}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Confirm New Password"
                 value={confirmPassword}
-                secureTextEntry={true}
-                onChangeText={(text) => setConfirmPassword(text)}
+                secureTextEntry={false}
+                onChangeText={(text) =>{
+                 setPasswordNullError(false)
+                 setPasswordMatchError(false)
+                 setConfirmPassword(text)
+                 }
+                }
             />
             {passwordMatchError && (
                 <Text style={styles.errorMessage}>Passwords do not match.</Text>
             )}
-            <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
-                <Text style={styles.buttonText}>Change Password</Text>
-            </TouchableOpacity>
+            {passwordNullError && (
+                <Text style={styles.errorMessage}>You must introduce a new password.</Text>
+            )}
+
+            { loading 
+              ? <View style={{marginTop:50, marginHorizontal: 40}}>
+                    <ActivityIndicator size="large" color = "black"/>
+                </View>
+              : <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
+                    <Text style={styles.buttonText}>Confirm</Text>
+                </TouchableOpacity>
+            }
+
+            {error && (
+                <View style = {{alignItems:"center",marginTop:15}}>
+                    <Text style = {styles.errorMessage}> {errorMessage} </Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -104,6 +161,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'rgba(23,29,52,0.93)',
         textAlign: 'center',
+        fontWeight:"bold"
     },
     button: {
         backgroundColor: '#DEE9F8FF',

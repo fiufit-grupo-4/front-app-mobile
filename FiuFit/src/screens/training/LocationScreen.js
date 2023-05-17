@@ -4,7 +4,6 @@ import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 
 
-
 const LocationScreen = () => {
   const [address, setAddress] = useState('');
   const [location, setLocation] = useState(null);

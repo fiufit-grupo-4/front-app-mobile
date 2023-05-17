@@ -3,7 +3,7 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 import {Controller} from 'react-hook-form';
 
-const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError}) => {
+const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError,width}) => {
 
   return (
       <Controller
@@ -15,7 +15,8 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
                 style={[
                   styles.container, 
                   {borderColor: error || otherError ? "crimson":"powderblue"},
-                  {borderWidth: error || otherError ? 1.5:0}
+                  {borderWidth: error || otherError ? 1.5:0},
+                  {width: width ? width : '80%'}
                 ]}
               >
                 <Ionicons name={icon} style= {
@@ -48,7 +49,6 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#AFC5E3',
-    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,

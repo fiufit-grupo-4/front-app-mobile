@@ -38,3 +38,18 @@ const styles = StyleSheet.create({
   });
 
   export default styles;
+
+
+
+  /*
+    COLOR PALETTE
+
+    ORANGE : "F0A500"
+    BLUE DARK:"#788FAD"
+    BLUE LIGHT: "#91AED4"
+    WHITES: "#fff8e7" 
+  
+  
+  
+  
+  */

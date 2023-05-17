@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import {View, Text, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {Ionicons} from "react-native-vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Rating = ({ onRate }) => {
@@ -22,4 +23,32 @@ const Rating = ({ onRate }) => {
     );
 };
 
-export default Rating;
+
+export function getCalification(handleStarPress, handleRate, item) {
+    return <>
+        {/* Calificacion */}
+        <View style={{flexDirection: 'row'}}>
+            <TouchableWithoutFeedback onPress={handleStarPress}>
+                <Ionicons name={"md-ribbon-outline"} style={styles.qualifyIcon}/>
+            </TouchableWithoutFeedback>
+            <Rating onRate={handleRate}/>
+            {/*<Text style={{
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+                color: 'rgba(23,29,52,0.71)'
+            }}>{'Average:  ' + item.likes.length}</Text>
+            */}
+        </View>
+    </>;
+}
+
+const styles = StyleSheet.create({
+    qualifyIcon :{
+        fontSize: 12,
+        marginRight: 10,
+        padding:8,
+        marginTop:12,
+        color: 'rgba(32,38,70,0.7)'
+    }
+});
+

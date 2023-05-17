@@ -1,19 +1,41 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {Image} from "react-native";
 import HomeScreen from "./MainScreen";
 import {AntDesign} from "@expo/vector-icons";
 import { Ionicons } from '@expo/vector-icons';
 import CustomDrawer from "../components/utils/CustomDrawer";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import {SearchScreen} from "../screens/Search/SearchScreen";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import CertifyScreen from "../screens/certify/CertifyScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ATHLETE,TRAINER,USER} from '../utils/constants';
+import CreateTraining from "../screens/training/CreateTraining";
 
 const Drawer = createDrawerNavigator();
 
 function DrawerComponent() {
+    const [userInfo,setUserInfo] = useState({})
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    useEffect(() => {
+        async function getUser() {
+            AsyncStorage.getItem(USER).then( user => {
+                setUserInfo(JSON.parse(user))          
+            }
+            ).catch(error => {
+                setError(true)
+                setErrorMessage(error)
+            })
+        }
+        getUser();
+    }, [])
+
+
+
     return (
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {... props} />}
@@ -58,6 +80,21 @@ function DrawerComponent() {
                 })}/>
 
             <Drawer.Screen
+                name="        Search"
+                color="#F0A500"
+                component={SearchScreen}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="search1"
+                            style={{color:'#2C302E'}}
+                        />
+                    ),
+                    headerShown: true,
+                })}/>
+
+            {/* 
+            <Drawer.Screen
                 name="         Settings"
                 color="#F0A500"
                 component={MenuProfileScreen}
@@ -69,22 +106,7 @@ function DrawerComponent() {
                     ),
                     headerShown: true,
                 })}
-            />
-
-
-        <Drawer.Screen
-            name="         New Post"
-            color="#F0A500"
-            component={CreateTrainingScreen}
-            options={() => ({
-                drawerIcon: () => (
-                    <AntDesign
-                        name="plus"
-                    />
-                ),
-                headerShown: true,
-            })}
-        />
+            />*/} 
 
 
         <Drawer.Screen
@@ -101,19 +123,40 @@ function DrawerComponent() {
             })}
         />
 
-        <Drawer.Screen
-            name="         Verify"
-            color="#F0A500"
-            component={CertifyScreen}
-            options={() => ({
-                drawerIcon: () => (
-                    <AntDesign
-                        name="checkcircleo"
-                    />
-                ),
-                headerShown: true,
-            })}
-        />
+        { userInfo.role != ATHLETE &&(
+            <>
+                <Drawer.Screen
+                name="         New Post"
+                color="#F0A500"
+                component={CreateTraining}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="plus"
+                        />
+                    ),
+                    headerShown: true,
+                })}
+                />
+
+                <Drawer.Screen
+                    name="         Verify"
+                    color="#F0A500"
+                    component={CertifyScreen}
+                    options={() => ({
+                        drawerIcon: () => (
+                            <AntDesign
+                                name="checkcircleo"
+                            />
+                        ),
+                        headerShown: true,
+                    })}
+                />    
+            </>
+        )}
+
+        
+        
 
 
     </Drawer.Navigator>

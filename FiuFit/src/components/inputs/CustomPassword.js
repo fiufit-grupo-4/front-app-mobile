@@ -3,7 +3,7 @@ import {View,TextInput, StyleSheet, TouchableWithoutFeedback,Text} from 'react-n
 import {Ionicons} from 'react-native-vector-icons'
 import {Controller} from 'react-hook-form';
 
-const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePasswordVisibility,rightIcon,rules= {},otherError}) => {
+const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePasswordVisibility,rightIcon,rules= {},otherError,width}) => {
   return (
         <Controller
           control={control}
@@ -13,7 +13,8 @@ const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePas
             <View style={[
                   styles.container, 
                   {borderColor: error || otherError ? "crimson":"powderblue"},
-                  {borderWidth: error || otherError ? 1.5:0}
+                  {borderWidth: error || otherError ? 1.5:0},
+                  {width: width ? width : '80%'}
               ]}>
 
               <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
@@ -44,7 +45,6 @@ const CustomPassword = ({control,name, placeholder, passwordVisibility,handlePas
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#AFC5E3',
-    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,

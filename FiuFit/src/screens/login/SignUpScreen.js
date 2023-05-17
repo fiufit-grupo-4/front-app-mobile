@@ -11,283 +11,315 @@ import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
 import FiuFitLogo from '../../../assets/images/fiticon.png';
 import * as Location from 'expo-location';
+import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
 
 const {height} = Dimensions.get("window")
 const validator = require('validator');
 
 const SignUpScreen = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
-    PasswordVisibility();
-  const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
+        PasswordVisibility();
+    const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
 
-  const toggleSwitch = () => {
-      setIsAthlete(previousState => !previousState); // Cambia el estado del botón
-  };
+    const toggleSwitch = () => {
+        setIsAthlete(previousState => !previousState); // Cambia el estado del botón
+    };
 
 
-  function getLocation() {
-    const result = requestLocationPermission();
-    result.then(async res => {
-      if (res) {
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location)
-        setLocation(location);
-      }
-    }).catch(error => {
-      console.warn(error);
-    })
-  }
-
-  async function requestLocationPermission() {
-    try {
-      const status = await Location.requestForegroundPermissionsAsync()
-      console.log(status)
-      if (status !== 'granted') {
-        console.log("Permiso concedido");
-        return true
-      } else {
-        setErrorMsg('Permission to access location was denied');
-        console.log("Permiso denegado");
-        return false
-      }
-    } catch(err) {
-      setErrorMsg('Permission to access location was denied');
-      console.warn(err)
-      return false
+    function getLocation() {
+        const result = requestLocationPermission();
+        result.then(async res => {
+            if (res) {
+                let location = await Location.getCurrentPositionAsync({});
+                console.log(location)
+                setLocation(location);
+            }
+        }).catch(error => {
+            console.warn(error);
+        })
     }
-  }
 
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
-
-  const navigation = useNavigation();
-
-  const onRegisterPressed = (data) => {
-    /*
-    var url = 'https://api-gateway-fiufit.herokuapp.com/signup/';
-    console.log(data)
-    setLoading(true)
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "mail": data.email,
-        "password": data.password
-      })
-    })
-    .then(response => {
-      setLoading(false)
-      if (!response.ok) {
-        setError(true)
-        setErrorMessage("Failed to connect with server")    
-      } else {
-        navigation.navigate('ConfirmEmail');
-      }
-    })
-    .catch(error => {
-      setError(true)
-      setErrorMessage(error)
-    })*/
-    getLocation()
-  };
-
-  const onSignInPress = () => {
-    navigation.navigate('SignIn');
-
-  };
-
-  const onTermsOfUsePressed = () => {
-    console.warn('onTermsOfUsePressed');
-  };
-
-  const onPrivacyPressed = () => {
-    console.warn('onPrivacyPressed');
-  };
-
-  const { control, handleSubmit, formState: { errors }, watch } = useForm({
-    defaultValues: {
-      email: 'sofia@fi.uba.ar',
-      password: '1234',
-      username:'Sofi77',
-      repeatPassword:'1234',
-      phoneNumber: "800900",
+    async function requestLocationPermission() {
+        try {
+            const status = await Location.requestForegroundPermissionsAsync()
+            console.log(status)
+            if (status !== 'granted') {
+                console.log("Permiso concedido");
+                return true
+            } else {
+                setErrorMsg('Permission to access location was denied');
+                console.log("Permiso denegado");
+                return false
+            }
+        } catch(err) {
+            setErrorMsg('Permission to access location was denied');
+            console.warn(err)
+            return false
+        }
     }
-  });
 
-  const pwd = watch("password")
-
-  const validateEmail = (email) => {
-    return validator.isEmail(email)
-  };
-
-  const validatePhoneNumber = (phoneNumber) => {
-    return validator.isMobilePhone(phoneNumber)
-  };
-
-  return (
-    
-      <View style={styles.root}>
-        <Image
-            source={FiuFitLogo}
-            style={ {width: "80%", height: height * 0.2,marginTop:10}}
-            resizeMode="contain"
-        />
-
-        {loading 
-          ? <LoadingIndicator/>
-          : <>
-              <Text style={styles.title}>Create an Account</Text>
-                
-
-              <ScrollView contentContainerStyle ={{alignItems: 'center',flexGrow:1 ,borderRadius:10,width:"100%",padding:5 }} showsHorizontalScrollIndicator={false}>
-              <CustomInput
-                name= "username" 
-                placeholder="Username"
-                icon={"person-outline"}
-                control={control}
-                rules = {{required:"This field is Required"}}
-              />
-              
-        
-              <CustomInput
-                name= "email"
-                placeholder="Email"
-                control={control}
-                icon={"mail-outline" }
-                rules = {{
-                  required:"This field is Required", 
-                  validate : value => validateEmail(value) || "Not a valid email address",
-                  }}
-                otherError={error}
-              />
-
-              
-              <CustomInput
-                name= "phoneNumber"
-                placeholder="Phone number"
-                control={control}
-                icon={"call-outline"}
-                rules = {{
-                  required:"This field is required",
-                  validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
-              />
-              
-            
-              <CustomPassword
-                name="password"
-                placeholder="Password"
-                control={control}
-                passwordVisibility={passwordVisibility}
-                handlePasswordVisibility={handlePasswordVisibility}
-                rightIcon={rightIcon}
-                rules = {{required:"This field is Required"}}
-                otherError={error}
-              />
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
 
 
-              <CustomPassword
-                name="repeatPassword"
-                placeholder="Repeat your password"
-                control={control}
-                passwordVisibility={passwordVisibility}
-                handlePasswordVisibility={handlePasswordVisibility}
-                rightIcon={rightIcon}
-                rules = {{
-                  required:"This field is Required",
-                  validate: value => value === pwd || "Passwords do not match"
-                }}
-                otherError={error}
-              /> 
+    const navigation = useNavigation();
 
-              <View style={[signUpStyles.container, isAthlete ? {} : {backgroundColor:"orange"} ]}>
-                  <Ionicons name={isAthlete ? 'basketball' : 'bicycle'} style= {signUpStyles.icon} size ={25}/>
-                  < Text style={[signUpStyles.text,isAthlete ? {color: "#708090"} : {color:"black"}]}  >
-                    Choose your role:    
-                  </Text>
-                  < Text style={signUpStyles.label}  >
-                    {isAthlete ? 'Athlete' : 'Trainer'}   
-                  </Text> 
-                  <Switch
-                    onValueChange={toggleSwitch}
-                    value={isAthlete}
-                    thumbColor={isAthlete ? '#ffffff' : '#000000'}
-                    trackColor={{ true: '#000000', false: '#ffffff' }}
-                    style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
-                  />      
-              </View>
-                
-              </ScrollView>
+    function getRole(){
+        console.log(isAthlete)
+        return isAthlete ? ATHLETE : TRAINER
+    }
 
-              <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
-              
-              {error && (
-                <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
-              )}
+    const onRegisterPressed = (data) => {
+        var url = API_GATEWAY + 'signup/';
+        console.log(data)
+        setLoading(true)
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            },
+            body: JSON.stringify({
+                "mail": data.mail,
+                "password": data.password,
+                "phone_number": data.phone_number,
+                "role":getRole(),
+                "name": data.name,
+                "lastname": data.lastname,
+                "age":data.age
+            })
+        })
+            .then(response => {
+                setLoading(false)
+                if (!response.ok) {
+                    setError(true)
+                    setErrorMessage("Failed to connect with server")
+                } else {
+                    navigation.navigate('ConfirmEmail',{phone : data.phone_number});
+                }
+            })
+            .catch(error => {
+                setError(true)
+                setErrorMessage(error)
+            })
+        //getLocation()
+    };
 
-              <View style={[styles.container]} > 
-                <Text style={styles.text}>
-                  By registering, you confirm that you accept our{' '}
-                  <Text style={styles.link} onPress={onTermsOfUsePressed}>
-                    Terms of Use
-                  </Text>{' '}
-                  and{' '}
-                  <Text style={styles.link} onPress={onPrivacyPressed}>
-                    Privacy Policy
-                  </Text>
-                  .
-                </Text>
-              </View>
-              
-              <CustomButton
-                text="Have an account? Sign in"
-                onPress={onSignInPress}
-                type="TERTIARY"
-              /> 
-            
+    const onSignInPress = () => {
+        navigation.navigate('SignIn');
 
-            </>
-        }   
-          
-      </View>
-      
-  );
+    };
+
+    const onTermsOfUsePressed = () => {
+        console.warn('onTermsOfUsePressed');
+    };
+
+    const onPrivacyPressed = () => {
+        console.warn('onPrivacyPressed');
+    };
+
+    const { control, handleSubmit, formState: { errors }, watch } = useForm({
+        defaultValues: {
+            mail: 'dante@fi.uba.ar',
+            password: '1234',
+            repeatPassword:'1234',
+            phone_number: "+5491161637747",
+            name: "Dante",
+            lastname: "420",
+            age: "24"
+        }
+    });
+
+    const pwd = watch("password")
+
+    const validateEmail = (email) => {
+        return validator.isEmail(email)
+    };
+
+    const validatePhoneNumber = (phoneNumber) => {
+        return validator.isMobilePhone(phoneNumber)
+    };
+
+    return (
+
+        <View style={styles.root}>
+            <Image
+                source={FiuFitLogo}
+                style={ {width: "80%", height: height * 0.2,marginTop:10}}
+                resizeMode="contain"
+            />
+
+            {loading
+                ? <LoadingIndicator/>
+                : <>
+                <Text style={styles.title}>Create an Account</Text>
+                <ScrollView >
+                    <View style={{alignItems:"center",width:"100%"}}>
+                    <CustomInput
+                        name= "mail"
+                        placeholder="Email"
+                        control={control}
+                        icon={"mail-outline" }
+                        rules = {{
+                            required:"This field is Required",
+                            validate : value => validateEmail(value) || "Not a valid email address",
+                        }}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+                    <CustomInput
+                        name= "name"
+                        placeholder="Name"
+                        control={control}
+                        icon={"person-outline"}
+                        rules = {{required:"This field is Required"}}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+                    <CustomInput
+                        name= "lastname"
+                        placeholder="Last Name"
+                        control={control}
+                        icon={"person-outline"}
+                        rules = {{required:"This field is Required"}}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+                    <CustomInput
+                        name= "age"
+                        placeholder="Age"
+                        control={control}
+                        icon={"fitness"}
+                        rules = {{required:"This field is Required"}}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+                    <CustomInput
+                        name= "phone_number"
+                        placeholder="Phone number"
+                        control={control}
+                        icon={"call-outline"}
+                        width={"100%"}
+                        rules = {{
+                            required:"This field is Required",
+                            validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+                    />
+
+
+                    <CustomPassword
+                        name="password"
+                        placeholder="Password"
+                        control={control}
+                        passwordVisibility={passwordVisibility}
+                        handlePasswordVisibility={handlePasswordVisibility}
+                        rightIcon={rightIcon}
+                        rules = {{required:"This field is Required"}}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+
+                    <CustomPassword
+                        name="repeatPassword"
+                        placeholder="Repeat your password"
+                        control={control}
+                        passwordVisibility={passwordVisibility}
+                        handlePasswordVisibility={handlePasswordVisibility}
+                        rightIcon={rightIcon}
+                        rules = {{
+                            required:"This field is Required",
+                            validate: value => value === pwd || "Passwords do not match"
+                        }}
+                        otherError={error}
+                        width={"100%"}
+                    />
+
+                    
+                    <View style={[signUpStyles.container, isAthlete ? {} : {backgroundColor:"orange"} ]}>
+                        <Ionicons name={isAthlete ? 'basketball' : 'bicycle'} style= {signUpStyles.icon} size ={25}/>
+                        < Text style={[signUpStyles.text,isAthlete ? {color: "#708090"} : {color:"black"}]}  >
+                            Choose your role:
+                        </Text>
+                        < Text style={signUpStyles.label}  >
+                            {isAthlete ? 'Athlete' : 'Trainer'}
+                        </Text>
+                        <Switch
+                            onValueChange={toggleSwitch}
+                            value={isAthlete}
+                            thumbColor={isAthlete ? '#ffffff' : '#000000'}
+                            trackColor={{ true: '#000000', false: '#ffffff' }}
+                            style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                        />
+                    </View>
+                    </View>
+                    </ScrollView>
+                    <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
+                    {error && (
+                        <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
+                    )}
+
+                {/* 
+                    <View style={[styles.container]} >
+                        <Text style={styles.text}>
+                            By registering, you confirm that you accept our{' '}
+                            <Text style={styles.link} onPress={onTermsOfUsePressed}>
+                                Terms of Use
+                            </Text>{' '}
+                            and{' '}
+                            <Text style={styles.link} onPress={onPrivacyPressed}>
+                                Privacy Policy
+                            </Text>
+                            .
+                        </Text>
+                    </View>*/}
+
+                    <CustomButton
+                        text="Have an account? Sign in"
+                        onPress={onSignInPress}
+                        type="TERTIARY"
+                    />
+                </>
+            }
+        </View>
+
+    );
 };
 
 export default SignUpScreen;
 
 
 const signUpStyles = StyleSheet.create({
-  container: {
-    
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor:"#AFC5E3",
-    width: '80%',
-    borderRadius: 15,
-    padding:5,
-    margin:5,
-    height:45
-  },
-  label: {
-    fontSize: 15,
-    fontWeight:"bold",
-  },
-  text: {
-    fontSize: 15,
-    marginRight:10,
-    marginLeft:5
-  }, 
-  icon: {
-    color: "#222831",
-    alignItems:"center",
-    paddingHorizontal:5
-  },
+    container: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor:"#AFC5E3",
+        width: '100%',
+        borderRadius: 15,
+        padding:5,
+        margin:5,
+        height:45
+    },
+    label: {
+        fontSize: 15,
+        fontWeight:"bold",
+    },
+    text: {
+        fontSize: 15,
+        marginRight:10,
+        marginLeft:5
+    },
+    icon: {
+        color: "#222831",
+        alignItems:"center",
+        paddingHorizontal:5
+    },
 });
 
 {/*
@@ -305,5 +337,5 @@ async function requestLocationPermission() {
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       console.log("Permiso concedido");
     } else {*/
-  
-  }
+
+}

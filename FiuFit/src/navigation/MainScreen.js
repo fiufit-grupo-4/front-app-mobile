@@ -2,7 +2,7 @@ import React from 'react';
 import {AntDesign} from "@expo/vector-icons";
 import {HomeTab} from "../screens/home/HomeTab";
 import {SearchScreen} from "../screens/Search/SearchScreen";
-import ProfileScreen from "../screens/profile/ProfileScreen";
+import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
@@ -42,7 +42,7 @@ const MainScreen = () => {
             />
 
             <Tab.Screen
-                name="Profile" component={ProfileScreen}
+                name="Profile" component={MenuProfileScreen}
                 options={{
                    //tabBarLabel: ({ focused, color }) => (<Text style={{ color: focused ? "#91AED4" : "grey" }}>Profile</Text>),
                     tabBarLabelStyle: { color: 'transparent' },
