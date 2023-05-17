@@ -4,7 +4,8 @@ import {StackActions} from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Screens} from "../../navigation/Screens";
 import {USER, API_GATEWAY } from '../../utils/constants';
-function MenuProfileScreen({ navigation }) {
+function MenuProfileScreen({ navigation,route }) {
+    const {reload} = route.params
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -22,7 +23,8 @@ function MenuProfileScreen({ navigation }) {
             "phone_number":newData.phone_number,
             "trainings":newData.trainings,
             "access_token":oldData.access_token,
-            "token_type":oldData.token_type
+            "token_type":oldData.token_type,
+            "id": newData.id
         }
         setUser(updateUser)
         AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
@@ -71,7 +73,7 @@ function MenuProfileScreen({ navigation }) {
                 });
         }
         getUser();
-        }, [])
+        }, [reload])
     return (
         <>
         { loading 
@@ -86,13 +88,19 @@ function MenuProfileScreen({ navigation }) {
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20,  alignItems: 'flex-start' }}>Number: {user.phone_number}</Text>
                 </View>
-                <TouchableOpacity style={{ backgroundColor: '#DEE9F8FF', borderRadius: 20, marginHorizontal: 40, paddingVertical: 10 }} onPress={() => navigation.navigate('Edit Profile',{user : user})}>
+                <TouchableOpacity style={{ backgroundColor: '#DEE9F8FF', borderRadius: 20, marginHorizontal: 40, paddingVertical: 10 }} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
                     <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Screens.ChangePassword)}>
                     <Text style={styles.buttonText}>Create New Password</Text>
                 </TouchableOpacity>
+
+                {error && (
+                <View style = {{alignItems:"center",marginTop:15}}>
+                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                </View>
+                )}
             </ScrollView>
           }
           </>

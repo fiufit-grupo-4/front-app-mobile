@@ -12,7 +12,7 @@ const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
     const handleTouchableOpacity = () => {
-        navigation.navigate("Profile")
+        navigation.navigate("Profile",{reload : false})
     };
 
     const [userInfo,setUserInfo] = useState({})

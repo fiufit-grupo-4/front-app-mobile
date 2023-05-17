@@ -14,16 +14,15 @@ import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from "@expo/vector-icons";
 import {StackActions, useNavigation} from "@react-navigation/native";
 import { API_GATEWAY,USER } from '../../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {firebase} from '../../config/firebase'
 
 
 export const EditProfileScreen = ({route}) => {
-    const {user} = route.params
+    const {user,reload} = route.params
     const [name, setName] = useState(user.name);
     const [lastName, setLastName] = useState(user.lastname);
-    const [profilePicture, setProfilePicture] = useState(require('../../../assets/images/profilepic.jpeg'));
+    const [profilePicture, setProfilePicture] = useState(user.image);
     const [age, setAge] = useState(user.age);
-    const [number, setNumber] = useState(user.phone_number);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -43,24 +42,88 @@ export const EditProfileScreen = ({route}) => {
             quality: 1,
         });
         if (!result.canceled) {
-            setProfilePicture(result.uri);
+            setProfilePicture(result.assets[0].uri);
+            console.log(result.assets[0].uri)
         }
     };
 
+    const uploadImage = async () => {
+     if (profilePicture){
+        setLoading(true);
+        const response = await fetch(profilePicture);
+        const blob = await response.blob();
+        firebase.storage().ref().child(`users/${user.id}`).put(blob).then((res) => {
+            Alert.alert("Photo uploaded correctly!")
+            console.log(res)
+            
+            return true
+        }).catch((error) => {
+            setError(true);
+            setErrorMessage(error); 
+
+        }); 
+        setLoading(false);
+        return false       
+    }}
+
 
     const handleSaveChanges = () => {
-          
-    }
-
-    
-    
+        let url = API_GATEWAY + "users/" + user.id
+        setLoading(true);
+        setError(false)
+        let image = profilePicture ? profilePicture : user.image
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + user.access_token,
+            },
+            body: JSON.stringify({
+                "name": name,
+                "lastname": lastName,
+                "age": age ,
+                "image" : image 
+            })
+        }).then((response) => {
+            //setLoading(false);
+            console.log(JSON.stringify(response))
+            if (!response.ok) {
+                setError(true);
+                if (response.status === 401) {
+                    setErrorMessage('Unauthorized, not a valid access token');
+                } else {
+                    setErrorMessage('Failed to connect with the server');
+                }
+            } else {
+                response.json().then((data) => {
+                    console.log(JSON.stringify(data))
+                    uploadImage().then((uploaded)=>{
+                        if (uploaded){
+                            navigation.navigate("Profile",{reload:!reload})
+                        }
+                        
+                    }).catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });  
+                }).catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
+            }}).catch((error) => {
+                setError(true);
+                setErrorMessage(error);
+    })}
 
     return (
         <View style={{flex:1,padding:30,backgroundColor: '#91AED4'}}>
 
             <View style={{ alignItems: 'center', padding: 20 }}>
                 <TouchableOpacity onPress={handleImagePicker}>
-                    <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                    { profilePicture 
+                        ? <Image source={{uri: profilePicture}} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                        : <Image source={ require('../../../assets/images/profilepic.jpeg')} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                    }
                     <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: 'white', borderRadius: 15, paddingHorizontal: 10, paddingVertical: 5 }}>
                         <Ionicons name={'camera-outline'} size={20} color={'#5B635F'}/>
                     </View>
@@ -100,20 +163,9 @@ export const EditProfileScreen = ({route}) => {
                     />
                 </View>
 
-            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Number</Text>
-            <View style={styles.inputContainer}>
-                
-                <TextInput
-                    style={{ fontSize: 16, color: 'black',marginLeft:10 }}
-                    placeholder="Enter your phone number"
-                    value={number}
-                    onChangeText={setNumber}
-                    keyboardType="numeric"
-                />
-            </View>
 
             { loading 
-              ? <View style={{}}>
+              ? <View style={{marginTop:50, marginHorizontal: 40}}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
               : <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
@@ -122,8 +174,8 @@ export const EditProfileScreen = ({route}) => {
             }
 
             {error && (
-                <View style = {{alignItems:"center"}}>
-                    <Text style = {{fontSize:18,color : "crimson",padding:5}}> {errorMessage} </Text>
+                <View style = {{alignItems:"center",marginTop:15}}>
+                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
                 </View>
             )}
 
@@ -155,7 +207,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         borderRadius: 20,
         paddingVertical: 10,
-        marginTop:110,
+        marginTop:50,
         marginHorizontal: 40
     }
 })
