@@ -62,7 +62,6 @@ const UploadImage = ({setImage}) => {
                         <Text style={styles.buttonText}>Select an Image</Text>
                     </TouchableOpacity>
 
-
                     {error && (
                         <Text style={{color: 'red'}}>You must select an image first</Text>
                     )}
