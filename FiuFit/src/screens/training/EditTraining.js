@@ -150,7 +150,7 @@ const EditTraining = ({ onPress , route }) => {
                 </View>
     */}
 
-{/*
+
 
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}> Difficulty </Text>
@@ -166,9 +166,9 @@ const EditTraining = ({ onPress , route }) => {
                         </View>
                     </View>
                 </View>
-*/}
 
-                <View style={styles.inputContainer}>
+
+{/*                <View style={styles.inputContainer}>
                     <Text style={styles.text}>Difficulty</Text>
                     <View style={{flexDirection: 'row'}}>
                         <Ionicons name={'ios-stats-chart-outline'} size={16} color="#A6A6A6" style={styles.icon}/>
@@ -181,7 +181,7 @@ const EditTraining = ({ onPress , route }) => {
                             keyboardType="numeric"
                         />
                     </View>
-                </View>
+                </View>*/}
 
 
                 <View style={styles.inputContainer}>
@@ -196,6 +196,7 @@ const EditTraining = ({ onPress , route }) => {
                         />
                     </View>
                 </View>
+
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
                     <View style={styles.container}>
@@ -215,6 +216,7 @@ const EditTraining = ({ onPress , route }) => {
                         </View>
                     </View>
                 </View>
+
 
             </ScrollView>
 
