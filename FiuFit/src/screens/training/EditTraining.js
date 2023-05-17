@@ -199,14 +199,13 @@ const EditTraining = ({ onPress , route }) => {
 
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
-                    <View style={styles.container}>
+                    <View style={{padding:1, marginTop:10, paddingTop:10 }}>
                         <Text style={styles.text}>Training Type</Text>
                         <View style={{flexDirection:"row"}}>
                             <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                             <Picker
                                 selectedValue={trainingType}
-                                style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
-                                itemStyle={styles.pickerItem}
+                                style={{ height: 50, width: '99%', marginLeft: -17, marginTop: -12, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
                                 onValueChange={(itemValue) =>
                                 {setTrainingType(itemValue)}}
                             >
