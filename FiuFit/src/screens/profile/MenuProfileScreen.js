@@ -92,7 +92,7 @@ function MenuProfileScreen({ navigation,route }) {
                     <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(Screens.ChangePassword)}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
                     <Text style={styles.buttonText}>Create New Password</Text>
                 </TouchableOpacity>
 

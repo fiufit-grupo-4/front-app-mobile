@@ -108,7 +108,7 @@ export const EditProfileScreen = ({route}) => {
     })}
 
     return (
-        <View style={{flex:1,padding:30,backgroundColor: '#91AED4'}}>
+        <View style={{flex:1,padding:30}}>
 
             <View style={{ alignItems: 'center', padding: 20 }}>
                 <TouchableOpacity onPress={handleImagePicker}>
@@ -122,7 +122,7 @@ export const EditProfileScreen = ({route}) => {
                 </TouchableOpacity>
             </View>
 
-            <Text style={{ fontSize: 17, color: 'black',  marginBottom: 5,marginLeft:10 }}>Name</Text>
+            <Text style={{ fontSize: 17, color: 'black',  marginLeft:10 }}>Name</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={{ fontSize: 16, color: 'black',marginLeft:10 }}
@@ -132,7 +132,7 @@ export const EditProfileScreen = ({route}) => {
                 />
             </View>
 
-            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Last Name</Text>
+            <Text style={{ fontSize: 17, color: 'black', marginLeft:10 }}>Last Name</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={{ fontSize: 16, color: 'black',marginLeft:10 }}
@@ -142,7 +142,7 @@ export const EditProfileScreen = ({route}) => {
                 />
             </View>
 
-            <Text style={{ fontSize: 18, color: 'black', marginBottom: 5,marginLeft:10 }}>Age</Text>
+            <Text style={{ fontSize: 17, color: 'black', marginLeft:10 }}>Age</Text>
             <View style={styles.inputContainer}>
             
                     <TextInput
@@ -180,14 +180,23 @@ export default EditProfileScreen;
 
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        backgroundColor: '#AFC5E3',
-        flexDirection: 'row',
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
         alignItems: 'center',
-        borderRadius: 15,
-        height:45,
-        padding:5,
-        margin:5,
+        justifyContent: 'center',
+    },
+    inputContainer: {
+        width: '90%',
+        
+        height: 50,
+        padding: 10,
+        //borderWidth: 1,
+        borderBottomWidth:1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginVertical: 10,
+        marginLeft:15
     },
     buttonText: {
         fontSize: 18,
