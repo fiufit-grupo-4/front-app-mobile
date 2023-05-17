@@ -110,7 +110,6 @@ function MenuProfileScreen({ navigation,route }) {
 export default MenuProfileScreen;
 
 
-
 const styles = StyleSheet.create({
     buttonText: {
         fontSize: 18,

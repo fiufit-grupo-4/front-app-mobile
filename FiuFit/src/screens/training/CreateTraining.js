@@ -134,8 +134,7 @@ export const CreateTraining = ({ navigation }) => {
         <View style={styles.container}>
             <Text style={styles.botton}>NEW POST</Text>
         <View>
-        
-        
+
         </View>
             <ScrollView style={{margin:10}}>
                 <View style={styles.boxContainer}>
@@ -224,11 +223,12 @@ export const CreateTraining = ({ navigation }) => {
                     </View>
                 )}
 
-
                 </ScrollView>
             </View>
     );
 };
+
+
 
 const styles = StyleSheet.create({
     botton: {

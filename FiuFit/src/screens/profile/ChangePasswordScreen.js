@@ -86,7 +86,6 @@ const ChangePasswordScreen = ({route}) => {
             {passwordChangeSuccess && (
                 <Text style={styles.successMessage}>Password changed successfully!</Text>
             )}
-            
 
             <TextInput
                 style={styles.input}
@@ -117,7 +116,6 @@ const ChangePasswordScreen = ({route}) => {
             {passwordNullError && (
                 <Text style={styles.errorMessage}>You must introduce a new password.</Text>
             )}
-            
 
             { loading 
               ? <View style={{marginTop:50, marginHorizontal: 40}}>

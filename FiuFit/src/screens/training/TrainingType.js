@@ -14,7 +14,7 @@ const TrainingType = ({setType}) => {
                 selectedValue={selectedValue}
                 style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
                 itemStyle={styles.pickerItem}
-                onValueChange={(itemValue, itemIndex) => 
+                onValueChange={(itemValue) =>
                     {   setType(itemValue)
                         setSelectedValue(itemValue)
                     }}

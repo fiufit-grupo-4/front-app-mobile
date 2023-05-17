@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {Ionicons} from "@expo/vector-icons";
-import {StackActions, useNavigation} from "@react-navigation/native";
-import { API_GATEWAY,USER } from '../../utils/constants';
+import {useNavigation} from "@react-navigation/native";
+import { API_GATEWAY } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 
 
