@@ -90,7 +90,7 @@ export const CreateTraining = ({ navigation }) => {
                         />
                     </View>
 
-                    <View style={styles.inputContainer}>
+{/*                    <View style={styles.inputContainer}>
                         <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                         <TextInput
                             style={styles.input}
@@ -99,7 +99,7 @@ export const CreateTraining = ({ navigation }) => {
                             onChangeText={setTrainingType}
                             multiline={true}
                         />
-                    </View>
+                    </View>*/}
 
                     <View style={styles.inputContainer}>
                         <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
@@ -112,7 +112,7 @@ export const CreateTraining = ({ navigation }) => {
                             onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
                             keyboardType="numeric"
                         />*/}
-                        <Text style={styles.input}> Difficulty:  </Text>
+                        <Text style={styles.difficultyInput}> Difficulty:  </Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
@@ -179,6 +179,14 @@ const styles = StyleSheet.create({
 
     },
     input: {
+        fontSize: 18,
+        minHeight:25,
+        maxWidth:320,
+        margin:3,
+        width: '99%',
+        color:"rgba(53,63,79,0.74)"
+    },
+    difficultyInput: {
         fontSize: 18,
         minHeight:25,
         maxWidth:320,
