@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import {Ionicons} from "@expo/vector-icons";
 
 
-const TrainingType = () => {
+const TrainingType = ({setType}) => {
     const [selectedValue, setSelectedValue] = useState(" ");
 
     return (
@@ -14,11 +14,14 @@ const TrainingType = () => {
                 selectedValue={selectedValue}
                 style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
                 itemStyle={styles.pickerItem}
-                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                onValueChange={(itemValue, itemIndex) => 
+                    {   setType(itemValue)
+                        setSelectedValue(itemValue)
+                    }}
             >
                 <Picker.Item label=" " value=" " />
-                <Picker.Item label="Caminata" value="caminata" />
-                <Picker.Item label="Running" value="running" />
+                <Picker.Item label="Caminata" value="Caminata" />
+                <Picker.Item label="Running" value="Running" />
             </Picker>
         </View>
     );
