@@ -47,11 +47,11 @@ export const CreateTraining = ({ navigation }) => {
 
 
     const createPost = () => {
-        if (!title || !description || !difficulty || !place) {
+        if (!title || !description  || !place) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || difficulty.trim() === '' || place.trim() === '') {
+        if (title.trim() === '' || description.trim() === '' || place.trim() === '') {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
