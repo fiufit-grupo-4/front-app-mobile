@@ -16,70 +16,8 @@ import TrainingType from "./TrainingType";
 import {EditTrainingType} from "./EditTrainingType";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as PropTypes from "prop-types";
+import {Picker} from "@react-native-picker/picker";
 
-
-EditTrainingType.propTypes = {
-    styles: PropTypes.shape({
-        styles: PropTypes.shape({
-            container: PropTypes.shape({
-                padding: PropTypes.number,
-                backgroundColor: PropTypes.string,
-                flex: PropTypes.number
-            }),
-            button: PropTypes.shape({
-                paddingVertical: PropTypes.number,
-                marginHorizontal: PropTypes.number,
-                backgroundColor: PropTypes.string,
-                borderRadius: PropTypes.number,
-                marginTop: PropTypes.number
-            }),
-            trainingType: PropTypes.shape({
-                backgroundColor: PropTypes.string,
-                maxHeight: PropTypes.number,
-                height: PropTypes.number
-            }),
-            input: PropTypes.shape({flex: PropTypes.number, fontSize: PropTypes.number}),
-            buttonText: PropTypes.shape({
-                color: PropTypes.string,
-                textAlign: PropTypes.string,
-                fontSize: PropTypes.number
-            }),
-            deleteButtonText: PropTypes.shape({
-                color: PropTypes.string,
-                textAlign: PropTypes.string,
-                fontSize: PropTypes.number
-            }),
-            deleteButton: PropTypes.shape({
-                paddingVertical: PropTypes.number,
-                marginHorizontal: PropTypes.number,
-                backgroundColor: PropTypes.string,
-                borderRadius: PropTypes.number,
-                marginTop: PropTypes.number
-            }),
-            icon: PropTypes.shape({
-                marginRight: PropTypes.number,
-                color: PropTypes.string,
-                fontSize: PropTypes.number,
-                marginTop: PropTypes.number
-            }),
-            typeIcon: PropTypes.shape({
-                marginRight: PropTypes.number,
-                color: PropTypes.string,
-                fontSize: PropTypes.number,
-                marginTop: PropTypes.number
-            }),
-            inputContainer: PropTypes.shape({
-                borderBottomColor: PropTypes.string,
-                marginVertical: PropTypes.number,
-                borderBottomWidth: PropTypes.number,
-                marginTop: PropTypes.number
-            }),
-            text: PropTypes.shape({color: PropTypes.string, fontSize: PropTypes.number, marginBottom: PropTypes.number})
-        })
-    }),
-    setType: PropTypes.func
-};
 const EditTraining = ({ onPress , route }) => {
     const {post, reload} = route.params;
     const [title, setTitle] = useState(post.title);
@@ -94,8 +32,6 @@ const EditTraining = ({ onPress , route }) => {
     const navigation = useNavigation();
 
     const handleDifficulty = (value) => {
-        console.log("difiiiii: ", value)
-        console.log("tipo: ", typeof(value))
         setDifficulty(value);
     };
 
@@ -123,11 +59,9 @@ const EditTraining = ({ onPress , route }) => {
         let url = API_GATEWAY + "trainers/me/trainings/" + post.id
         setLoading(true);
         setError(false)
-        console.log("la dificultad a guardar: ", difficulty)
         //let image = profilePicture ? profilePicture : user.image
         AsyncStorage.getItem(USER).then((item) => {
             let userInfo = JSON.parse(item)
-            console.log("la dificultad a guardar 1: ", difficulty)
         fetch(url, {
             method: 'PATCH',
             headers: {
@@ -137,15 +71,13 @@ const EditTraining = ({ onPress , route }) => {
             body: JSON.stringify({
                 "title": title,
                 "description": description,
-                "type": trainingType.toString(),
+                "type": trainingType,
                 "difficulty" : difficulty,
                 "place": place
             })
         }).then((response) => {
             setLoading(false);
             console.log(JSON.stringify(response))
-            console.log("la dificultad a guardar perri: ", difficulty)
-
             if (!response.ok) {
                 setError(true);
                 if (response.status === 401) {
@@ -218,6 +150,7 @@ const EditTraining = ({ onPress , route }) => {
                 </View>
     */}
 
+{/*
 
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}> Difficulty </Text>
@@ -233,21 +166,22 @@ const EditTraining = ({ onPress , route }) => {
                         </View>
                     </View>
                 </View>
+*/}
 
-    {/*            <View style={styles.inputContainer}>
+                <View style={styles.inputContainer}>
                     <Text style={styles.text}>Difficulty</Text>
                     <View style={{flexDirection: 'row'}}>
-                        <Ionicons name={'fitness-outline'} size={16} color="#A6A6A6" style={styles.icon}/>
+                        <Ionicons name={'ios-stats-chart-outline'} size={16} color="#A6A6A6" style={styles.icon}/>
                         <TextInput
                             maxLength={1}
                             style={{fontSize: 16, color: '#333'}}
-                            placeholder="Enter difficulty (1-5)"
+                            placeholder="Difficulty (1-5)"
                             value={difficulty}
                             onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
                             keyboardType="numeric"
                         />
                     </View>
-                </View>*/}
+                </View>
 
 
                 <View style={styles.inputContainer}>
@@ -264,7 +198,22 @@ const EditTraining = ({ onPress , route }) => {
                 </View>
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
-                        <EditTrainingType setType={setTrainingType} type={trainingType}/>
+                    <View style={styles.container}>
+                        <Text style={styles.text}>Training Type</Text>
+                        <View style={{flexDirection:"row"}}>
+                            <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                            <Picker
+                                selectedValue={trainingType}
+                                style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
+                                itemStyle={styles.pickerItem}
+                                onValueChange={(itemValue) =>
+                                {setTrainingType(itemValue)}}
+                            >
+                                <Picker.Item label="Caminata" value="Caminata" />
+                                <Picker.Item label="Running" value="Running" />
+                            </Picker>
+                        </View>
+                    </View>
                 </View>
 
             </ScrollView>
