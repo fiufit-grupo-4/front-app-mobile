@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Image} from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    StyleSheet,
+    Image,
+    TouchableWithoutFeedback
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
 const EditTraining = ({ onPress , route }) => {
@@ -8,9 +18,13 @@ const EditTraining = ({ onPress , route }) => {
     const [title, setTitle] = useState(post.title);
     const [description, setDescription] = useState(post.description);
     const [trainingType, setTrainingType] = useState(post.trainingType);
-    const [difficulty, setDifficulty] = useState(post.difficulty.toString());
+    const [difficulty, setDifficulty] = useState(post.difficulty);
     const [place, setPlace] = useState(post.place);
 
+
+    const handleDifficulty = (value) => {
+        setDifficulty(value);
+    };
 
     const handleSubmit = () => {
         if (!title || !description || !difficulty || !place) {
@@ -79,7 +93,24 @@ const EditTraining = ({ onPress , route }) => {
                 </View>
             </View>
 
+
+
             <View style={styles.inputContainer}>
+                <Text style={styles.difficultyInput}> Difficulty:  </Text>
+                <View style={{flexDirection: 'row', marginTop: 8}}>
+                    <Ionicons name="ios-stats-chart-outline" size={16} color="#A6A6A6" style={styles.icon}/>
+                    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                        {[1, 2, 3, 4, 5].map((value) => (
+                            <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
+                                <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                            </TouchableWithoutFeedback>
+                        ))}
+                        <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
+                    </View>
+                </View>
+            </View>
+
+{/*            <View style={styles.inputContainer}>
                 <Text style={styles.text}>Difficulty</Text>
                 <View style={{flexDirection: 'row'}}>
                     <Ionicons name={'fitness-outline'} size={16} color="#A6A6A6" style={styles.icon}/>
@@ -92,7 +123,7 @@ const EditTraining = ({ onPress , route }) => {
                         keyboardType="numeric"
                     />
                 </View>
-            </View>
+            </View>*/}
 
 
             <View style={styles.inputContainer}>
