@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,TouchableWithoutFeedback} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    TouchableWithoutFeedback,
+    ScrollView
+} from 'react-native';
 import {useForm} from "react-hook-form";
 import {Ionicons} from "@expo/vector-icons";
 import UploadImage from '../../components/utils/UploadImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MultiSelect from 'react-native-multiple-select';
+import TrainingType from "./TrainingType";
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -56,82 +66,84 @@ export const CreateTraining = ({ navigation }) => {
         <View>
         
         
-    </View>
-            <View style={styles.boxContainer}>
-                <View style={styles.inputContainer}>
-                    <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Title"
-                        value={title}
-                        onChangeText={setTitle}
-                    />
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Description"
-                        value={description}
-                        onChangeText={setDescription}
-                        multiline={true}
-                    />
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Training Type"
-                        value={trainingType}
-                        onChangeText={setTrainingType}
-                        multiline={true}
-                    />
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                    {/* 
-                    <TextInput
-                        style={styles.input}
-                        maxLength={1}
-                        placeholder="Difficulty (1-5)"
-                        value={difficulty}
-                        onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
-                        keyboardType="numeric"
-                    />*/}
-                    <Text style={styles.input}> Difficulty:  </Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                        {[1, 2, 3, 4, 5].map((value) => (
-                            <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
-                                <Icon name={value <= rating ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                            </TouchableWithoutFeedback>
-                        ))}
-                        <Text style={{ marginLeft: 10 }}>{rating > 0 ? ' ' + ' ' : ' '}</Text>
-                    </View>
-                </View>
-
-
-                <View style={styles.inputContainer}>
-                    <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Place"
-                        value={place}
-                        onChangeText={setPlace}
-                    />
-                </View>
-
-            </View>
-
-            <UploadImage setImage={setImageUri}></UploadImage>
-
-            <TouchableOpacity style={styles.button} onPress={createPost}>
-                <Text style={styles.buttonText}>Post</Text>
-            </TouchableOpacity>
-
         </View>
+            <ScrollView>
+                <View style={styles.boxContainer}>
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="md-barbell-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Title"
+                            value={title}
+                            onChangeText={setTitle}
+                        />
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="md-pencil-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Description"
+                            value={description}
+                            onChangeText={setDescription}
+                            multiline={true}
+                        />
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Training Type"
+                            value={trainingType}
+                            onChangeText={setTrainingType}
+                            multiline={true}
+                        />
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        {/*
+                        <TextInput
+                            style={styles.input}
+                            maxLength={1}
+                            placeholder="Difficulty (1-5)"
+                            value={difficulty}
+                            onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
+                            keyboardType="numeric"
+                        />*/}
+                        <Text style={styles.input}> Difficulty:  </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
+                                    <Icon name={value <= rating ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                </TouchableWithoutFeedback>
+                            ))}
+                            <Text style={{ marginLeft: 10 }}>{rating > 0 ? ' ' + ' ' : ' '}</Text>
+                        </View>
+                    </View>
+
+
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Place"
+                            value={place}
+                            onChangeText={setPlace}
+                        />
+                    </View>
+                <TrainingType></TrainingType>
+
+                </View>
+
+                <UploadImage setImage={setImageUri}></UploadImage>
+
+                <TouchableOpacity style={styles.button} onPress={createPost}>
+                    <Text style={styles.buttonText}>Post</Text>
+                </TouchableOpacity>
+            </ScrollView>
+            </View>
     );
 };
 

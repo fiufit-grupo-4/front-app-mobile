@@ -52,13 +52,13 @@ const UploadImage = ({setImage}) => {
     return (
         <View style={styles.container}>
            
-                <View style={{alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: 40}}>
 
                 {imageUri && (
                     <Image source={{ uri: imageUri }} style={{  width: 120, height: 120 }} />
                 
                     )}
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#DEE9F8FF' }]}  onPress={pickImage}>
+                    <TouchableOpacity style={styles.button} onPress={pickImage}>
                         <Text style={styles.buttonText}>Select an Image</Text>
                     </TouchableOpacity>
 
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fffff',
         alignItems: 'center',
         justifyContent: 'center',
+        //width: '100%'
     },
     buttonsContainer: {
         flexDirection: 'row',
@@ -104,24 +105,15 @@ const styles = StyleSheet.create({
         marginTop:30
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
         alignItems: 'center',
         borderRadius: 15,
-        padding: 10,
-        marginHorizontal: 5,
-        marginBottom:1,
+        padding: 13,
+        //marginBottom:1,
         marginTop:10,
-        width: 370
-    },
-    nextButton: {
-        backgroundColor: '#DEE9F8FF',
-        alignItems: 'center',
-        borderRadius: 15,
-        padding: 10,
-        marginHorizontal: 5,
-        marginBottom:1,
-        marginTop:20,
-        width: 400
+        //width: '90%',
+        backgroundColor: 'rgba(217,227,240,0.75)',
+        //marginHorizontal: 40
+
     },
     buttonText: {
         color: '#333b48',
