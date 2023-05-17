@@ -34,7 +34,7 @@ export const CreateTraining = ({ navigation }) => {
 
     
     const handleDifficulty = (value) => {
-        setDifficulty(value);;
+        setDifficulty(value);
     };
 
 
@@ -67,11 +67,11 @@ export const CreateTraining = ({ navigation }) => {
 
     const createPost = () => {
         console.log(type)
-        if (!title || !description  || !place) {
+        if (!title || !description  || !place || !type || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || place.trim() === '') {
+        if (title.trim() === '' || description.trim() === '' || place.trim() === '' || type.trim() === '' || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
@@ -126,7 +126,6 @@ export const CreateTraining = ({ navigation }) => {
                 setError(true);
                 setErrorMessage(error);
         })
-         
     };
 
 
@@ -134,8 +133,7 @@ export const CreateTraining = ({ navigation }) => {
         <View style={styles.container}>
             <Text style={styles.botton}>NEW POST</Text>
         <View>
-        
-        
+
         </View>
             <ScrollView style={{margin:10}}>
                 <View style={styles.boxContainer}>
@@ -224,11 +222,12 @@ export const CreateTraining = ({ navigation }) => {
                     </View>
                 )}
 
-
                 </ScrollView>
             </View>
     );
 };
+
+
 
 const styles = StyleSheet.create({
     botton: {
