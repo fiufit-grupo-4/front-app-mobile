@@ -153,7 +153,7 @@ const ProfileScreen = ( ) => {
                         data={posts}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <Training item={item} canEdit={true} />
+                            <Training user={user} item={item} canEdit={true} />
                         )}
                     />
 

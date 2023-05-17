@@ -16,6 +16,7 @@ import CodeValidationScreen from "../screens/login/ValidateNumberScreen";
 import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
+import ViewTrainings from "../screens/training/ViewTrainings";
 
 
 const Stack = createNativeStackNavigator();
@@ -43,6 +44,8 @@ class Navigation extends React.Component {
 
                     <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
+                    <Stack.Screen name="ViewTrainings" component={ViewTrainings}  />
+
 
                 </Stack.Navigator>
             </NavigationContainer>

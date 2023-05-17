@@ -213,7 +213,7 @@ export const CreateTraining = ({ navigation }) => {
                             onChangeText={setPlace}
                         />
                     </View>
-                <TrainingType setType={setType}/>
+                <TrainingType setType={setType} styles={styles}/>
 
                 </View>
 
@@ -316,6 +316,21 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginTop:30,
         marginHorizontal: 40
+    },
+    trainingType: {
+        height: 50,
+        width: '99%',
+        marginLeft: -10,
+        color: "rgba(53,63,79,0.74)",
+        fontSize: 18
+    },
+    pickerItem: {
+        color: "red",
+        backgroundColor:  'rgba(163,205,255,0.42)'
+    },
+    typeIcon: {
+        size: 24,
+        color: "#A6A6A6"
     }
 });
 
