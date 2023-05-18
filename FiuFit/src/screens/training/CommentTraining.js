@@ -12,7 +12,8 @@ import React from "react";
 import {Ionicons} from "react-native-vector-icons";
 
 export function getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment) {
-    return <>
+        console.log(item)
+        return <>
         {/* COMENTARIOS */}
         <TouchableWithoutFeedback onPress={handleComment}>
             <Ionicons name={'chatbubble-outline'} style={styles.commentIcon}/>
@@ -28,9 +29,9 @@ export function getComments(handleComment, showCommentPopup, toggleCommentPopup,
             <View style={styles.commentPopUp}>
                 <ScrollView>
                     {item.comments && item.comments.map((comment) => {
-                        return (<View key={comment.user + comment.content}>
-                            <Text style={styles.commentUsername}>{comment.user}</Text>
-                            <Text style={styles.commentContent}>{comment.content}</Text>
+                        return (<View key={comment.user.name + " " + comment.user.lastname}>
+                            <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
+                            <Text style={styles.commentContent}>{comment.detail}</Text>
                         </View>);
                     })}
                 </ScrollView>
