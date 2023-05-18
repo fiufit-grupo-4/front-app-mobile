@@ -32,10 +32,14 @@ const UserProfile = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileInfo}>
-          <Image
-            style={styles.profileImage}
-            source={require('../../../assets/images/profilepic.jpeg')}
-          />
+          { user.image  
+            ? <Image source={{uri:user.image}} style={styles.profileImage}/>
+            : <Image
+                style={styles.profileImage}
+                source={require('../../../assets/images/profilepic.jpeg')}
+              />
+          }  
+          
           <View style={styles.nameContainer}>
             <Text style={styles.name}>{user.name + " " +user.lastname}</Text>
             <Text style={styles.role}>{getRole(user.role)}</Text>

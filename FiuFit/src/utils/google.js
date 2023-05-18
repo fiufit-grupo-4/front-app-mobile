@@ -1,4 +1,4 @@
-import auth from '@react-native-firebase/auth';
+//mport auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
@@ -6,7 +6,7 @@ GoogleSignin.configure({
     webClientId: "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
   });
 
-
+/*
 async function onGoogleButtonPress() {
     // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
@@ -18,4 +18,4 @@ async function onGoogleButtonPress() {
 
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
-}
+}*/

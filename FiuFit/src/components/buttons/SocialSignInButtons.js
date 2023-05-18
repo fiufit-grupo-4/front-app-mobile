@@ -3,7 +3,6 @@ import CustomIconButton from './CustomIconButton';
 import { firebase } from '../../config/firebase';
 
 
-
 const SocialSignInButtons = () => {
   const onSignInFacebook = () => {
     console.warn('onSignInFacebook');

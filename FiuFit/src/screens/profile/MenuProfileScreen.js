@@ -12,7 +12,7 @@ function MenuProfileScreen({ navigation,route }) {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    function handleSetUser(newData,oldData){
+    async function handleSetUser(newData,oldData){
         const updateUser = {
             "name":newData.name,
             "lastname":newData.lastname,
@@ -28,12 +28,9 @@ function MenuProfileScreen({ navigation,route }) {
             "token_type":oldData.token_type,
             "id": newData.id
         }
+        console.log(JSON.stringify(updateUser))
         setUser(updateUser)
-        AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
-        .catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          }) 
+        await AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
 
     }
 
@@ -62,12 +59,9 @@ function MenuProfileScreen({ navigation,route }) {
                                     setErrorMessage('Failed to connect with the server');
                                 }
                             } else {
-                                response.json().then((data) => {
-                                    setUser(data);
-                                }).catch((error) => {
-                                    setError(true);
-                                    setErrorMessage(error);
-                                });
+                                response.json().then(async (data) => {
+                                    await handleSetUser(data,user)
+                                })
                             }
                         }).catch((error) => {
                             setError(true);
@@ -114,7 +108,10 @@ function MenuProfileScreen({ navigation,route }) {
               </View>
             : <ScrollView style={{ flex: 1, backgroundColor: '#91AED4' }}>
                 <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
-                    <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                    { user.image  
+                        ? <Image source={{uri:user.image}} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                        : <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                    }  
                     <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Age: {user.age}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>

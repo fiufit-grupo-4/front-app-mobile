@@ -76,15 +76,13 @@ const CustomDrawer = (props) => {
                             onPress={
                                 handleTouchableOpacity
                             }>
-                            <Image
-                                source={require('../../../assets/images/profilepic.jpeg')}
-                                style={{
-                                    height: 80,
-                                    width: 80,
-                                    borderRadius: 40,
-                                    marginBottom: 10,
-                                }}
-                            />
+                                { userInfo.image  
+                                        ? <Image source={{uri:userInfo.image}} 
+                                           style={{height: 80,width: 80,borderRadius: 40,marginBottom: 10,}}/>
+                                        : <Image source={require('../../../assets/images/profilepic.jpeg')}
+                                            style={{height: 80,width: 80,borderRadius: 40,marginBottom: 10,}}/>
+                                }  
+                            
                         </TouchableOpacity>
 
                         <TouchableOpacity

@@ -22,7 +22,8 @@ export const EditProfileScreen = ({route}) => {
     const {user,reload} = route.params
     const [name, setName] = useState(user.name);
     const [lastName, setLastName] = useState(user.lastname);
-    const [profilePicture, setProfilePicture] = useState(user.image);
+    const [profilePicture, setProfilePicture] = useState("");
+    const [profileUpload, setProfileUpload] = useState("");
     const [age, setAge] = useState(user.age);
     const [location, setLocation] = useState(user.location);
     const [loading, setLoading] = useState(false);
@@ -45,39 +46,68 @@ export const EditProfileScreen = ({route}) => {
         });
         if (!result.canceled) {
             setProfilePicture(result.assets[0].uri);
-            console.log(result.assets[0].uri)
+            //console.log(result.assets[0].uri)
         }
     };
 
     const uploadImage = async () => {
-     if (profilePicture){
         setLoading(true);
         const response = await fetch(profilePicture);
         const blob = await response.blob();
-        firebase.storage().ref().child(`users/${user.id}`).put(blob).then((res) => {
-            Alert.alert("Photo uploaded correctly!")
-            console.log(res)
-            
-            return true
-        }).catch((error) => {
-            setError(true);
-            setErrorMessage(error); 
-
-        }); 
-        setLoading(false);
-        return false       
-    }}
+        let date = new Date().getTime()
+        const res = await firebase.storage().ref().child(`users/${user.id}/avatar/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.id}/avatar/${date}`).getDownloadURL()   
+        //console.log(uri)
+        setProfileUpload(uri)
+        setLoading(false)   
+    }
 
     const handleGetLocation = async () => {
         const res = await getLocation()
         setLocation(res)
     }
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
         let url = API_GATEWAY + "users/" + user.id
         setLoading(true);
         setError(false)
-        let image = profilePicture ? profilePicture : user.image
+        if (profilePicture) {
+            await uploadImage()
+        }
+        let image = profilePicture ? profileUpload : user.image
+    
+        let response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + user.access_token,
+            },
+            body: JSON.stringify({
+                "name": name,
+                "lastname": lastName,
+                "age": age ,
+                "image" : image,
+                "location" : location
+            })
+        })
+        setLoading(false);
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
+            setError(true);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))                
+            navigation.navigate("Profile",{reload:!reload})
+        }
+        
+        
+        /*
+        
         fetch(url, {
             method: 'PATCH',
             headers: {
@@ -112,7 +142,8 @@ export const EditProfileScreen = ({route}) => {
             }}).catch((error) => {
                 setError(true);
                 setErrorMessage(error);
-    })}
+    })*/
+}
 
     return (
         <View style={{flex:1,padding:30}}>
@@ -121,6 +152,8 @@ export const EditProfileScreen = ({route}) => {
                 <TouchableOpacity onPress={handleImagePicker}>
                     { profilePicture 
                         ? <Image source={{uri: profilePicture}} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                    : user.image 
+                        ? <Image source={ {uri: user.image}} style={{ width: 100, height: 100, borderRadius: 50 }} />
                         : <Image source={ require('../../../assets/images/profilepic.jpeg')} style={{ width: 100, height: 100, borderRadius: 50 }} />
                     }
                     <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: 'white', borderRadius: 15, paddingHorizontal: 10, paddingVertical: 5 }}>
