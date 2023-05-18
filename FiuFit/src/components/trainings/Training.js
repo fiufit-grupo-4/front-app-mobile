@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
 
 
-const Training = ({item, canEdit}) => {
+const Training = ({user, item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -55,17 +55,6 @@ const Training = ({item, canEdit}) => {
     const handleComment = () => {
         toggleCommentPopup();
     };
-
-    const handleAddComment = () => {
-        const newComment = {
-            user: 'Your Username', // Replace with actual username
-            content: commentText,
-        };
-        const updatedComments = [...item.comments, newComment];
-        //setItem({ ...item, comments: updatedComments });
-        setCommentText('');
-    };
-
 
     // CALIFICACION
     const handleRate = (value) => {
@@ -145,7 +134,7 @@ const Training = ({item, canEdit}) => {
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
                         {/* COMENTATIOS */}
-                        {getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment)}
+                        {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText)}
 
                         {/* FAVORITOS */}
                         {favouriteTraining(handleFavoritePress, isFavorite)}
