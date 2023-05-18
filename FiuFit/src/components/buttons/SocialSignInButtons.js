@@ -1,13 +1,28 @@
 import React from 'react';
 import CustomIconButton from './CustomIconButton';
+import { firebase } from '../../config/firebase';
+
+
 
 const SocialSignInButtons = () => {
   const onSignInFacebook = () => {
     console.warn('onSignInFacebook');
   };
 
-  const onSignInGoogle = () => {
-    console.warn('onSignInGoogle');
+  const onSignInGoogle = async () => {
+    
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+    
+        const { user: firebaseUser } = await firebase.auth().signInWithPopup(provider);
+    
+        // El inicio de sesión es exitoso, puedes redirigir o hacer otras acciones
+        console.log('Inicio de sesión exitoso:', firebaseUser);
+      } catch (error) {
+        // Manejo de errores
+        console.log('Error de inicio de sesión:', error);
+      }
+  
   };
 
   return (

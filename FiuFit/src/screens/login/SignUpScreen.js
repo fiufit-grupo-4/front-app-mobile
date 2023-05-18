@@ -12,7 +12,8 @@ import {Ionicons} from 'react-native-vector-icons'
 import FiuFitLogo from '../../../assets/images/fiticon.png';
 import * as Location from 'expo-location';
 import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
-
+import CustomIconButton from '../../components/buttons/CustomIconButton';
+import { firebase } from '../../config/firebase';
 const {height} = Dimensions.get("window")
 const validator = require('validator');
 
@@ -139,9 +140,43 @@ const SignUpScreen = () => {
         return validator.isEmail(email)
     };
 
+
     const validatePhoneNumber = (phoneNumber) => {
         return validator.isMobilePhone(phoneNumber)
     };
+
+
+    const onSignUpGoogle = async () => {
+            try {
+              const provider = new firebase.auth.GoogleAuthProvider();
+          
+              const { user: firebaseUser } = await firebase.auth().signInWithPopup(provider);
+          
+              // Crea el usuario en tu base de datos con los datos de Firebase
+              const userData = {
+                googleUserId: firebaseUser.uid,
+                email: firebaseUser.email,
+                // Otros datos que desees almacenar
+              };
+          
+              // Envía los datos al backend para el registro
+              await fetch('TU_URL_DEL_ENDPOINT_DE_REGISTRO', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+              });
+          
+              // El registro es exitoso, puedes redirigir o hacer otras acciones
+              console.log('Registro exitoso:', firebaseUser);
+            } catch (error) {
+              // Manejo de errores
+              console.log('Error de registro:', error);
+            }
+          
+      };
+    
 
     return (
 
@@ -265,6 +300,15 @@ const SignUpScreen = () => {
                     {error && (
                         <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
                     )}
+
+                    <CustomIconButton
+                            text="Sign Up with Google "
+                            onPress={onSignUpGoogle}
+                            bgColor="crimson"
+                            fgColor="white"
+                            icon= "logo-google"
+                            iconColor="white"
+                    />
 
                 {/* 
                     <View style={[styles.container]} >
