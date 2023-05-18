@@ -41,7 +41,7 @@ function ViewTrainings({ navigation,route }) {
             data={posts}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => (
-                <Training user={user} item={item} canEdit={true}/>
+                <Training user={user} item={item} canEdit={true} reload={reload}/>
             )}
         />
     )

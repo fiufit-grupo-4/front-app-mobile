@@ -12,13 +12,15 @@ import React, {useState} from "react";
 import {Ionicons} from "react-native-vector-icons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useNavigation} from "@react-navigation/native";
 
 
-export function getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText) {
-    //const [comment, setComment] = useState("")
+export function getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const navigation = useNavigation();
 
     const handleAddComment = () => {
         const newComment = {
@@ -56,7 +58,7 @@ export function getComments(user, handleComment, showCommentPopup, toggleComment
                 } else {
                     response.json().then((data) => {
                         console.log(JSON.stringify(data))
-                        navigation.navigate("Profile", {reload: !reload})
+                        navigation.navigate("Home", {reload: !reload})
                     }).catch((error) => {
                         setError(true);
                         setErrorMessage(error);

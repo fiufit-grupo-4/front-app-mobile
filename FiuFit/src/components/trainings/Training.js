@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
 
 
-const Training = ({user, item, canEdit}) => {
+const Training = ({user, item, canEdit, reload}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -134,7 +134,7 @@ const Training = ({user, item, canEdit}) => {
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
                         {/* COMENTATIOS */}
-                        {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText)}
+                        {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
 
                         {/* FAVORITOS */}
                         {favouriteTraining(handleFavoritePress, isFavorite)}
