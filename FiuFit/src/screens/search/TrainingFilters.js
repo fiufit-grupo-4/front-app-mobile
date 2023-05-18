@@ -1,41 +1,39 @@
 import React, { useState,useEffect } from 'react';
-import { FlatList,ActivityIndicator,View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { FlatList,ActivityIndicator,View, Text, TouchableWithoutFeedback, TextInput } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import TypeSelector from './TypeSelector';
 import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Training from "../../components/trainings/Training";
 import TrainingListItem from './TrainingListItem';
+import {Ionicons} from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const TrainingFilters = ({search}) => {
-  const [minDifficulty, setMinDifficulty] = useState('1');
-  const [maxDifficulty, setMaxDifficulty] = useState('5');
-  const [minDistance, setMinDistance] = useState('');
-  const [maxDistance, setMaxDistance] = useState('');
+  const [minDifficulty, setMinDifficulty] = useState('');
+  const [maxDifficulty, setMaxDifficulty] = useState('');
   const [type,setType] = useState('');
   const types = ['Running', 'Caminata','Boxeo','Yoga','Cardio'];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [trainings,setTrainings] =  useState([]);
-
+  const [difficulty, setDifficulty] = useState('');;
 
   const handleMinDifficultyChange = (value) => {
     setMinDifficulty(value);
-  };
-  const handleMinDistanceChange = (value) => {
-    setMinDistance(value);
-  };
+  }
 
   const handleMaxDifficultyChange = (value) => {
     setMaxDifficulty(value);
+  }
+
+  const handleDifficulty = (value) => {
+    setDifficulty(value);
   };
 
   
 
-  const handleMaxDistanceChange = (value) => {
-    setMaxDistance(value);
-  };
 
   useEffect(() => {
     const url = API_GATEWAY + 'trainings/'
@@ -52,6 +50,7 @@ const TrainingFilters = ({search}) => {
             }).then((response) => {
                 setLoading(false);
                 if (!response.ok) {
+                  console.log(response.status)
                     setError(true);
                     if (response.status === 401) {
                         setErrorMessage('Unauthorized, not a valid access token');
@@ -81,9 +80,10 @@ const TrainingFilters = ({search}) => {
       return trainings.filter((training) => {
           const nameMatches = training.title.toLowerCase().includes(search.toLowerCase());
           const typeMatches = training.type.toLowerCase().includes(type.toLowerCase());
+          const difficultyMatches = training.difficulty == difficulty
           //const minDifficultyMatches = minDifficulty <= training.difficulty.toString()
-          const maxDifficultyMatches = maxDifficulty >= training.difficulty.toString()
-          return nameMatches && maxDifficultyMatches && typeMatches ;
+          //const maxDifficultyMatches = maxDifficulty >= training.difficulty.toString()
+          return nameMatches && difficultyMatches && typeMatches ;
       });
   }
 
@@ -91,25 +91,18 @@ const TrainingFilters = ({search}) => {
     <View>
         <View style={styles.filtersContainer}>
 
+            
             <View style={styles.distanceContainer}>
               <Text style={styles.textInput}>Difficulty:</Text>
-              <Text style={styles.textInput}>Distance:</Text>
-            </View>
-            <View style={styles.distanceContainer}>
-              <TextInput
-                style={styles.distanceInput}
-                keyboardType="numeric"
-                placeholder="Max"
-                value={maxDifficulty}
-                onChangeText={handleMaxDifficultyChange}
-              />
-              <TextInput
-                style={styles.distanceInput}
-                keyboardType="numeric"
-                placeholder="Max"
-                value={maxDistance}
-                onChangeText={handleMaxDistanceChange}
-              />
+              
+              <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:10}}>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
+                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                </TouchableWithoutFeedback>
+                            ))}
+                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
+                        </View>
             </View>
             <TypeSelector setType={setType} types={types}></TypeSelector>
         </View>
@@ -193,7 +186,7 @@ const styles = {
     distanceContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom:5
+        marginBottom:10
     },
     distanceInput: {
         flex: 1,
@@ -201,16 +194,14 @@ const styles = {
         backgroundColor: 'white',
         borderRadius: 5,
         padding: 5,
-        marginLeft:10,
+       marginLeft:10,
         marginRight: 10,
     },
     textInput: {
-      flex: 1,
-      
+    
+
       borderRadius: 5,
       padding: 5,
-      marginLeft:10,
-      marginRight: 10,
       fontSize: 16,
       fontWeight: 'bold',
       marginLeft:5,

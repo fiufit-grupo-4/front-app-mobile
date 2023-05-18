@@ -4,22 +4,56 @@ import TypeSelector from './TypeSelector';
 import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserListItem from './UserListItem';
+import { getLocation,calcularDistancia } from '../../utils/locations';
 
 const UserFilters = ({search}) => {
   const [type,setType] = useState('');
   const [users,setUsers]  = useState([]);
-
+  const [myUser,setMyUser]  = useState({});
+  const [location,setLocation]  = useState({});
+  
+  const [maxDistance, setMaxDistance] = useState('');
+  const [minDistance, setMinDistance] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const types = ['Athlete', 'Trainer'];
+  const types = ['Athlete', 'Trainer','Admin'];
+  
+  const handleMinDistanceChange = (value) => {
+    setMinDistance(value);
+  };
 
+  const handleMaxDistanceChange = (value) => {
+    setMaxDistance(value);
+  };
+
+  const calculateDistance = (myDistance,userDistance) =>{
+    if (!userDistance){
+      console.log("-------------------------------")
+      console.log("El otro usuario no tiene distancia")
+      return false
+    } else if (!myDistance){
+      console.log("Mi usuario no tiene distancia")
+      console.log("-------------------------------")
+      return false 
+    } else {
+      calcularDistancia(
+        myDistance.location.latitude,
+        userDistance.location.latitude,
+        myDistance.location.longitude,
+        userDistance.location.longitude
+      )
+
+    }
+      
+  }
   useEffect(() => {
     const url = API_GATEWAY + 'users/'
     async function getUsers() {
         setLoading(true)
         AsyncStorage.getItem(USER).then((item) => {
             let userInfo = JSON.parse(item)
+            setMyUser(userInfo)
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -69,6 +103,7 @@ const UserFilters = ({search}) => {
 
     function getFilteredUsers() {
         return users.filter((user) => {
+            //calculateDistance(myUser.location,user.location)
             const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
             const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
             return nameMatches && roleMatches ;
@@ -77,9 +112,23 @@ const UserFilters = ({search}) => {
 
   return (
     <View>
-        {/*<View style={styles.filtersContainer}>
+        <View style={styles.filtersContainer}> 
+              {myUser.location && (
+                    <View style={styles.distanceContainer}>
+                        <Text style={styles.textInput}>Distance:</Text>
+                        <TextInput
+                          style={styles.distanceInput}
+                          keyboardType="numeric"
+                          placeholder="Max (km)"
+                          value={minDistance}
+                          onChangeText={handleMinDistanceChange}
+                        />
+                    </View>
+              )}
+
           <TypeSelector setType={setType} types={types}></TypeSelector>
-        </View> */}
+        </View> 
+       
 
         <View>
           { loading 
@@ -151,13 +200,25 @@ const styles = {
     distanceContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom:5
     },
     distanceInput: {
         flex: 1,
-        height: 40,
+        height: 30,
         backgroundColor: 'white',
         borderRadius: 5,
         padding: 5,
+        marginLeft:10,
         marginRight: 10,
     },
+    textInput: {
+        marginBottom:5,
+        borderRadius: 5,
+        padding: 5,
+        marginLeft:15,
+        marginRight: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft:5,
+    }
 };

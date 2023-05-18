@@ -29,36 +29,25 @@ const SignUpScreen = () => {
     };
 
 
-    function getLocation() {
-        const result = requestLocationPermission();
-        result.then(async res => {
-            if (res) {
-                let location = await Location.getCurrentPositionAsync({});
-                console.log(location)
-                setLocation(location);
-            }
-        }).catch(error => {
-            console.warn(error);
-        })
+    async function getLocation() {
+        let res = await requestLocationPermission()
+        if (res) {
+            let loc = await Location.getCurrentPositionAsync({})
+            return {"latitude": loc.coords.latitude,"longitude":loc.coords.longitude};
+        }
+        return null
     }
 
     async function requestLocationPermission() {
-        try {
-            const status = await Location.requestForegroundPermissionsAsync()
-            console.log(status)
-            if (status !== 'granted') {
-                console.log("Permiso concedido");
-                return true
-            } else {
-                setErrorMsg('Permission to access location was denied');
-                console.log("Permiso denegado");
-                return false
-            }
-        } catch(err) {
-            setErrorMsg('Permission to access location was denied');
-            console.warn(err)
+        let status = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted') {
+            console.log("Permiso concedido");
+            return true
+        } else {
+            console.log("Permiso denegado");
             return false
-        }
+        }   
+
     }
 
     const [location, setLocation] = useState(null);
@@ -72,11 +61,10 @@ const SignUpScreen = () => {
         return isAthlete ? ATHLETE : TRAINER
     }
 
-    const onRegisterPressed = (data) => {
+    const onRegisterPressed = async (data) => {
         var url = API_GATEWAY + 'signup/';
-        getLocation()
-                    console.log(location)
-        console.log(data)
+        let res = await getLocation()
+        setLocation(res)
         setLoading(true)
         fetch(url, {
             method: 'POST',
@@ -91,9 +79,10 @@ const SignUpScreen = () => {
                 "role":getRole(),
                 "name": data.name,
                 "lastname": data.lastname,
-                "age":data.age
+                "age":data.age,
+                "location":location
             })
-        })
+            })
             .then(response => {
                 setLoading(false)
                 if (!response.ok) {

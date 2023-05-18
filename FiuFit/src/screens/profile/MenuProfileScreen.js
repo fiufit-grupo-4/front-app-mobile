@@ -22,6 +22,7 @@ function MenuProfileScreen({ navigation,route }) {
             "blocked":newData.blocked,
             "phone_number":newData.phone_number,
             "trainings":newData.trainings,
+            "location":newData.location,
             "access_token":oldData.access_token,
             "token_type":oldData.token_type,
             "id": newData.id
