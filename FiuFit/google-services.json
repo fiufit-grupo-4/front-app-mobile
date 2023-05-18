@@ -1,0 +1,84 @@
+{
+  "project_info": {
+    "project_number": "880473744329",
+    "project_id": "react-native-fiufit",
+    "storage_bucket": "react-native-fiufit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880473744329:android:a612796bf3c8bf1cfc3e18",
+        "android_client_info": {
+          "package_name": "fiu.fit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiwHRBfRb3a_LFFls62MsUNNaXarn7iIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880473744329:android:8fb34a10bdcee6a8fc3e18",
+        "android_client_info": {
+          "package_name": "fiufit.app.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880473744329-ofb4ou7obvjjq7s1b5a8c884kbse7363.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "f56b9df814423177641e8ab2ec7f01328146e2c1"
+          }
+        },
+        {
+          "client_id": "880473744329-ua8on8m52l5ipukh245ciftvtj1sfs2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "ee1f1a2c69f568c1019aa5274178e6b9c982b299"
+          }
+        },
+        {
+          "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiwHRBfRb3a_LFFls62MsUNNaXarn7iIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
