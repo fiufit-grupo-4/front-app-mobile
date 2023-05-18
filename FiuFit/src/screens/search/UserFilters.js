@@ -77,9 +77,9 @@ const UserFilters = ({search}) => {
 
   return (
     <View>
-        <View style={styles.filtersContainer}>
+        {/*<View style={styles.filtersContainer}>
           <TypeSelector setType={setType} types={types}></TypeSelector>
-        </View>
+        </View> */}
 
         <View>
           { loading 
@@ -90,12 +90,17 @@ const UserFilters = ({search}) => {
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}
+                        contentContainerStyle={{ paddingBottom: 30 }}
                         renderItem={({ item }) => (
                             <UserListItem user = {item}/>
                         )}
                     />
-               </View>
-               
+                {error && (
+                    <View style = {{alignItems:"center",marginTop:15}}>
+                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                    </View>
+                    )}
+               </View>              
           }  
         
         </View>        

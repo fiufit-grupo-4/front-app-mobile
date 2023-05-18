@@ -4,11 +4,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import TrainingFilters from './TrainingFilters';
 import UserFilters from './UserFilters';
-
+import { AntDesign } from '@expo/vector-icons'; 
 
 export const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
-    const [filter, setFilter] = useState(null);
+    const [filter, setFilter] = useState('trainings');
 
     const handleSearch = () => {
         // Handle search logic here
@@ -53,6 +53,8 @@ export const SearchScreen = () => {
                         Users
                     </Text>
                 </TouchableOpacity>
+
+                
             </View>
 
             </View>
@@ -68,8 +70,8 @@ export const SearchScreen = () => {
 const styles = StyleSheet.create({
     container: {
         borderRadius: 5,
-        marginHorizontal: 10,
-        paddingBottom:290,
+        marginHorizontal: 5,
+        
         paddingHorizontal: 10,
         paddingVertical: 10,
     },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import CustomButton from '../../components/buttons/CustomButton';
 
 const TypeSelector = ({setType,types}) => {
  
@@ -18,6 +19,7 @@ const TypeSelector = ({setType,types}) => {
 
   return (
     <ScrollView horizontal>
+      
       <View style={styles.container}>
         {types.map((type) => (
           <TouchableOpacity
@@ -46,21 +48,24 @@ const TypeSelector = ({setType,types}) => {
 const styles = {
   container: {
     flexDirection: 'row',
+    marginTop:10,
+    marginBottom:5
     
   },
   typeContainer: {
     backgroundColor: '#788FAD',
     borderRadius: 5,
-    padding: 10,
+    padding: 5,
     marginRight: 10,
     marginLeft:10,
+    height:30
   },
   selectedTypeContainer: {
     backgroundColor: 'orange',
     borderWidth:1
   },
   typeText: {
-    fontSize: 16,
+    fontSize: 12,
     color: 'black',
     fontWeight:"bold"
   },

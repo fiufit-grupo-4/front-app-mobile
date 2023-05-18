@@ -74,6 +74,8 @@ const SignUpScreen = () => {
 
     const onRegisterPressed = (data) => {
         var url = API_GATEWAY + 'signup/';
+        getLocation()
+                    console.log(location)
         console.log(data)
         setLoading(true)
         fetch(url, {
@@ -98,6 +100,7 @@ const SignUpScreen = () => {
                     setError(true)
                     setErrorMessage("Failed to connect with server")
                 } else {
+                    
                     navigation.navigate('ConfirmEmail',{phone : data.phone_number});
                 }
             })
@@ -105,7 +108,7 @@ const SignUpScreen = () => {
                 setError(true)
                 setErrorMessage(error)
             })
-        //getLocation()
+        
     };
 
     const onSignInPress = () => {
