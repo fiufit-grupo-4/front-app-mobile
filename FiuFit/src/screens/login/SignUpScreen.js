@@ -53,7 +53,6 @@ const SignUpScreen = () => {
     const [location, setLocation] = useState(null);
 
 
-
     const navigation = useNavigation();
 
     function getRole(){
@@ -64,8 +63,10 @@ const SignUpScreen = () => {
     const onRegisterPressed = async (data) => {
         var url = API_GATEWAY + 'signup/';
         let res = await getLocation()
-        setLocation(res)
+        console.log(location)
+        console.log(res)
         setLoading(true)
+        
         fetch(url, {
             method: 'POST',
             headers: {
@@ -80,14 +81,21 @@ const SignUpScreen = () => {
                 "name": data.name,
                 "lastname": data.lastname,
                 "age":data.age,
-                "location":location
+                "location":res
             })
             })
             .then(response => {
                 setLoading(false)
                 if (!response.ok) {
-                    setError(true)
-                    setErrorMessage("Failed to connect with server")
+                    console.log(response.status)
+                    if (response.status ==  409) {
+                        setError(true)
+                        setErrorMessage("User email already in use")
+                    }else {
+                        setError(true)
+                        setErrorMessage("Failed to connect with server")
+                    }
+                    
                 } else {
                     
                     navigation.navigate('ConfirmEmail',{phone : data.phone_number});
@@ -202,6 +210,7 @@ const SignUpScreen = () => {
                         rules = {{
                             required:"This field is Required",
                             validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+                            otherError={error}
                     />
 
 
