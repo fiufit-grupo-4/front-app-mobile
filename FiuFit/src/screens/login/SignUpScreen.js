@@ -29,40 +29,28 @@ const SignUpScreen = () => {
     };
 
 
-    function getLocation() {
-        const result = requestLocationPermission();
-        result.then(async res => {
-            if (res) {
-                let location = await Location.getCurrentPositionAsync({});
-                console.log(location)
-                setLocation(location);
-            }
-        }).catch(error => {
-            console.warn(error);
-        })
+    async function getLocation() {
+        let res = await requestLocationPermission()
+        if (res) {
+            let loc = await Location.getCurrentPositionAsync({})
+            return {"latitude": loc.coords.latitude,"longitude":loc.coords.longitude};
+        }
+        return null
     }
 
     async function requestLocationPermission() {
-        try {
-            const status = await Location.requestForegroundPermissionsAsync()
-            console.log(status)
-            if (status !== 'granted') {
-                console.log("Permiso concedido");
-                return true
-            } else {
-                setErrorMsg('Permission to access location was denied');
-                console.log("Permiso denegado");
-                return false
-            }
-        } catch(err) {
-            setErrorMsg('Permission to access location was denied');
-            console.warn(err)
+        let status = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted') {
+            console.log("Permiso concedido");
+            return true
+        } else {
+            console.log("Permiso denegado");
             return false
-        }
+        }   
+
     }
 
     const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
 
 
     const navigation = useNavigation();
@@ -72,10 +60,13 @@ const SignUpScreen = () => {
         return isAthlete ? ATHLETE : TRAINER
     }
 
-    const onRegisterPressed = (data) => {
+    const onRegisterPressed = async (data) => {
         var url = API_GATEWAY + 'signup/';
-        console.log(data)
+        let res = await getLocation()
+        console.log(location)
+        console.log(res)
         setLoading(true)
+        
         fetch(url, {
             method: 'POST',
             headers: {
@@ -89,15 +80,24 @@ const SignUpScreen = () => {
                 "role":getRole(),
                 "name": data.name,
                 "lastname": data.lastname,
-                "age":data.age
+                "age":data.age,
+                "location":res
             })
-        })
+            })
             .then(response => {
                 setLoading(false)
                 if (!response.ok) {
-                    setError(true)
-                    setErrorMessage("Failed to connect with server")
+                    console.log(response.status)
+                    if (response.status ==  409) {
+                        setError(true)
+                        setErrorMessage("User email already in use")
+                    }else {
+                        setError(true)
+                        setErrorMessage("Failed to connect with server")
+                    }
+                    
                 } else {
+                    
                     navigation.navigate('ConfirmEmail',{phone : data.phone_number});
                 }
             })
@@ -105,7 +105,7 @@ const SignUpScreen = () => {
                 setError(true)
                 setErrorMessage(error)
             })
-        //getLocation()
+        
     };
 
     const onSignInPress = () => {
@@ -210,6 +210,7 @@ const SignUpScreen = () => {
                         rules = {{
                             required:"This field is Required",
                             validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+                            otherError={error}
                     />
 
 

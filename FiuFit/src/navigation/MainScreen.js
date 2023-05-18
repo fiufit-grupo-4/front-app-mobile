@@ -1,7 +1,7 @@
 import React from 'react';
 import {AntDesign} from "@expo/vector-icons";
 import {HomeTab} from "../screens/home/HomeTab";
-import {SearchScreen} from "../screens/Search/SearchScreen";
+import {SearchScreen} from "../screens/search/SearchScreen";
 import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
