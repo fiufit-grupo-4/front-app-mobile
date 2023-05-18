@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import TrainingFilters from './TrainingFilters';
+import UserFilters from './UserFilters';
+import { AntDesign } from '@expo/vector-icons'; 
 
 export const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
-    const [filter, setFilter] = useState(null);
+    const [filter, setFilter] = useState('trainings');
 
     const handleSearch = () => {
         // Handle search logic here
@@ -24,6 +27,7 @@ export const SearchScreen = () => {
     };
 
     return (
+        <View style={styles.container}>
         <View style={styles.searchContainer}>
             <View style={styles.searchBox}>
                 <MaterialCommunityIcons name="magnify" color='gray' size={26} />
@@ -46,24 +50,39 @@ export const SearchScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleFilter('trainers')}>
                     <Text style={filter === 'trainers' ? styles.activeFilterText : styles.filterText}>
-                        Trainers
+                        Users
                     </Text>
                 </TouchableOpacity>
+
+                
             </View>
+
+            </View>
+            { (filter =='trainings' )
+                ? <TrainingFilters search = {searchText}/>
+                : <UserFilters search = {searchText} />
+            }
+
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        borderRadius: 5,
+        marginHorizontal: 5,
+        
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+    },
     searchContainer: {
+        paddingHorizontal: 5,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
-        borderRadius: 5,
-        marginHorizontal: 10,
-        marginVertical: 5,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
+        borderTopLeftRadius:5,
+        borderTopRightRadius:5,
+        backgroundColor:'#91AED4',
+        height:50
     },
     searchBox: {
         flexDirection: 'row',
@@ -92,7 +111,7 @@ const styles = StyleSheet.create({
     filterText: {
         fontSize: 16,
         fontWeight: '400',
-        color: '#999',
+        color: '#666',
         marginLeft: 10,
     },
     activeFilterText: {
