@@ -4,13 +4,12 @@ import TypeSelector from './TypeSelector';
 import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserListItem from './UserListItem';
-import { getLocation,calcularDistancia } from '../../utils/locations';
+import { distance} from '../../utils/locations';
 
 const UserFilters = ({search}) => {
   const [type,setType] = useState('');
   const [users,setUsers]  = useState([]);
   const [myUser,setMyUser]  = useState({});
-  const [location,setLocation]  = useState({});
   
   const [maxDistance, setMaxDistance] = useState('');
   const [minDistance, setMinDistance] = useState('');
@@ -28,22 +27,15 @@ const UserFilters = ({search}) => {
   };
 
   const calculateDistance = (myDistance,userDistance) =>{
-    if (!userDistance){
-      console.log("-------------------------------")
-      console.log("El otro usuario no tiene distancia")
+    if (userDistance == null || myDistance == null){
       return false
-    } else if (!myDistance){
-      console.log("Mi usuario no tiene distancia")
-      console.log("-------------------------------")
-      return false 
+    } else if (maxDistance == "") {
+      return true
     } else {
-      calcularDistancia(
-        myDistance.location.latitude,
-        userDistance.location.latitude,
-        myDistance.location.longitude,
-        userDistance.location.longitude
-      )
-
+       let dist = distance(myDistance,userDistance)
+       console.log(dist)
+       console.log(maxDistance)
+       return dist <= parseInt(maxDistance)
     }
       
   }
@@ -102,34 +94,40 @@ const UserFilters = ({search}) => {
         }
 
     function getFilteredUsers() {
+      if (!maxDistance) {
         return users.filter((user) => {
-            //calculateDistance(myUser.location,user.location)
-            const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
-            const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-            return nameMatches && roleMatches ;
-        });
+          const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
+          const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
+          return nameMatches && roleMatches  ;
+          });
+      } else {
+        return users.filter((user) => {
+          const distanceMatches = calculateDistance(myUser.location,user.location)
+          const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
+          const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
+          return nameMatches && roleMatches && distanceMatches ;
+      });
+      }
     }
 
   return (
     <View>
         <View style={styles.filtersContainer}> 
-              {myUser.location && (
-                    <View style={styles.distanceContainer}>
-                        <Text style={styles.textInput}>Distance:</Text>
-                        <TextInput
-                          style={styles.distanceInput}
-                          keyboardType="numeric"
-                          placeholder="Max (km)"
-                          value={minDistance}
-                          onChangeText={handleMinDistanceChange}
-                        />
-                    </View>
-              )}
-
+            {myUser.location && (
+              <View style={styles.distanceContainer}>
+                  <Text style={styles.textInput}>Distance:</Text>
+                  <TextInput
+                    style={styles.distanceInput}
+                    keyboardType="numeric"
+                    placeholder="Max (km)"
+                    value={maxDistance}
+                    onChangeText={handleMaxDistanceChange}
+                  />
+              </View>
+            )}
           <TypeSelector setType={setType} types={types}></TypeSelector>
         </View> 
        
-
         <View>
           { loading 
             ? <View style={{marginTop:10}}>
@@ -141,7 +139,7 @@ const UserFilters = ({search}) => {
                         keyExtractor={(item) => item.id.toString()}
                         contentContainerStyle={{ paddingBottom: 30 }}
                         renderItem={({ item }) => (
-                            <UserListItem user = {item}/>
+                            <UserListItem user = {item} myDistance = {myUser.location}/>
                         )}
                     />
                 {error && (

@@ -51,7 +51,7 @@ const SignUpScreen = () => {
     }
 
     const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+
 
 
     const navigation = useNavigation();

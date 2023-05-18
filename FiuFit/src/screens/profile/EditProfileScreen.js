@@ -15,6 +15,7 @@ import {Ionicons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import { API_GATEWAY } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
+import { getLocation } from '../../utils/locations';
 
 
 export const EditProfileScreen = ({route}) => {
@@ -23,6 +24,7 @@ export const EditProfileScreen = ({route}) => {
     const [lastName, setLastName] = useState(user.lastname);
     const [profilePicture, setProfilePicture] = useState(user.image);
     const [age, setAge] = useState(user.age);
+    const [location, setLocation] = useState(user.location);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -66,6 +68,10 @@ export const EditProfileScreen = ({route}) => {
         return false       
     }}
 
+    const handleGetLocation = async () => {
+        const res = await getLocation()
+        setLocation(res)
+    }
 
     const handleSaveChanges = () => {
         let url = API_GATEWAY + "users/" + user.id
@@ -82,7 +88,8 @@ export const EditProfileScreen = ({route}) => {
                 "name": name,
                 "lastname": lastName,
                 "age": age ,
-                "image" : image 
+                "image" : image,
+                "location" : location
             })
         }).then((response) => {
             setLoading(false);
@@ -155,6 +162,10 @@ export const EditProfileScreen = ({route}) => {
                     />
                 </View>
 
+                <TouchableOpacity style={styles.buttonLocation} onPress={handleGetLocation}>
+                  <Text style={styles.buttonText}>Get Location</Text>
+                </TouchableOpacity>
+
 
             { loading 
               ? <View style={{marginTop:50, marginHorizontal: 40}}>
@@ -206,6 +217,13 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: 'black',
+        borderRadius: 20,
+        paddingVertical: 10,
+        marginTop:50,
+        marginHorizontal: 40
+    },
+    buttonLocation: {
+        backgroundColor: 'crimson',
         borderRadius: 20,
         paddingVertical: 10,
         marginTop:50,

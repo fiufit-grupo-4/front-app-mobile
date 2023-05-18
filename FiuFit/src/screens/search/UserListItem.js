@@ -1,12 +1,25 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import { distance} from '../../utils/locations';
 
-const UserListItem = ({ user }) => {
+const UserListItem = ({ user, myDistance }) => {
   const navigation = useNavigation();
   function handleOnPress() {
     navigation.navigate("User Profile", {user:user})
   }
+
+  function distancia (){
+    if (user.location == null || myDistance == null){
+      return 0
+    } else {
+      return distance( myDistance, user.location)
+    }
+  }
+  function showDistance(){
+    return myDistance !=null &&  user.location !=null
+  }
+
   return (
     <TouchableOpacity onPress={handleOnPress}>
     <View style={styles.container}>
@@ -18,6 +31,12 @@ const UserListItem = ({ user }) => {
         <Text style={styles.name}>{user.name + " " + user.lastname}</Text>
         <Text style={styles.role}>{user.mail}</Text>
       </View>
+      {showDistance() && (
+        <View style={styles.distanceInfo}>
+          <Text style={styles.role}> {distancia()} km</Text>
+        </View>
+      )}
+      
     </View>
     </TouchableOpacity>
   );
@@ -50,6 +69,10 @@ const styles = StyleSheet.create({
   role: {
     fontSize: 14,
     color: 'gray',
+  },
+  distanceInfo: {
+    justifyContent:"flex-end",
+    marginRight:10
   },
 });
 

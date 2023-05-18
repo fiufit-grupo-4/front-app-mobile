@@ -1,36 +1,25 @@
 import { useState } from 'react';
 import * as Location from 'expo-location';
 
-async function requestLocationPermission() {
-    try {
-        const status = await Location.requestForegroundPermissionsAsync()
-        console.log(status)
-        if (status !== 'granted') {
-            console.log("Permiso concedido");
-            return true
-        } else {
-            console.log("Permiso denegado");
-            return false
-        }
-    } catch(err) {
-        console.warn(err)
-        return false
+export async function getLocation() {
+    let res = await requestLocationPermission()
+    if (res) {
+        let loc = await Location.getCurrentPositionAsync({})
+        return {"latitude": loc.coords.latitude,"longitude":loc.coords.longitude};
     }
+    return null
 }
 
-export function getLocation(setLocation) {
-    const result = requestLocationPermission();
-    result.then(async res => {
-        if (res) {
-            let location = await Location.getCurrentPositionAsync({});
-            console.log(location)
-            setLocation(location);
-            return true
-        }
-    }).catch(error => {
-        console.warn(error);
+async function requestLocationPermission() {
+    let status = await Location.requestForegroundPermissionsAsync()
+    if (status !== 'granted') {
+        console.log("Permiso concedido");
+        return true
+    } else {
+        console.log("Permiso denegado");
         return false
-    })
+    }   
+
 }
 
 
@@ -53,12 +42,25 @@ export function calcularDistancia(lat1, lon1, lat2, lon2) {
   
     const distancia = radioTierra * c;
   
-    return distancia;
+    return Math.round(distancia);
   }
   
   function degToRad(degrees) {
     return degrees * (Math.PI / 180);
   }
-    
+
+export function distance (myDistance,userDistance){
+    let myLat = myDistance ? myDistance.latitude : 0
+    let myLon = myDistance ? myDistance.longitude: 0
+    let otherLat = userDistance?  userDistance.latitude : 0
+    let otherLon = userDistance ?  userDistance.longitude : 0
+    return calcularDistancia(
+        myLat,
+        myLon,
+        otherLat,
+        otherLon
+    )    
+}
+
     
 
