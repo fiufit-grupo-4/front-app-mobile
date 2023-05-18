@@ -1,18 +1,14 @@
-import axios from "axios";
 import React, {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {getCalification} from "../../screens/training/RateTraining";
-import {favouriteTraining} from "../../screens/training/FavouriteTraining";
 import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
 import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
-import {API_GATEWAY, USER} from "../../utils/constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
+import {favouriteTraining} from "../../screens/training/FavouriteTraining";
+import {getCalification} from "../../screens/training/RateTraining";
+import axios from "axios";
 
-
-const Training = ({item, canEdit}) => {
+const FavTraining = ({item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -28,21 +24,15 @@ const Training = ({item, canEdit}) => {
 
     const navigation = useNavigation();
 
-
     const toggleModal = (image) => {
         setSelectedImage(image);
         setShowModal(!showModal);
     };
 
-
     // EDITA POST
     const handleEdit = (item) => {
         setSelectedPost(item);
         navigation.navigate('EditTrainingScreen', {post: item});
-    }
-
-    function onPress() {
-        navigation.navigate("Training", {item})
     }
 
 
@@ -86,49 +76,6 @@ const Training = ({item, canEdit}) => {
         setShowStars(false);
     };
 
-    // AGREGAR/SACAR DE FAVORITOS
-
-    const handleFavoritePress = () => {
-        setIsFavorite(!isFavorite);
-        AsyncStorage.getItem(USER).then((item1) => {
-            let user = JSON.parse(item1)
-            let url = API_GATEWAY + "users/me/trainings/" + item.id
-            setLoading(true)
-            setError(false)
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + user.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        //navigation.goBack();
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-            })
-        }).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        })
-    }
-
 
     return (
         <View style={styles.background}>
@@ -147,14 +94,10 @@ const Training = ({item, canEdit}) => {
                         {/* COMENTATIOS */}
                         {getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment)}
 
-                        {/* FAVORITOS */}
-                        {favouriteTraining(handleFavoritePress, isFavorite)}
-
                     </View>
 
 
                     {trainingContent(item)}
-
 
                     {getCalification(handleStarPress, handleRate, item)}
 
@@ -182,4 +125,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Training;
+export default FavTraining;

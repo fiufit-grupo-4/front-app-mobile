@@ -1,118 +1,77 @@
-import {FlatList, TouchableOpacity, View, StyleSheet} from "react-native";
-import {useState} from "react";
-import Training from "../../components/trainings/Training";
-import { StatusBar } from 'expo-status-bar';
+import {FlatList, View, StyleSheet, Text} from "react-native";
+import {useEffect, useState} from "react";
 import {useNavigation} from '@react-navigation/native';
-import CustomButton from '../../components/buttons/CustomButton';
+import {API_GATEWAY, USER} from "../../utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import FavTraining from "../../components/trainings/favTrainings";
 
-const FavoriteTrainingScreen = ( ) => {
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            title: 'Fuerza de brazos',
-            place: 'AreaX',
-            description: 'Lorem ipsum dolor sit amet.',
-            trainingType: 'Dolor',
-            difficulty: 3,
-            image: require('../../../assets/images/post1.png'),
-            comments: [
-                {
-                    content:'muy piolita',
-                    user:'pepito1',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito2',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo2'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito3',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo3'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito4',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo8'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito7',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo9'
-                },
-                {
-                    content:'muy piolita',
-                    user:'pepito8',
-                },
-                {
-                    content:'dificil',
-                    user:'yoyo6'
-                }
-            ],
-            likes: {
-                length:4
-            }
-        },
-        {
-            id: 2,
-            title: 'GAP',
-            place: 'Gimnasio de aca la vueltitta',
-            description: 'Sed ut perspiciatis unde omnis iste natus error, con un texto bien largo para ver como queda el espacio entre las cosas.',
-            trainingType: 'Localizada',
-            difficulty: 5,
-            image: require('../../../assets/images/post2.png'),
-            comments: [
-                {
-                    content:'horror',
-                    user:'pepito1',
-                },
-                {
-                    content:'facil',
-                    user:'yoyo'
-                }
-            ],
-            likes: {
-                length:32
-            }
-        }
-    ]);
+const FavoriteTrainingScreen = () => {
+    const [user, setUser] = useState();
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigation = useNavigation();
 
-    const renderItem = ({ item }) => {
-        const onPress = () => navigation.navigate("Training", { item });
-        return (
-            <>
-                <Training item = {item} canEdit={false}></Training>
-                <CustomButton onPress = {onPress} text={"Ver Entrenamiento"} containerWidth={"100%"}></CustomButton>
-            </>
-        );
-      };
+    //const getFavoriteTrainings = () => {
+    useEffect(() => {
+        const url = API_GATEWAY + 'users/me'
+        function getUsers() {
+            console.log("tenemos favs??? veamos")
+            setLoading(true);
+            AsyncStorage.getItem(USER)
+                .then((item1) => {
+                    let user = JSON.parse(item1)
+                        fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + user.access_token,
+                            },
+                        }).then((response) => {
+
+                            if (response.ok) {
+                                response.json().then((data) => {
+                                    console.log("POSTS faaaaavs: ", data);
+                                    setUser(data);
+                                    if (data && data.trainings) {
+                                        setPosts(data.trainings);
+                                    }
+                                    console.log("SE GUARDARON LOS Fvsposts como: ", posts)
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            } else {
+                                setError(true);
+                                setErrorMessage('Failed to fetch posts');
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        })
+                })
+                .catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
+        }
+        getUsers();
+    }, [])
+
 
     return (
-        <View style={{ flex: 1,padding: 1 }}>
-            <StatusBar style="auto" />
-                <FlatList
-                    data={posts}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderItem}/>
+        <View>
+            <Text>Hola estoy aca, soy tus favs</Text>
+            <FlatList
+                data={posts}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <FavTraining user={user} item={item} canEdit={false} />
+                )}
+            />
         </View>
-     )
+    )
 }
 
 const styles = StyleSheet.create({

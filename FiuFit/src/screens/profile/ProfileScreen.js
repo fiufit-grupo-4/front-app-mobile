@@ -7,31 +7,6 @@ import {USER, API_GATEWAY } from '../../utils/constants';
 
 
 const ProfileScreen = ( ) => {
-   /*
-        {
-            id: 3,
-            title: 'Sentadillas',
-            place: 'Parque LasHeras',
-            description: 'Excepteur sint occaecat cupidatat non proident.',
-            trainingType: 'Cola',
-            difficulty: 1,
-            image: require('../../../assets/images/post3.png'),
-            comments: [
-                {
-                    content:'eeee meshi',
-                    user:'pepito1',
-                },
-                {
-                    content:'colores?',
-                    user:'yoyo'
-                }
-            ],
-            likes: {
-                length:32
-            }
-        },
-    ]);*/
-
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [user, setUser] = useState({});
@@ -153,7 +128,7 @@ const ProfileScreen = ( ) => {
                         data={posts}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <Training item={item} canEdit={true} />
+                            <Training user={user} item={item} canEdit={true} />
                         )}
                     />
 

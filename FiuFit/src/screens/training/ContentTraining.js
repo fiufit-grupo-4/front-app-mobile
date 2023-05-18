@@ -23,7 +23,7 @@ export function trainingContent(item) {
 
         <View style={styles.item}>
             <Ionicons name={'fitness-outline'} style={styles.icon}/>
-            <Text style={styles.itemText}>{'Training Type: ' + item.trainingType}</Text>
+            <Text style={styles.itemText}>{'Training Type: ' + item.type}</Text>
         </View>
 
         <View style={styles.item}>
