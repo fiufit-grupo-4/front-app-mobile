@@ -59,7 +59,7 @@ export const CertifyScreen = ({ onPress }) => {
             let user = JSON.parse(user_string)
             const uri = await uploadVideo(user)
             let response = await fetch(url, {
-                method: 'PATCH',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + user.access_token,
@@ -69,7 +69,6 @@ export const CertifyScreen = ({ onPress }) => {
                 })
             })
             setLoading(false);
-            console.log(JSON.stringify(response))
             if (!response.ok) {
                 setError(true);
                 console.log(response.status)
