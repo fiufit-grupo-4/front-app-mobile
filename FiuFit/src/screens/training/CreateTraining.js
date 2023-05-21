@@ -18,7 +18,7 @@ import TrainingType from "./TrainingType";
 import { API_GATEWAY,USER } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as ImagePicker from 'expo-image-picker'
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -31,7 +31,7 @@ export const CreateTraining = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const [media, setMedia] = useState([]);
     
     const handleDifficulty = (value) => {
         setDifficulty(value);
@@ -44,26 +44,44 @@ export const CreateTraining = ({ navigation }) => {
             password: '123456e'
         }
     });
-/*
-    const uploadImage = async () => {
-        if (imageUri){
-            setLoading(true)
-            const response = await fetch(imageUri);
-            const blob = await response.blob();
-            const ref = firebase.storage().ref().child(`trainings/${user.id}/${new Date().getTime()}`).put(blob);    
-            try {
-                await ref
-            } catch(e){
-                console.log(e)
-            }
-            setLoading(false)
-            Alert.alert("Photo uploaded correctly!")  
-        } else {
-            setError(true)
+    
+
+
+    const handleSelectMedia = async () => {
+        setError(false)
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert('Permission to access camera roll is required!');
+            return;
         }
-        
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [3, 3],
+            quality:1,
+        });
+        if (!result.canceled) {
+            let element = {
+                "media_type": result.assets[0].type,
+                "url": result.assets[0].uri
+            }
+            //setVideo(result.assets[0].uri);
+            setMedia(oldArray => [...oldArray, element])
+            //oldArray => [...oldArray, newElement]);
+            //console.log(result.assets[0].uri)
+        }
+    };
+
+    const uploadMedia = async (user) => {
+        setLoading(true);
+        const response = await fetch(video);
+        const blob = await response.blob();
+        let date = new Date().getTime()
+        await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).getDownloadURL()   
+        setLoading(false) 
+        return uri   
     }
-*/
 
 
 

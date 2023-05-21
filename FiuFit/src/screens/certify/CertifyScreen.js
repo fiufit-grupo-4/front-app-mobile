@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import {View,ActivityIndicator, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
-import {useForm} from "react-hook-form";
 import { Ionicons } from '@expo/vector-icons';
 import {firebase} from '../../config/firebase'
 import * as ImagePicker from 'expo-image-picker';
 import { API_GATEWAY,USER } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from "@react-navigation/native";
 
 export const CertifyScreen = ({ onPress }) => {
     const [video, setVideo] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const navigation = useNavigation();
     const handleSelectVideo = async () => {
         setError(false)
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -55,11 +55,10 @@ export const CertifyScreen = ({ onPress }) => {
             setLoading(true);
             setError(false)
             let user_string = await AsyncStorage.getItem(USER)
-            console.log(user_string)
             let user = JSON.parse(user_string)
             const uri = await uploadVideo(user)
             let response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + user.access_token,
