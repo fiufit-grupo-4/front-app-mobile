@@ -19,6 +19,7 @@ import { API_GATEWAY,USER } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker'
+import MediaBox from './MediaBox';
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -33,6 +34,11 @@ export const CreateTraining = ({ navigation }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [media, setMedia] = useState([]);
     
+    const [media1, setMedia1] = useState([]);
+    const [media2, setMedia2] = useState([]);
+    const [media3, setMedia3] = useState([]);
+    const [media4, setMedia4] = useState([]);
+
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
@@ -72,7 +78,7 @@ export const CreateTraining = ({ navigation }) => {
         }
     };
 
-    const uploadMedia = async (user) => {
+    const uploadMedia = async (video,user) => {
         setLoading(true);
         const response = await fetch(video);
         const blob = await response.blob();
@@ -81,6 +87,14 @@ export const CreateTraining = ({ navigation }) => {
         const uri = await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).getDownloadURL()   
         setLoading(false) 
         return uri   
+    }
+
+    const handleMedia = async (user)=> {
+        if (!media){
+            return null
+        } else {
+            let uri = await uploadMedia(media,user)
+        }
     }
 
 
@@ -221,21 +235,22 @@ export const CreateTraining = ({ navigation }) => {
                         </View>
                     </View>
 
-
-                    <View style={styles.inputContainer}>
-                        <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Place"
-                            value={place}
-                            onChangeText={setPlace}
-                        />
-                    </View>
                 <TrainingType setType={setType} styles={styles}/>
 
                 </View>
 
-                <UploadImage setImage={setImageUri}></UploadImage>
+                <ScrollView
+                    contentContainerStyle={styles.mediaContainer}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    >
+                    <MediaBox setElement = {setMedia1}/>
+                    <MediaBox setElement = {setMedia2}/>
+                    <MediaBox setElement = {setMedia3}/>
+                    <MediaBox setElement = {setMedia4}/>
+                    
+                    </ScrollView>
+
 
                 { loading 
                 ? <View style={{marginTop:50, marginHorizontal: 40}}>
@@ -349,64 +364,34 @@ const styles = StyleSheet.create({
     typeIcon: {
         size: 24,
         color: "#A6A6A6"
-    }
+    },
+    mediaContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+      }
 });
 
 export default CreateTraining;
 
 /*
-import React, { useState } from 'react';
-import { View, Button, Text } from 'react-native';
-import MultiSelect from 'react-native-multi-select';
+import { ScrollView } from 'react-native';
+import MediaBox from './MediaBox';
 
-const MyComponent = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  const items = [
-    { id: '1', name: 'Item 1' },
-    { id: '2', name: 'Item 2' },
-    { id: '3', name: 'Item 3' },
-    { id: '4', name: 'Item 4' },
-  ];
-
-  const onSelectedItemChange = (selectedItem) => {
-    setSelectedItem(selectedItem);
-  };
-
-  const onConfirmSelection = () => {
-    // Aquí puedes realizar acciones con el elemento seleccionado
-    console.log(selectedItem);
-  };
-
+const YourScreen = () => {
   return (
-    <View>
-      <MultiSelect
-        items={items}
-        uniqueKey="id"
-        onSelectedItemsChange={onSelectedItemChange}
-        selectedItems={[selectedItem]}
-        selectText="Seleccionar"
-        searchInputPlaceholderText="Buscar..."
-        onChangeInput={(text) => console.log(text)}
-        tagRemoveIconColor="#CCC"
-        tagBorderColor="#CCC"
-        tagTextColor="#CCC"
-        selectedItemTextColor="#CCC"
-        selectedItemIconColor="#CCC"
-        itemTextColor="#000"
-        displayKey="name"
-        searchInputStyle={{ color: '#CCC' }}
-        submitButtonColor="#CCC"
-        submitButtonText="Confirmar"
-        fixedHeight={false}
-        hideTags
-        onConfirm={onConfirmSelection}
-        single
-      />
-    </View>
+    
   );
 };
 
-export default MyComponent;
+const styles = {
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+};
+
+export default YourScreen;
 
 */
