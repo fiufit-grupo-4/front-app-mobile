@@ -28,7 +28,7 @@ function MenuProfileScreen({ navigation,route }) {
             "token_type":oldData.token_type,
             "id": newData.id
         }
-        console.log(JSON.stringify(updateUser))
+        //console.log(JSON.stringify(updateUser))
         setUser(updateUser)
         await AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
 
@@ -76,7 +76,7 @@ function MenuProfileScreen({ navigation,route }) {
                         }).then((response) => {
                             if (response.ok) {
                                 response.json().then((data) => {
-                                    console.log("POSTS: ", data);
+                                    //console.log("POSTS: ", data);
                                     setPosts(data);
                                 }).catch((error) => {
                                     setError(true);

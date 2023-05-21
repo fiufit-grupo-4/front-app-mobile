@@ -12,10 +12,12 @@ const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
     const handleTouchableOpacity = () => {
+        setReload(reload + 1)
         navigation.navigate("Profile",{reload : false})
     };
 
     const [userInfo,setUserInfo] = useState({})
+    const [reload,setReload] = useState(0)
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
@@ -30,7 +32,7 @@ const CustomDrawer = (props) => {
             })
         }
         getUser();
-    }, [])
+    }, [reload])
 
     const handleLogOut = () => {
         Alert.alert(

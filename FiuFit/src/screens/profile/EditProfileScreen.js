@@ -10,11 +10,12 @@ import {
     ActivityIndicator,
     StyleSheet
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+
 import {Ionicons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import { API_GATEWAY } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
+import * as ImagePicker from 'expo-image-picker';
 import { getLocation } from '../../utils/locations';
 
 
@@ -55,11 +56,16 @@ export const EditProfileScreen = ({route}) => {
         const response = await fetch(profilePicture);
         const blob = await response.blob();
         let date = new Date().getTime()
-        const res = await firebase.storage().ref().child(`users/${user.id}/avatar/${date}`).put(blob)
-        const uri = await firebase.storage().ref().child(`users/${user.id}/avatar/${date}`).getDownloadURL()   
+        //const storageRef = firebase.storage().ref()
+        //const imageRef = storageRef.child(`users/${user.id}/avatar/${date}`)
+        //await imageRef.put(blob)
+        const res = await firebase.storage().ref().child(`users/${user.mail}/avatar/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.mail}/avatar/${date}`).getDownloadURL()   
         //console.log(uri)
-        setProfileUpload(uri)
-        setLoading(false)   
+        //const uri = await imageRef.getDownloadURL() 
+        //setProfileUpload(uri)
+        setLoading(false) 
+        return uri   
     }
 
     const handleGetLocation = async () => {
@@ -71,11 +77,13 @@ export const EditProfileScreen = ({route}) => {
         let url = API_GATEWAY + "users/" + user.id
         setLoading(true);
         setError(false)
+        let image
         if (profilePicture) {
-            await uploadImage()
+            image = await uploadImage()
+        } else {
+            image = user.image
         }
-        let image = profilePicture ? profileUpload : user.image
-    
+        
         let response = await fetch(url, {
             method: 'PATCH',
             headers: {
