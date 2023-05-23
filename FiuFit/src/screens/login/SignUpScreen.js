@@ -140,6 +140,10 @@ const SignUpScreen = () => {
         return validator.isEmail(email)
     };
 
+    const validateNumber = (number) => {
+        return validator.isInt(number,{min:0})
+    };
+
 
     const validatePhoneNumber = (phoneNumber) => {
         return validator.isMobilePhone(phoneNumber)
@@ -181,16 +185,24 @@ const SignUpScreen = () => {
     return (
 
         <View style={styles.root}>
-            <Image
-                source={FiuFitLogo}
-                style={ {width: "80%", height: height * 0.2,marginTop:10}}
-                resizeMode="contain"
-            />
+            
 
             {loading
-                ? <LoadingIndicator/>
+                ? <>
+                    <Image
+                        source={FiuFitLogo}
+                        style={ {width: "80%", height: height * 0.2,marginTop:10}}
+                        resizeMode="contain"
+                    />
+                    <LoadingIndicator/>
+                  </>
                 : <>
-                <Text style={styles.title}>Create an Account</Text>
+                    <Image
+                        source={FiuFitLogo}
+                        style={ {width: "60%", height: height * 0.1,marginTop:10}}
+                        resizeMode="contain"
+                    />
+                <Text style={[styles.title]}>Create an Account</Text>
                 <ScrollView >
                     <View style={{alignItems:"center",width:"100%"}}>
                     <CustomInput
@@ -231,9 +243,13 @@ const SignUpScreen = () => {
                         placeholder="Age"
                         control={control}
                         icon={"fitness"}
-                        rules = {{required:"This field is Required"}}
+                        rules = {{
+                            required:"This field is Required",
+                            validate: value => validateNumber(value) || "Not a valid number"
+                        }}
                         otherError={error}
                         width={"100%"}
+                        keyboardType='numeric'
                     />
 
                     <CustomInput
@@ -244,7 +260,7 @@ const SignUpScreen = () => {
                         width={"100%"}
                         rules = {{
                             required:"This field is Required",
-                            validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+                            validate: value => validatePhoneNumber(value) || "Not a valid phone number"}}
                             otherError={error}
                     />
 
@@ -294,9 +310,8 @@ const SignUpScreen = () => {
                             style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
                         />
                     </View>
-                    </View>
-                    </ScrollView>
-                    <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
+                    
+                    <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)}  containerWidth="100%" />
                     {error && (
                         <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
                     )}
@@ -308,28 +323,18 @@ const SignUpScreen = () => {
                             fgColor="white"
                             icon= "logo-google"
                             iconColor="white"
+                            containerWidth="100%"
                     />
-
-                {/* 
-                    <View style={[styles.container]} >
-                        <Text style={styles.text}>
-                            By registering, you confirm that you accept our{' '}
-                            <Text style={styles.link} onPress={onTermsOfUsePressed}>
-                                Terms of Use
-                            </Text>{' '}
-                            and{' '}
-                            <Text style={styles.link} onPress={onPrivacyPressed}>
-                                Privacy Policy
-                            </Text>
-                            .
-                        </Text>
-                    </View>*/}
 
                     <CustomButton
                         text="Have an account? Sign in"
                         onPress={onSignInPress}
                         type="TERTIARY"
+                       
                     />
+                    </View>
+                </ScrollView>
+                   
                 </>
             }
         </View>
