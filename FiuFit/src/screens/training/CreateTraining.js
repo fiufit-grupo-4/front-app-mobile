@@ -77,6 +77,26 @@ export const CreateTraining = ({ navigation }) => {
 
     }
 
+    const resetStates =  ()=> {
+        setImageUri('');
+        setTitle('');
+        setDescription('');
+        setType('');
+        setDifficulty(0);
+        setLoading(false);
+        setError(false);
+        setErrorMessage("");
+        setMedia1("");
+        setMediaType1("")
+        setMedia2("");
+        setMediaType2("")
+        setMedia3("");
+        setMediaType3("")
+        setMedia4("");
+        setMediaType4("")
+    }
+
+
 
 
     const createPost = async () => {
@@ -122,14 +142,8 @@ export const CreateTraining = ({ navigation }) => {
             console.log(JSON.stringify(data))                
             navigation.goBack();
         }
-        setImageUri('');
-        setTitle('');
-        setDescription('');
-        setType('');
-        setDifficulty(0);
-        setLoading(false);
-        setError(false);
-        setErrorMessage("");
+        resetStates()
+        
     };
 
     return (
