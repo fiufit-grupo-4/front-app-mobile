@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, Image, ScrollView, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
-
 const ImageTraining = (media) => {
 
   const renderMediaItem = (item) => {

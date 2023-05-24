@@ -2,26 +2,43 @@ import {Image, StyleSheet, Text, TouchableWithoutFeedback,FlatList,  ScrollView,
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
 import ImageTraining from "./ImageTraining";
-import Video from 'react-native-video';
+import Video from "../../components/utils/Video";
+import { DEFAULT_IMAGE } from "../../utils/constants";
+import MediaVisualizableBox from "./MediaVisualizableBox";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>
         <View style={{padding: 5}}>
             <Text style={styles.title}>{item.title}</Text>
         </View>
-
-        <ScrollView>
-        <TouchableWithoutFeedback>
-            
-            { (item.media != {}) 
-                ? item.media[0]
-                  ? <Image source={{uri : item.media[0].url}} style={styles.postImage}/>
-                  : <Image source={{uri : "https://firebasestorage.googleapis.com/v0/b/react-native-fiufit.appspot.com/o/users%2Fundefined%2Ftraining%2F1684884021158?alt=media&token=445fc135-b3bb-4bbf-83b4-433a79b2ce9e"}} style={styles.postImage}/>
-                : <Image source={{uri : "https://firebasestorage.googleapis.com/v0/b/react-native-fiufit.appspot.com/o/users%2Fundefined%2Ftraining%2F1684884021158?alt=media&token=445fc135-b3bb-4bbf-83b4-433a79b2ce9e"}} style={styles.postImage}/>
-            }
-            
-        </TouchableWithoutFeedback>
+    
+        <ScrollView
+            contentContainerStyle={styles.mediaContainer}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            >
+                <MediaVisualizableBox media = { item.media[0]}/>
+                <MediaVisualizableBox media = { item.media[1]}/>
+                <MediaVisualizableBox media = { item.media[2]}/>
+                <MediaVisualizableBox media = { item.media[3]}/>             
         </ScrollView>
+    {/*
+        <FlatList
+            data={item.media}
+            keyExtractor={(item, index) => 'key'+index}
+            renderItem={({item}) => (
+                <View style={styles.postContainer}>      
+                        { item.media_type == "image" 
+                            ? item.url 
+                                ? <Image source={{ uri: item.url }} style={styles.image} />
+                                : <Image source={{ uri: DEFAULT_IMAGE }} style={styles.image} /> 
+                            : item.media_type == "video"
+                                ? <Video uri ={item.url} />
+                                : <Image source={{ uri: DEFAULT_IMAGE }} style={styles.image} /> 
+                        }           
+                </View>        
+        )}/>     */}
+
     </>
 }
 
@@ -90,16 +107,12 @@ const styles = StyleSheet.create({
         marginTop: 5,
       },
       mediaContainer: {
-        marginRight: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
       },
       image: {
-        width: 200,
-        height: 200,
-        borderRadius: 10,
-      },
-      video: {
-        width: 200,
-        height: 200,
-        borderRadius: 10,
-      },
+        width: 300,
+        height: 300,
+      }
 });
