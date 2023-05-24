@@ -26,7 +26,6 @@ export const CreateTraining = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [difficulty, setDifficulty] = useState(0);
-    const [place, setPlace] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -58,16 +57,8 @@ export const CreateTraining = ({ navigation }) => {
     }
 
 
-    const uploadElement = async (user,media,media_type,array,oldPost)=>{
-        let old_url = oldPost ? oldPost.url : ""
-        let old_type = oldPost ? oldPost.media_type : "" 
-        if (old_url == media && old_url != "") {
-            let element = {
-                "media_type": old_type,
-                "url" : old_url
-            }
-            array.push(element)
-        } else if (media){
+    const uploadElement = async (user,media,media_type,array)=>{
+         if (media){
             let uri = await uploadMedia(media,user)
             let element = {
                 "media_type": media_type,
@@ -78,10 +69,10 @@ export const CreateTraining = ({ navigation }) => {
     }
     const handleMedia = async (user)=> {
         let array = []
-        await uploadElement(user,media1,mediaType1,array,post.media[0])
-        await uploadElement(user,media2,mediaType2,array,post.media[1])
-        await uploadElement(user,media3,mediaType3,array,post.media[2])
-        await uploadElement(user,media4,mediaType4,array,post.media[3])
+        await uploadElement(user,media1,mediaType1,array)
+        await uploadElement(user,media2,mediaType2,array)
+        await uploadElement(user,media3,mediaType3,array)
+        await uploadElement(user,media4,mediaType4,array)
         return array
 
     }
@@ -136,7 +127,6 @@ export const CreateTraining = ({ navigation }) => {
         setDescription('');
         setType('');
         setDifficulty(0);
-        setPlace('');
         setLoading(false);
         setError(false);
         setErrorMessage("");
