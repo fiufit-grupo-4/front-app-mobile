@@ -41,56 +41,31 @@ function MenuProfileScreen({ navigation,route }) {
             AsyncStorage.getItem(USER)
                 .then((item) => {
                     let user = JSON.parse(item)
-                    Promise.all([
-                        fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + user.access_token,
-                            },
-                        }).then((response) => {
-                            setLoading(false);
-                            if (!response.ok) {
-                                setError(true);
-                                console.log("RESPONSE: ", response.status);
-                                if (response.status === 401) {
-                                    setErrorMessage('Unauthorized, not a valid access token');
-                                } else {
-                                    setErrorMessage('Failed to connect with the server');
-                                }
-                            } else {
-                                response.json().then(async (data) => {
-                                    await handleSetUser(data,user)
-                                })
-                            }
-                        }).catch((error) => {
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + user.access_token,
+                        },
+                    }).then((response) => {
+                        setLoading(false);
+                        if (!response.ok) {
                             setError(true);
-                            setErrorMessage(error);
-                        }),
-                        fetch(API_GATEWAY + 'trainers/me/trainings', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + user.access_token,
-                            },
-                        }).then((response) => {
-                            if (response.ok) {
-                                response.json().then((data) => {
-                                    //console.log("POSTS: ", data);
-                                    setPosts(data);
-                                }).catch((error) => {
-                                    setError(true);
-                                    setErrorMessage(error);
-                                });
+                            console.log("RESPONSE: ", response.status);
+                            if (response.status === 401) {
+                                setErrorMessage('Unauthorized, not a valid access token');
                             } else {
-                                setError(true);
-                                setErrorMessage('Failed to fetch posts');
+                                setErrorMessage('Failed to connect with the server');
                             }
-                        }).catch((error) => {
-                            setError(true);
-                            setErrorMessage(error);
-                        }),
-                    ]);
+                        } else {
+                            response.json().then(async (data) => {
+                                await handleSetUser(data,user)
+                            })
+                        }
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    })              
                 })
                 .catch((error) => {
                     setError(true);
@@ -119,7 +94,7 @@ function MenuProfileScreen({ navigation,route }) {
                 </View>
 
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ViewTrainings',{user : user, posts: posts ,reload:reload})}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
                     <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Trainings</Text>
                 </TouchableOpacity>
 
@@ -132,9 +107,9 @@ function MenuProfileScreen({ navigation,route }) {
                 </TouchableOpacity>
 
                 {error && (
-                <View style = {{alignItems:"center",marginTop:15}}>
-                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                </View>
+                    <View style = {{alignItems:"center",marginTop:15}}>
+                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                    </View>
                 )}
             </ScrollView>
           }

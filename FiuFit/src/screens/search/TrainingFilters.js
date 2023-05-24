@@ -108,8 +108,8 @@ const TrainingFilters = ({search}) => {
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
                                     {cancel 
-                                      ? <Icon name= 'star-outline' size={30} color="#FDB813" />
-                                      : <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={30} color="#FDB813" />
+                                      ? <Icon name= 'star-outline' size={25} color="#FDB813" />
+                                      : <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={25} color="#FDB813" />
                                     }
                                     
                                 </TouchableWithoutFeedback>

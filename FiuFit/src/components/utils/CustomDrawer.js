@@ -8,6 +8,7 @@ import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER } from '../../utils/constants';
 
+
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
@@ -20,6 +21,7 @@ const CustomDrawer = (props) => {
     const [reload,setReload] = useState(0)
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    
     useEffect(() => {
         async function getUser() {
             AsyncStorage.getItem(USER).then( user => {

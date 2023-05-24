@@ -18,7 +18,6 @@ import TrainingType from "./TrainingType";
 import { API_GATEWAY,USER } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as ImagePicker from 'expo-image-picker'
 import MediaBox from './MediaBox';
 
 export const CreateTraining = ({ navigation }) => {
@@ -29,54 +28,23 @@ export const CreateTraining = ({ navigation }) => {
     const [difficulty, setDifficulty] = useState(0);
     const [place, setPlace] = useState('');
     const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState({});
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [media, setMedia] = useState([]);
     
-    const [media1, setMedia1] = useState([]);
-    const [media2, setMedia2] = useState([]);
-    const [media3, setMedia3] = useState([]);
-    const [media4, setMedia4] = useState([]);
+    const [media1, setMedia1] = useState("");
+    const [mediaType1, setMediaType1] = useState("");
+    const [media2, setMedia2] = useState("");
+    const [mediaType2, setMediaType2] = useState("");
+    const [media3, setMedia3] = useState("");
+    const [mediaType3, setMediaType3] = useState("");
+    const [media4, setMedia4] = useState("");
+    const [mediaType4, setMediaType4] = useState("");
 
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
 
-
-    const { control} = useForm({
-        defaultValues: {
-            email: 'sofia@fi.uba.ar',
-            password: '123456e'
-        }
-    });
     
-
-
-    const handleSelectMedia = async () => {
-        setError(false)
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted === false) {
-            alert('Permission to access camera roll is required!');
-            return;
-        }
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [3, 3],
-            quality:1,
-        });
-        if (!result.canceled) {
-            let element = {
-                "media_type": result.assets[0].type,
-                "url": result.assets[0].uri
-            }
-            //setVideo(result.assets[0].uri);
-            setMedia(oldArray => [...oldArray, element])
-            //oldArray => [...oldArray, newElement]);
-            //console.log(result.assets[0].uri)
-        }
-    };
 
     const uploadMedia = async (video,user) => {
         setLoading(true);
@@ -89,32 +57,54 @@ export const CreateTraining = ({ navigation }) => {
         return uri   
     }
 
-    const handleMedia = async (user)=> {
-        if (!media){
-            return null
-        } else {
+
+    const uploadElement = async (user,media,media_type,array,oldPost)=>{
+        let old_url = oldPost ? oldPost.url : ""
+        let old_type = oldPost ? oldPost.media_type : "" 
+        if (old_url == media && old_url != "") {
+            let element = {
+                "media_type": old_type,
+                "url" : old_url
+            }
+            array.push(element)
+        } else if (media){
             let uri = await uploadMedia(media,user)
+            let element = {
+                "media_type": media_type,
+                "url" : uri
+            }
+            array.push(element)
         }
+    }
+    const handleMedia = async (user)=> {
+        let array = []
+        await uploadElement(user,media1,mediaType1,array,post.media[0])
+        await uploadElement(user,media2,mediaType2,array,post.media[1])
+        await uploadElement(user,media3,mediaType3,array,post.media[2])
+        await uploadElement(user,media4,mediaType4,array,post.media[3])
+        return array
+
     }
 
 
 
-    const createPost = () => {
+    const createPost = async () => {
         console.log(type)
-        if (!title || !description  || !place || !type || !difficulty) {
+        if (!title || !description  || !type || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || place.trim() === '' || type.trim() === '' || !difficulty) {
+        if (title.trim() === '' || description.trim() === '' || type.trim() === '' || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        AsyncStorage.getItem(USER).then((item) => {
+        let item = await AsyncStorage.getItem(USER)
         let user = JSON.parse(item)
+        let array = await handleMedia(user)
         let url = API_GATEWAY + "trainers/me/trainings"
         setLoading(true)
-        setError(false)
-        fetch(url, {
+        setError(false)     
+        let response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,42 +115,22 @@ export const CreateTraining = ({ navigation }) => {
                 "description": description,
                 "type": type,
                 "difficulty": difficulty,
-                "media": [
-                    {
-                        "media_type": "image",
-                        "url": imageUri
-                    }
-                ],
-                "place": place
+                "media": array
             })
-        }).then((response) => {
-            setLoading(false);
-            console.log(JSON.stringify(response))
-            if (!response.ok) {
-                setError(true);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
-            } else {
-                response.json().then((data) => {
-                        console.log(JSON.stringify(data))                
-                        navigation.goBack();
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                }) 
-        
-            }).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
         })
-        //TODO: a mejorar
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))                
+            navigation.goBack();
+        }
         setImageUri('');
         setTitle('');
         setDescription('');
@@ -168,7 +138,6 @@ export const CreateTraining = ({ navigation }) => {
         setDifficulty(0);
         setPlace('');
         setLoading(false);
-        setUser({});
         setError(false);
         setErrorMessage("");
     };
@@ -202,36 +171,16 @@ export const CreateTraining = ({ navigation }) => {
                         />
                     </View>
 
-            {/*        <View style={styles.inputContainer}>
-                        <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Training Type"
-                            value={trainingType}
-                            onChangeText={setTrainingType}
-                            multiline={true}
-                        />
-                    </View>*/}
-
                     <View style={styles.inputContainer}>
                         <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        {/*
-                        <TextInput
-                            style={styles.input}
-                            maxLength={1}
-                            placeholder="Difficulty (1-5)"
-                            value={difficulty}
-                            onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
-                            keyboardType="numeric"
-                        />*/}
                         <Text style={styles.difficultyInput}> Difficulty:  </Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                                </TouchableWithoutFeedback>
-                            ))}
-                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                    <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
+                                        <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                    </TouchableWithoutFeedback>
+                                ))}
+                        <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
                         </View>
                     </View>
 
@@ -244,12 +193,12 @@ export const CreateTraining = ({ navigation }) => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     >
-                    <MediaBox setElement = {setMedia1}/>
-                    <MediaBox setElement = {setMedia2}/>
-                    <MediaBox setElement = {setMedia3}/>
-                    <MediaBox setElement = {setMedia4}/>
+                    <MediaBox setElement = {setMedia1} setMediaElement = {setMediaType1}/>
+                    <MediaBox setElement = {setMedia2} setMediaElement = {setMediaType2} />
+                    <MediaBox setElement = {setMedia3} setMediaElement = {setMediaType3} />
+                    <MediaBox setElement = {setMedia4} setMediaElement = {setMediaType4}/>
                     
-                    </ScrollView>
+                </ScrollView>
 
 
                 { loading 

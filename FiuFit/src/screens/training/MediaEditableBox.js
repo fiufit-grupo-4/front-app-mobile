@@ -3,8 +3,9 @@ import { View, TouchableOpacity, Image, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-const MediaBox = ({setElement,setMediaElement}) => {
+const MediaEditableBox = ({setElement,setMediaElement,oldMedia}) => {
   const [media, setMedia] = useState("");
+  const [olderMedia,setOldMedia] = useState(oldMedia)
 
   const handleMediaSelection = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -33,6 +34,7 @@ const MediaBox = ({setElement,setMediaElement}) => {
     setMedia("")
     setElement("")
     setMediaElement("")
+    setOldMedia("")
   };
 
   return (
@@ -44,11 +46,18 @@ const MediaBox = ({setElement,setMediaElement}) => {
             <AntDesign name="closecircle" size={24} color="red" />
           </View>
         </TouchableOpacity>
+      ) : olderMedia ? (
+        <TouchableOpacity onPress={handleMediaRemoval} style={styles.imageContainer}>
+          <Image source={{ uri: oldMedia.url }} style={styles.image} />
+          <View style={styles.removeButton}>
+            <AntDesign name="closecircle" size={24} color="red" />
+          </View>
+        </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={handleMediaSelection} style={styles.placeholderContainer}>
-          <View style={styles.placeholder}>
-            <AntDesign name="plus" size={24} color="black" />
-          </View>
+            <View style={styles.placeholder}>
+                <AntDesign name="plus" size={24} color="black" />
+            </View>
         </TouchableOpacity>
       )}
     </View>
@@ -95,4 +104,4 @@ const styles = {
   },
 };
 
-export default MediaBox;
+export default MediaEditableBox;

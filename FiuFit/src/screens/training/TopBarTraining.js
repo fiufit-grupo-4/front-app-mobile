@@ -5,22 +5,22 @@ import {editPostDots} from "./EditTrainingButton";
 
 export function topContent(canEdit, handleEdit, item, user) {
     return <View style={styles.topContent}>
-        {topBarPost()}
+        {topBarPost(item)}
         {editPostDots(canEdit, handleEdit, item)}
     </View>;
 }
 
-export function topBarPost() {
+export function topBarPost(item) {
     return <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image source={require('../../../assets/images/profilepic.jpeg')}
                style={styles.profileImage}/>
-        <Text style={styles.name}>{'Pepito Boxeador'}</Text>
+        <Text style={styles.name}>{item.trainer.name + " " + item.trainer.lastname}</Text>
     </View>;
 }
 
 export function trainingPlace(item) {
     return <View style={styles.item}>
-        <Ionicons name={'md-pin-outline'} style={styles.placeIcon}/>
+        <Ionicons name={'md-pin-outline'} style={styles.placeIcon} />
         <Text style={styles.place}>{item.place}</Text>
     </View>;
 }
