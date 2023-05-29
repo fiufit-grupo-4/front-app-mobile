@@ -6,8 +6,9 @@ import {USER, API_GATEWAY } from '../../utils/constants';
 import MenuProfileScreen from "../profile/MenuProfileScreen";
 
 
-function ViewTrainings({ navigation,route }) {
-    const {user, posts, reload} = route.params
+function ViewTrainings({ navigation, route }) {
+    const {user, reload} = route.params
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +36,48 @@ function ViewTrainings({ navigation,route }) {
             })
 
     }
+
+    useEffect(() => {
+        const url = API_GATEWAY + 'users/me'
+        function getPosts() {
+            setLoading(true);
+            AsyncStorage.getItem(USER)
+                .then((item) => {
+                    let user = JSON.parse(item)
+                    Promise.all([
+                        fetch(API_GATEWAY + 'trainers/me/trainings', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + user.access_token,
+                            },
+                        }).then((response) => {
+                            if (response.ok) {
+                                response.json().then((data) => {
+                                    console.log("POSTS: ", data);
+                                    setPosts(data);
+                                    navigation.navigate(0)
+                                }).catch((error) => {
+                                    setError(true);
+                                    setErrorMessage(error);
+                                });
+                            } else {
+                                setError(true);
+                                setErrorMessage('Failed to fetch posts');
+                            }
+                        }).catch((error) => {
+                            setError(true);
+                            setErrorMessage(error);
+                        }),
+                    ]);
+                })
+                .catch((error) => {
+                    setError(true);
+                    setErrorMessage(error);
+                });
+        }
+        getPosts();
+    }, [reload])
 
     return (
         <FlatList

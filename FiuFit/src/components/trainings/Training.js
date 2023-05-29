@@ -17,6 +17,7 @@ const Training = ({user, item, canEdit, reload}) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
     const [rating, setRating] = useState(0);
+    const [comments, setComments] = useState(item.comments);
     const [commentText, setCommentText] = useState('');
     const [showCommentPopup, setShowCommentPopup] = useState(false);
     const [showStars, setShowStars] = useState(false);
@@ -144,9 +145,9 @@ const Training = ({user, item, canEdit, reload}) => {
 
                     {trainingContent(item)}
 
-
+                    {/*
                     {getCalification(handleStarPress, handleRate, item)}
-
+                    r*/}
 
                 </View>
             </View>

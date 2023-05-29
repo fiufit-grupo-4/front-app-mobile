@@ -8,7 +8,6 @@ import {USER, API_GATEWAY } from '../../utils/constants';
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
     const [user, setUser] = useState({});
-    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -73,27 +72,8 @@ function MenuProfileScreen({ navigation,route }) {
                         }).catch((error) => {
                             setError(true);
                             setErrorMessage(error);
-                        }),
-                        fetch(API_GATEWAY + 'trainers/me/trainings', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + user.access_token,
-                            },
-                        }).then((response) => {
-                            if (response.ok) {
-                                response.json().then((data) => {
-                                    console.log("POSTS: ", data);
-                                    setPosts(data);
-                                }).catch((error) => {
-                                    setError(true);
-                                    setErrorMessage(error);
-                                });
-                            } else {
-                                setError(true);
-                                setErrorMessage('Failed to fetch posts');
-                            }
-                        }).catch((error) => {
+                        })
+                       .catch((error) => {
                             setError(true);
                             setErrorMessage(error);
                         }),
@@ -116,19 +96,19 @@ function MenuProfileScreen({ navigation,route }) {
             : <ScrollView style={{ flex: 1, backgroundColor: '#91AED4' }}>
                 <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
                     <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
-                    <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
-                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Age: {user.age}</Text>
-                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
-                    <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20,  alignItems: 'flex-start' }}>Number: {user.phone_number}</Text>
+                    <Text style={{ fontSize: 18, color: 'rgba(32,38,70,0.63)', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
+                    <Text style={{ fontSize: 18, color: 'rgba(32,38,70,0.63)', marginTop: 15, alignItems: 'flex-start'}}>Age: {user.age}</Text>
+                    <Text style={{ fontSize: 18, color: 'rgba(32,38,70,0.63)', marginTop: 15, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
+                    <Text style={{ fontSize: 18, color: 'rgba(32,38,70,0.63)', marginTop: 15,  alignItems: 'flex-start' }}>Number: {user.phone_number}</Text>
                 </View>
 
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ViewTrainings',{user : user, posts: posts ,reload:reload})}>
-                    <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Trainings</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ViewTrainings',{user : user , reload:reload})}>
+                    <Text style={{ fontSize: 18, color: 'rgba(41,51,93,0.81)', textAlign: 'center' }}>Trainings</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
-                    <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edit Profile',{user : user, reload:reload})}>
+                    <Text style={{ fontSize: 18, color: 'rgba(41,51,93,0.81)', textAlign: 'center' }}>Edit Profile</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
@@ -152,10 +132,11 @@ export default MenuProfileScreen;
 const styles = StyleSheet.create({
     buttonText: {
         fontSize: 18,
-        color: 'rgba(23,29,52,0.93)',
+        color: 'rgba(41,51,93,0.81)',
         textAlign: 'center'
     },
     button: {
+        color: 'rgba(41,51,93,0.81)',
         backgroundColor: '#DEE9F8FF',
         borderRadius: 20,
         paddingVertical: 10,

@@ -39,8 +39,8 @@ const SignInScreen = () => {
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: 'dantetrainer@hotmail.com',
-            password: '12345'
+            email: 'tate@fi.uba.ar',
+            password: '1234'
         }
     });
 
@@ -68,6 +68,7 @@ const SignInScreen = () => {
             .then(response => {
                 setLoading(false)
                 if (!response.ok) {
+                    console.log(response.status)
                     setError(true)
                     if(response.status == 401){
                         setErrorMessage("Invalid username or password")

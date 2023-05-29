@@ -123,10 +123,10 @@ const SignUpScreen = () => {
 
     const { control, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
-            mail: 'dante@fi.uba.ar',
+            mail: 't@fi.uba.ar',
             password: '1234',
             repeatPassword:'1234',
-            phone_number: "+5491161637747",
+            phone_number: "+5491159340782",
             name: "Dante",
             lastname: "420",
             age: "24"
