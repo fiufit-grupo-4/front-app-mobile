@@ -97,11 +97,13 @@ export function getComments(user, handleComment, showCommentPopup, toggleComment
 
             <View style={styles.commentPopUp}>
                 <ScrollView>
-                    {comments && comments.map((comment) => {
-                        return (<View key={comment.user.name + " " + comment.user.lastname}>
-                            <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
-                            <Text style={styles.commentContent}>{comment.detail}</Text>
-                        </View>);
+                    {comments && comments.map((comment, index) => { // Add index as second argument
+                        return (
+                            <View key={index}>
+                                <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
+                                <Text style={styles.commentContent}>{comment.detail}</Text>
+                            </View>
+                        );
                     })}
                 </ScrollView>
 
