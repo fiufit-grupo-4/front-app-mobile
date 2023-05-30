@@ -6,6 +6,7 @@ import CustomButton from '../../components/buttons/CustomButton';
 
 const TrainingListItem = ({ item }) => {
   const navigation = useNavigation();
+  
   function handleOnPress() {
     navigation.navigate("Training Profile", {item:item})
   }

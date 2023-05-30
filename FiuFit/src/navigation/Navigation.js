@@ -21,7 +21,7 @@ import TrainingProfile from '../screens/search/TrainingProfile';
 import ViewTrainings from "../screens/training/ViewTrainings";
 import Prueba from "../screens/login/Prueba";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
-
+import FavoriteTrainingProfile from '../screens/search/FavoriteTrainingProfile';
 
 
 const Stack = createNativeStackNavigator();
@@ -53,7 +53,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Training" component={TrainingScreen}  />
 
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
-
+                    <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
 
                     <Stack.Screen name="My Trainings" component={ViewTrainings}  />
 

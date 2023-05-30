@@ -111,7 +111,7 @@ function MenuProfileScreen({ navigation,route }) {
             ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            : <ScrollView style={{ flex: 1 }}>
+            : <ScrollView style={{ flex: 1,backgroundColor:"#91AED4" }}>
                 {/* 
                 <View style={styles.container}>
                     <View style={styles.header}>

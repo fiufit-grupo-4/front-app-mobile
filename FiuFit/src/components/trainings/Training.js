@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
 
 
-const Training = ({user, item, canEdit, reload}) => {
+const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -21,7 +21,7 @@ const Training = ({user, item, canEdit, reload}) => {
     const [showCommentPopup, setShowCommentPopup] = useState(false);
     const [showStars, setShowStars] = useState(false);
     const [selectedStars, setSelectedStars] = useState(0);
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(fav);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -75,47 +75,71 @@ const Training = ({user, item, canEdit, reload}) => {
         setShowStars(false);
     };
 
-    // AGREGAR/SACAR DE FAVORITOS
+    const handleAddFavorite = async () => {
+        console.log(item.id)
+        let url = API_GATEWAY + "users/me/trainings/" + item.id
+        setIsFavorite(true)
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+    }
+
+    const handleDeleteFavorite = async () => {
+        setIsFavorite(false)
+        console.log(item.id)
+        let url = API_GATEWAY + "users/me/trainings/" + item.id
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+
+    }
 
     const handleFavoritePress = () => {
-        setIsFavorite(!isFavorite);
-        AsyncStorage.getItem(USER).then((item1) => {
-            let user = JSON.parse(item1)
-            let url = API_GATEWAY + "users/me/trainings/" + item.id
-            setLoading(true)
-            setError(false)
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + user.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        //navigation.goBack();
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-            })
-        }).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        })
+        isFavorite? handleDeleteFavorite() : handleAddFavorite()
     }
 
 

@@ -68,6 +68,7 @@ const SignInScreen = () => {
             .then(response => {
                 setLoading(false)
                 if (!response.ok) {
+                    console.log(response.status)
                     setError(true)
                     if(response.status == 401){
                         setErrorMessage("Invalid username or password")

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import { distance} from '../../utils/locations';
+import {Ionicons} from 'react-native-vector-icons'
 
 const UserListItem = ({ user, myDistance }) => {
   const navigation = useNavigation();
@@ -31,7 +32,12 @@ const UserListItem = ({ user, myDistance }) => {
         
       </View>
       <View style={styles.userInfo}>
-        <Text style={styles.name}>{user.name + " " + user.lastname}</Text>
+        <Text style={styles.name}>{user.name + " " + user.lastname + " "}
+          { user.verification?.verified && (
+                <Ionicons name={"checkmark-done-outline"} size={18} color={"lightblue"} />
+            )
+          }
+        </Text>
         <Text style={styles.role}>{user.mail}</Text>
       </View>
       {showDistance() && (
