@@ -57,6 +57,7 @@ const Training = ({user, item, canEdit, reload}) => {
         toggleCommentPopup();
     };
 
+
     // CALIFICACION
     const handleRate = (value) => {
         setRating(value);

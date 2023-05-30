@@ -217,6 +217,5 @@ const styles = {
         marginRight: 10,
         fontSize: 16,
         fontWeight: 'bold',
-        marginLeft:5,
     }
 };

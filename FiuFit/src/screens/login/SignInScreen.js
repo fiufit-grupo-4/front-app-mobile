@@ -39,7 +39,7 @@ const SignInScreen = () => {
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: 'tate@fi.uba.ar',
+            email: 'tatetii@fi.uba.ar',
             password: '1234'
         }
     });

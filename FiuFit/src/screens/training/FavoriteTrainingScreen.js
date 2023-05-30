@@ -4,10 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavTraining from "../../components/trainings/favTrainings";
+import Training from "../../components/trainings/Training";
 
 const FavoriteTrainingScreen = () => {
     const [user, setUser] = useState();
-    const [posts, setPosts] = useState([]);
+    const [favPosts, setFavPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +17,7 @@ const FavoriteTrainingScreen = () => {
     //const getFavoriteTrainings = () => {
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
-        function getUsers() {
+        function getFavorites() {
             console.log("tenemos favs??? veamos")
             setLoading(true);
             AsyncStorage.getItem(USER)
@@ -34,10 +35,11 @@ const FavoriteTrainingScreen = () => {
                                 response.json().then((data) => {
                                     console.log("POSTS faaaaavs: ", data);
                                     setUser(data);
-                                    if (data && data.trainings) {
-                                        setPosts(data.trainings);
-                                    }
-                                    console.log("SE GUARDARON LOS Fvsposts como: ", posts)
+                                    setFavPosts(data.trainings);
+                                    /*if (data && data.trainings) {
+                                        setFavPosts(data.trainings);
+                                    }*/
+                                    navigation.navigate(0)
                                 }).catch((error) => {
                                     setError(true);
                                     setErrorMessage(error);
@@ -56,7 +58,7 @@ const FavoriteTrainingScreen = () => {
                     setErrorMessage(error);
                 });
         }
-        getUsers();
+        getFavorites();
     }, [])
 
 
@@ -64,13 +66,14 @@ const FavoriteTrainingScreen = () => {
         <View>
             <Text>Hola estoy aca, soy tus favs</Text>
             <FlatList
-                data={posts}
+                data={favPosts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <FavTraining user={user} item={item} canEdit={false} />
                 )}
             />
         </View>
+
     )
 }
 

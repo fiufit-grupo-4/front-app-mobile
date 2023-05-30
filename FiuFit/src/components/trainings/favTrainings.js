@@ -88,18 +88,17 @@ const FavTraining = ({item, canEdit}) => {
 
                     {trainingPrincipalContent(item, toggleModal)}
 
-
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    {/*
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}> */}
 
                         {/* COMENTATIOS */}
-                        {getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment)}
+                    {/*     {getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment)}
 
                     </View>
-
+                */}
 
                     {trainingContent(item)}
 
-                    {getCalification(handleStarPress, handleRate, item)}
 
 
                 </View>
