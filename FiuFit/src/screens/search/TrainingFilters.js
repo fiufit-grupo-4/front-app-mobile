@@ -18,7 +18,9 @@ const TrainingFilters = ({search}) => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [trainings,setTrainings] =  useState([]);
-  const [difficulty, setDifficulty] = useState('');;
+  const [difficulty, setDifficulty] = useState(5);
+  const [lastDifficulty, setLastDifficulty] = useState(5);
+  const [cancel,setCancel]= useState(false)
 
   const handleMinDifficultyChange = (value) => {
     setMinDifficulty(value);
@@ -29,6 +31,12 @@ const TrainingFilters = ({search}) => {
   }
 
   const handleDifficulty = (value) => {
+    setLastDifficulty(difficulty)
+    if (value == 5 && lastDifficulty == 5){
+      setCancel(!cancel)
+    } else {
+      setCancel(false)
+    } 
     setDifficulty(value);
   };
 
@@ -80,7 +88,8 @@ const TrainingFilters = ({search}) => {
       return trainings.filter((training) => {
           const nameMatches = training.title.toLowerCase().includes(search.toLowerCase());
           const typeMatches = training.type.toLowerCase().includes(type.toLowerCase());
-          const difficultyMatches = training.difficulty == difficulty
+          
+          const difficultyMatches = training.difficulty <= difficulty
           //const minDifficultyMatches = minDifficulty <= training.difficulty.toString()
           //const maxDifficultyMatches = maxDifficulty >= training.difficulty.toString()
           return nameMatches && difficultyMatches && typeMatches ;
@@ -98,7 +107,11 @@ const TrainingFilters = ({search}) => {
               <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:10}}>
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                    {cancel 
+                                      ? <Icon name= 'star-outline' size={25} color="#FDB813" />
+                                      : <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={25} color="#FDB813" />
+                                    }
+                                    
                                 </TouchableWithoutFeedback>
                             ))}
                             <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>

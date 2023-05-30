@@ -6,10 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomDrawer from "../components/utils/CustomDrawer";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {SearchScreen} from "../screens/search/SearchScreen";
-import MenuProfileScreen from "../screens/profile/MenuProfileScreen";
-import CreateTrainingScreen from "../screens/training/CreateTrainingScreen";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
-import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import CertifyScreen from "../screens/certify/CertifyScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ATHLETE,TRAINER,USER} from '../utils/constants';
@@ -148,6 +145,7 @@ function DrawerComponent() {
                             <AntDesign
                                 name="checkcircleo"
                             />
+                            
                         ),
                         headerShown: true,
                     })}

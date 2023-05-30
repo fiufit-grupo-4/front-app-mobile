@@ -8,16 +8,20 @@ import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER } from '../../utils/constants';
 
+
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
     const handleTouchableOpacity = () => {
+        setReload(reload + 1)
         navigation.navigate("Profile",{reload : false})
     };
 
     const [userInfo,setUserInfo] = useState({})
+    const [reload,setReload] = useState(0)
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    
     useEffect(() => {
         async function getUser() {
             AsyncStorage.getItem(USER).then( user => {
@@ -30,7 +34,7 @@ const CustomDrawer = (props) => {
             })
         }
         getUser();
-    }, [])
+    }, [reload])
 
     const handleLogOut = () => {
         Alert.alert(
@@ -76,15 +80,13 @@ const CustomDrawer = (props) => {
                             onPress={
                                 handleTouchableOpacity
                             }>
-                            <Image
-                                source={require('../../../assets/images/profilepic.jpeg')}
-                                style={{
-                                    height: 80,
-                                    width: 80,
-                                    borderRadius: 40,
-                                    marginBottom: 10,
-                                }}
-                            />
+                                { userInfo.image  
+                                        ? <Image source={{uri:userInfo.image}} 
+                                           style={{height: 80,width: 80,borderRadius: 40,marginBottom: 10,}}/>
+                                        : <Image source={require('../../../assets/images/profilepic.jpeg')}
+                                            style={{height: 80,width: 80,borderRadius: 40,marginBottom: 10,}}/>
+                                }  
+                            
                         </TouchableOpacity>
 
                         <TouchableOpacity

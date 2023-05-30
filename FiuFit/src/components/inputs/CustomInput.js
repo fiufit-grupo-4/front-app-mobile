@@ -3,7 +3,7 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 import {Controller} from 'react-hook-form';
 
-const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError,width}) => {
+const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError,width,keyboardType  }) => {
 
   return (
       <Controller
@@ -32,6 +32,7 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
 
                   ]}
                   secureTextEntry={secureTextEntry}
+                  keyboardType = {keyboardType}
                 />
               </View>
               { error && (

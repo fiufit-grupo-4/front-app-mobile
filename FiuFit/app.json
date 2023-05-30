@@ -4,8 +4,9 @@
     "slug": "FiuFit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/fiticon.png",
     "userInterfaceStyle": "light",
+    "scheme":"fiufit",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,8 +19,9 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/fiticon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "fiufit.app.mobile",
@@ -46,7 +48,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow FiuFit to use your location."
         }
-      ]
+      ],
+      ["@react-native-google-signin/google-signin"]
     ],
     "extra": {
       "eas": {

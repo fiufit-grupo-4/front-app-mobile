@@ -15,9 +15,9 @@ export function editPostDots(canEdit, handleEdit, item) {
 
 const styles = StyleSheet.create({
     placeIcon: {
-        fontSize: 12,
+        fontSize: 18,
         marginLeft:30,
-        color : 'rgba(91,99,95,0.77)',
+        color : 'black',
     },
     edit: {
         flexDirection: 'row',

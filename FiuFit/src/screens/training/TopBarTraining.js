@@ -20,7 +20,7 @@ export function topBarPost(item) {
 
 export function trainingPlace(item) {
     return <View style={styles.item}>
-        <Ionicons name={'md-pin-outline'} style={styles.placeIcon}/>
+        <Ionicons name={'md-pin-outline'} style={styles.placeIcon} />
         <Text style={styles.place}>{item.place}</Text>
     </View>;
 }

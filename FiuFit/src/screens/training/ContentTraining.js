@@ -1,17 +1,45 @@
-import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
+import {Image, StyleSheet, Text, TouchableWithoutFeedback,FlatList,  ScrollView,View} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
-
+import ImageTraining from "./ImageTraining";
+import Video from "../../components/utils/Video";
+import { DEFAULT_IMAGE } from "../../utils/constants";
+import MediaVisualizableBox from "./MediaVisualizableBox";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>
         <View style={{padding: 5}}>
             <Text style={styles.title}>{item.title}</Text>
         </View>
-        <TouchableWithoutFeedback onPress={() => toggleModal(item.image)}>
-            <Image source={item.image} style={styles.postImage}/>
-        </TouchableWithoutFeedback>
-    </>;
+    
+        <ScrollView
+            contentContainerStyle={styles.mediaContainer}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            >
+                <MediaVisualizableBox media = { item.media[0]}/>
+                <MediaVisualizableBox media = { item.media[1]}/>
+                <MediaVisualizableBox media = { item.media[2]}/>
+                <MediaVisualizableBox media = { item.media[3]}/>             
+        </ScrollView>
+    {/*
+        <FlatList
+            data={item.media}
+            keyExtractor={(item, index) => 'key'+index}
+            renderItem={({item}) => (
+                <View style={styles.postContainer}>      
+                        { item.media_type == "image" 
+                            ? item.url 
+                                ? <Image source={{ uri: item.url }} style={styles.image} />
+                                : <Image source={{ uri: DEFAULT_IMAGE }} style={styles.image} /> 
+                            : item.media_type == "video"
+                                ? <Video uri ={item.url} />
+                                : <Image source={{ uri: DEFAULT_IMAGE }} style={styles.image} /> 
+                        }           
+                </View>        
+        )}/>     */}
+
+    </>
 }
 
 export function trainingContent(item) {
@@ -60,5 +88,31 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: 'rgba(32,38,70,0.63)',
         marginLeft: 8
-    }
+    },
+    postContainer: {
+        marginVertical: 10,
+        paddingHorizontal: 10,
+    },
+    userName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      postTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 5,
+      },
+      postDescription: {
+        fontSize: 14,
+        marginTop: 5,
+      },
+      mediaContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+      },
+      image: {
+        width: 300,
+        height: 300,
+      }
 });

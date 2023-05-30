@@ -19,6 +19,7 @@ import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
 import UserProfile from '../screens/search/UserProfile';
 import TrainingProfile from '../screens/search/TrainingProfile';
 import ViewTrainings from "../screens/training/ViewTrainings";
+import Prueba from "../screens/login/Prueba";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 
 
@@ -30,6 +31,7 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
+                    {/*<Stack.Screen name="Prueba" component={Prueba} options={{ headerShown: false }} /> */}
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
 
@@ -47,12 +49,15 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Change Password" component={ChangePasswordScreen}  />
                     <Stack.Screen name="User Profile" component={UserProfile}  />
 
-                    <Stack.Screen name="EditTrainingScreen" component={EditTrainingScreen}  />
+                    <Stack.Screen name="Edit Training" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
 
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
 
-                    <Stack.Screen name="ViewTrainings" component={ViewTrainings}  />
+
+                    <Stack.Screen name="My Trainings" component={ViewTrainings}  />
+
+                   
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
 
 

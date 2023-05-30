@@ -13,7 +13,7 @@ function MenuProfileScreen({ navigation,route }) {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    function handleSetUser(newData,oldData){
+    async function handleSetUser(newData,oldData){
         const updateUser = {
             "name":newData.name,
             "lastname":newData.lastname,
@@ -29,12 +29,9 @@ function MenuProfileScreen({ navigation,route }) {
             "token_type":oldData.token_type,
             "id": newData.id
         }
+        //console.log(JSON.stringify(updateUser))
         setUser(updateUser)
-        AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
-        .catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          }) 
+        await AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
 
     }
 
@@ -45,59 +42,31 @@ function MenuProfileScreen({ navigation,route }) {
             AsyncStorage.getItem(USER)
                 .then((item) => {
                     let user = JSON.parse(item)
-                    Promise.all([
-                        fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + user.access_token,
-                            },
-                        }).then((response) => {
-                            setLoading(false);
-                            if (!response.ok) {
-                                setError(true);
-                                console.log("RESPONSE: ", response.status);
-                                if (response.status === 401) {
-                                    setErrorMessage('Unauthorized, not a valid access token');
-                                } else {
-                                    setErrorMessage('Failed to connect with the server');
-                                }
-                            } else {
-                                response.json().then((data) => {
-                                    setUser(data);
-                                }).catch((error) => {
-                                    setError(true);
-                                    setErrorMessage(error);
-                                });
-                            }
-                        }).catch((error) => {
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + user.access_token,
+                        },
+                    }).then((response) => {
+                        setLoading(false);
+                        if (!response.ok) {
                             setError(true);
-                            setErrorMessage(error);
-                        }),
-                        fetch(API_GATEWAY + 'trainers/me/trainings', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + user.access_token,
-                            },
-                        }).then((response) => {
-                            if (response.ok) {
-                                response.json().then((data) => {
-                                    console.log("POSTS: ", data);
-                                    setPosts(data);
-                                }).catch((error) => {
-                                    setError(true);
-                                    setErrorMessage(error);
-                                });
+                            console.log("RESPONSE: ", response.status);
+                            if (response.status === 401) {
+                                setErrorMessage('Unauthorized, not a valid access token');
                             } else {
-                                setError(true);
-                                setErrorMessage('Failed to fetch posts');
+                                setErrorMessage('Failed to connect with the server');
                             }
-                        }).catch((error) => {
-                            setError(true);
-                            setErrorMessage(error);
-                        }),
-                    ]);
+                        } else {
+                            response.json().then(async (data) => {
+                                await handleSetUser(data,user)
+                            })
+                        }
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    })              
                 })
                 .catch((error) => {
                     setError(true);
@@ -115,7 +84,10 @@ function MenuProfileScreen({ navigation,route }) {
               </View>
             : <ScrollView style={{ flex: 1, backgroundColor: '#91AED4' }}>
                 <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
-                    <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                    { user.image  
+                        ? <Image source={{uri:user.image}} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                        : <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
+                    }  
                     <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Age: {user.age}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
@@ -123,7 +95,7 @@ function MenuProfileScreen({ navigation,route }) {
                 </View>
 
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ViewTrainings',{user : user, posts: posts ,reload:reload})}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
                     <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Trainings</Text>
                 </TouchableOpacity>
 
@@ -136,9 +108,9 @@ function MenuProfileScreen({ navigation,route }) {
                 </TouchableOpacity>
 
                 {error && (
-                <View style = {{alignItems:"center",marginTop:15}}>
-                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                </View>
+                    <View style = {{alignItems:"center",marginTop:15}}>
+                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                    </View>
                 )}
             </ScrollView>
           }

@@ -96,16 +96,19 @@ const UserFilters = ({search}) => {
     function getFilteredUsers() {
       if (!maxDistance) {
         return users.filter((user) => {
+
+          const notMyUser = myUser.mail != user.mail
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches  ;
+          return nameMatches && roleMatches && notMyUser ;
           });
       } else {
         return users.filter((user) => {
+          const notMyUser = myUser.mail =! user.mail
           const distanceMatches = calculateDistance(myUser.location,user.location)
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches && distanceMatches ;
+          return nameMatches && roleMatches && distanceMatches && notMyUser;
       });
       }
     }
@@ -137,7 +140,7 @@ const UserFilters = ({search}) => {
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}
-                        contentContainerStyle={{ paddingBottom: 30 }}
+                        contentContainerStyle={{ paddingBottom: 500 }}
                         renderItem={({ item }) => (
                             <UserListItem user = {item} myDistance = {myUser.location}/>
                         )}

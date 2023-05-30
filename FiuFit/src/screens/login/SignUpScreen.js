@@ -12,7 +12,8 @@ import {Ionicons} from 'react-native-vector-icons'
 import FiuFitLogo from '../../../assets/images/fiticon.png';
 import * as Location from 'expo-location';
 import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
-
+import CustomIconButton from '../../components/buttons/CustomIconButton';
+import { firebase } from '../../config/firebase';
 const {height} = Dimensions.get("window")
 const validator = require('validator');
 
@@ -139,23 +140,69 @@ const SignUpScreen = () => {
         return validator.isEmail(email)
     };
 
+    const validateNumber = (number) => {
+        return validator.isInt(number,{min:0})
+    };
+
+
     const validatePhoneNumber = (phoneNumber) => {
         return validator.isMobilePhone(phoneNumber)
     };
 
+
+    const onSignUpGoogle = async () => {
+            try {
+              const provider = new firebase.auth.GoogleAuthProvider();
+          
+              const { user: firebaseUser } = await firebase.auth().signInWithPopup(provider);
+          
+              // Crea el usuario en tu base de datos con los datos de Firebase
+              const userData = {
+                googleUserId: firebaseUser.uid,
+                email: firebaseUser.email,
+                // Otros datos que desees almacenar
+              };
+          
+              // Envía los datos al backend para el registro
+              await fetch('TU_URL_DEL_ENDPOINT_DE_REGISTRO', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+              });
+          
+              // El registro es exitoso, puedes redirigir o hacer otras acciones
+              console.log('Registro exitoso:', firebaseUser);
+            } catch (error) {
+              // Manejo de errores
+              console.log('Error de registro:', error);
+            }
+          
+      };
+    
+
     return (
 
         <View style={styles.root}>
-            <Image
-                source={FiuFitLogo}
-                style={ {width: "80%", height: height * 0.2,marginTop:10}}
-                resizeMode="contain"
-            />
+            
 
             {loading
-                ? <LoadingIndicator/>
+                ? <>
+                    <Image
+                        source={FiuFitLogo}
+                        style={ {width: "80%", height: height * 0.2,marginTop:10}}
+                        resizeMode="contain"
+                    />
+                    <LoadingIndicator/>
+                  </>
                 : <>
-                <Text style={styles.title}>Create an Account</Text>
+                    <Image
+                        source={FiuFitLogo}
+                        style={ {width: "60%", height: height * 0.1,marginTop:10}}
+                        resizeMode="contain"
+                    />
+                <Text style={[styles.title]}>Create an Account</Text>
                 <ScrollView >
                     <View style={{alignItems:"center",width:"100%"}}>
                     <CustomInput
@@ -196,9 +243,13 @@ const SignUpScreen = () => {
                         placeholder="Age"
                         control={control}
                         icon={"fitness"}
-                        rules = {{required:"This field is Required"}}
+                        rules = {{
+                            required:"This field is Required",
+                            validate: value => validateNumber(value) || "Not a valid number"
+                        }}
                         otherError={error}
                         width={"100%"}
+                        keyboardType='numeric'
                     />
 
                     <CustomInput
@@ -209,7 +260,7 @@ const SignUpScreen = () => {
                         width={"100%"}
                         rules = {{
                             required:"This field is Required",
-                            validate: value => validatePhoneNumber(value) || "Not an valid phone number"}}
+                            validate: value => validatePhoneNumber(value) || "Not a valid phone number"}}
                             otherError={error}
                     />
 
@@ -259,33 +310,31 @@ const SignUpScreen = () => {
                             style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
                         />
                     </View>
-                    </View>
-                    </ScrollView>
-                    <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)} />
+                    
+                    <CustomButton text="Register" onPress={handleSubmit(onRegisterPressed)}  containerWidth="100%" />
                     {error && (
                         <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
                     )}
 
-                {/* 
-                    <View style={[styles.container]} >
-                        <Text style={styles.text}>
-                            By registering, you confirm that you accept our{' '}
-                            <Text style={styles.link} onPress={onTermsOfUsePressed}>
-                                Terms of Use
-                            </Text>{' '}
-                            and{' '}
-                            <Text style={styles.link} onPress={onPrivacyPressed}>
-                                Privacy Policy
-                            </Text>
-                            .
-                        </Text>
-                    </View>*/}
+                    <CustomIconButton
+                            text="Sign Up with Google "
+                            onPress={onSignUpGoogle}
+                            bgColor="crimson"
+                            fgColor="white"
+                            icon= "logo-google"
+                            iconColor="white"
+                            containerWidth="100%"
+                    />
 
                     <CustomButton
                         text="Have an account? Sign in"
                         onPress={onSignInPress}
                         type="TERTIARY"
+                       
                     />
+                    </View>
+                </ScrollView>
+                   
                 </>
             }
         </View>

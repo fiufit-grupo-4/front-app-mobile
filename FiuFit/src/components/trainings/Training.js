@@ -38,7 +38,7 @@ const Training = ({user, item, canEdit, reload}) => {
     // EDITA POST
     const handleEdit = (item) => {
         setSelectedPost(item);
-        navigation.navigate('EditTrainingScreen', {post: item});
+        navigation.navigate('Edit Training', {post: item});
     }
 
     function onPress() {
@@ -126,7 +126,7 @@ const Training = ({user, item, canEdit, reload}) => {
 
                     {topContent(canEdit, handleEdit, item)}
 
-                    {trainingPlace(item)}
+                    {/*{trainingPlace(item)}*/}
 
                     {trainingPrincipalContent(item, toggleModal)}
 
@@ -156,9 +156,10 @@ const Training = ({user, item, canEdit, reload}) => {
 
 const styles = StyleSheet.create({
     background: {
-        paddingVertical: 6,
         //backgroundColor: 'rgba(222,233,248,0.29)'
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        paddingTop:15,
+        paddingHorizontal:10
     },
     postContainer: {
         backgroundColor: 'white',
