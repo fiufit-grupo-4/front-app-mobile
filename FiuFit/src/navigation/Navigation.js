@@ -19,7 +19,7 @@ import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
 import UserProfile from '../screens/search/UserProfile';
 import TrainingProfile from '../screens/search/TrainingProfile';
 import ViewTrainings from "../screens/training/ViewTrainings";
-
+import Prueba from "../screens/login/Prueba";
 
 
 const Stack = createNativeStackNavigator();
@@ -29,6 +29,7 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
+                    {/*<Stack.Screen name="Prueba" component={Prueba} options={{ headerShown: false }} /> */}
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
 

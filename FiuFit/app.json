@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/fiticon.png",
     "userInterfaceStyle": "light",
+    "scheme":"fiufit",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
