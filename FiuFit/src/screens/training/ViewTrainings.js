@@ -88,6 +88,15 @@ function ViewTrainings({ navigation,route }) {
             }         
         </>
         
+      {/* 
+        <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => (
+                <Training user={user} item={item} canEdit={true} reload={reload}/>
+            )}
+        />
+      */}
     )
 }
 

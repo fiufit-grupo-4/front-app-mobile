@@ -4,6 +4,7 @@ import {StackActions} from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Screens} from "../../navigation/Screens";
 import {USER, API_GATEWAY } from '../../utils/constants';
+
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
     const [user, setUser] = useState({});

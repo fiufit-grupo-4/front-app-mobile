@@ -8,10 +8,71 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import React from "react";
+import React, {useState} from "react";
 import {Ionicons} from "react-native-vector-icons";
+import {API_GATEWAY, USER} from "../../utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useNavigation} from "@react-navigation/native";
 
-export function getComments(handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, handleAddComment) {
+
+export function getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload) {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const navigation = useNavigation();
+
+    const handleAddComment = () => {
+        const newComment = {
+            user: user.name,
+            content: commentText,
+        };
+        const updatedComments = [...item.comments, newComment];
+        //setItem({ ...item, comments: updatedComments });
+        //setCommentText('');
+        let url = API_GATEWAY + "trainings/" + item.id + "/comment"
+        setLoading(true);
+        setError(false)
+        //let image = profilePicture ? profilePicture : user.image
+        AsyncStorage.getItem(USER).then((item) => {
+            let userInfo = JSON.parse(item)
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userInfo.access_token,
+                },
+                body: JSON.stringify({
+                    "detail": commentText
+                })
+            }).then((response) => {
+                setLoading(false);
+                console.log(JSON.stringify(response))
+                if (!response.ok) {
+                    setError(true);
+                    if (response.status === 401) {
+                        setErrorMessage('Unauthorized, not a valid access token');
+                    } else {
+                        setErrorMessage('Failed to connect with the server');
+                    }
+                } else {
+                    response.json().then((data) => {
+                        console.log(JSON.stringify(data))
+                        navigation.navigate("Home", {reload: !reload})
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    });
+                }
+            })
+        }).catch((error) => {
+            setError(true);
+            setErrorMessage(error);
+        })
+        setCommentText('');
+    }
+
+
     return <>
         {/* COMENTARIOS */}
         <TouchableWithoutFeedback onPress={handleComment}>
@@ -28,9 +89,9 @@ export function getComments(handleComment, showCommentPopup, toggleCommentPopup,
             <View style={styles.commentPopUp}>
                 <ScrollView>
                     {item.comments && item.comments.map((comment) => {
-                        return (<View key={comment.user + comment.content}>
-                            <Text style={styles.commentUsername}>{comment.user}</Text>
-                            <Text style={styles.commentContent}>{comment.content}</Text>
+                        return (<View key={comment.user.name + " " + comment.user.lastname}>
+                            <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
+                            <Text style={styles.commentContent}>{comment.detail}</Text>
                         </View>);
                     })}
                 </ScrollView>
@@ -109,7 +170,7 @@ const styles = StyleSheet.create({
     },
     sendCommentIcon:{
         fontSize:20,
-        marginVertical:30,
+        marginVertical:40,
         marginRight: 18,
         alignSelf: 'flex-end',
     },
