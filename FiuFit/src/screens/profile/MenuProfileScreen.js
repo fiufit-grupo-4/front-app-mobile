@@ -3,7 +3,10 @@ import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndic
 import {StackActions} from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Screens} from "../../navigation/Screens";
-import {USER, API_GATEWAY } from '../../utils/constants';
+import {USER, API_GATEWAY ,ADMIN,ATHLETE,TRAINER} from '../../utils/constants';
+import {Ionicons} from 'react-native-vector-icons'
+
+
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
@@ -12,6 +15,18 @@ function MenuProfileScreen({ navigation,route }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [isFollowing, setIsFollowing] = useState(false);
+
+  const handleFollow = () => {
+    setIsFollowing(!isFollowing);
+  };
+  const renderTableRow = ({ item }) => (
+    <View style={styles.tableRow}>
+      <Text style={styles.tableCell}>{item.name}</Text>
+      <Text style={styles.tableCell}>{item.value}</Text>
+      </View>
+  );
 
     async function handleSetUser(newData,oldData){
         const updateUser = {
@@ -27,7 +42,8 @@ function MenuProfileScreen({ navigation,route }) {
             "location":newData.location,
             "access_token":oldData.access_token,
             "token_type":oldData.token_type,
-            "id": newData.id
+            "id": newData.id,
+            "verified": newData.verification.verified
         }
         //console.log(JSON.stringify(updateUser))
         setUser(updateUser)
@@ -60,6 +76,7 @@ function MenuProfileScreen({ navigation,route }) {
                             }
                         } else {
                             response.json().then(async (data) => {
+                                console.log(data)
                                 await handleSetUser(data,user)
                             })
                         }
@@ -76,19 +93,94 @@ function MenuProfileScreen({ navigation,route }) {
         getUsers();
         }, [reload])
 
+        function getRole(role){
+            if (role == ADMIN){
+                return "Admin"
+            } else if (role == TRAINER){
+                return "Trainer"
+            } else if (role == ATHLETE){
+                return "Athlete"
+            } else {
+                return "Undefined"
+            }
+           }
+
     return (
         <>
         { loading 
             ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            : <ScrollView style={{ flex: 1, backgroundColor: '#91AED4' }}>
+            : <ScrollView style={{ flex: 1 }}>
+                {/* 
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <View style={styles.profileInfo}>
+                        { user.image  
+                            ? <Image source={{uri:user.image}} style={styles.profileImage}/>
+                            : <Image
+                                style={styles.profileImage}
+                                source={require('../../../assets/images/profilepic.jpeg')}
+                            />
+                        }  
+                        <View style={styles.nameContainer}>
+                            <Text style={styles.name}>{user.name + " " +user.lastname}</Text>
+                            <Text style={styles.role}>{getRole(user.role)}</Text>
+                            
+                        </View>
+                        </View>
+                    </View>
+                    <View style={styles.buttonsContainer}>
+                        <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
+                            <Text style={ styles.followButtonText }>Edit Profile</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
+                            <Text style={styles.followButtonText}>Edit Password</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                        
+                    <View style={styles.followersContainer}>
+                        <Text style={styles.followersCount}>Followers: 100</Text>
+                        <Text style={styles.followingCount}>Following: 50</Text>
+                    </View>
+
+                    <View style={styles.tableContainer}>
+                        <View style={styles.tableHeader}>
+                            <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
+                         </View>
+                        <View style={styles.tableHeader}>
+                            <Text style={styles.tableHeaderCell}>Email: {user.mail}</Text>
+                        </View>
+                        <View style={styles.tableHeader}>
+                            <Text style={styles.tableHeaderCell}>Age: {user.age}</Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
+                    <Text style={styles.followButtonText}>Trainings</Text>
+                    </TouchableOpacity>
+                </View>
+
+                */}
+
+
+
                 <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
                     { user.image  
                         ? <Image source={{uri:user.image}} style={{ width: 200, height: 200, borderRadius: 100 }} />
                         : <Image source={require('../../../assets/images/profilepic.jpeg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
                     }  
-                    <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>{user.name + " " + user.lastname}</Text>
+                    <Text style={{ fontSize: 18, color: '#172D34', fontWeight: 'bold', marginTop: 20 }}>
+                        {user.name + " " + user.lastname + " "}
+                        { user.verified && (
+                            <Ionicons name={"checkmark-done-outline"} size={22} color={"lightblue"} />
+                        )
+                        }
+                        
+                        
+                    </Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Age: {user.age}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20, alignItems: 'flex-start'}}>Email: {user.mail}</Text>
                     <Text style={{ fontSize: 18, color: '#172D34', marginTop: 20,  alignItems: 'flex-start' }}>Number: {user.phone_number}</Text>
@@ -96,11 +188,11 @@ function MenuProfileScreen({ navigation,route }) {
 
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
-                    <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Trainings</Text>
+                    <Text style={styles.buttonText}>Trainings</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
-                    <Text style={{ fontSize: 18, color: 'rgba(23,29,52,0.93)', textAlign: 'center' }}>Edit Profile</Text>
+                    <Text style={ styles.buttonText }>Edit Profile</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
@@ -123,15 +215,128 @@ export default MenuProfileScreen;
 
 const styles = StyleSheet.create({
     buttonText: {
-        fontSize: 18,
+        fontSize: 16,
         color: 'rgba(23,29,52,0.93)',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     button: {
         backgroundColor: '#DEE9F8FF',
-        borderRadius: 20,
+        borderRadius: 10,
         paddingVertical: 10,
         marginTop:20,
         marginHorizontal: 40
-    }
+    },container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor:"#91AED4",
+        
+      },
+      header: {
+        marginTop:20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+      },
+      profileInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      profileImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+      },
+      nameContainer: {
+        marginLeft: 10,
+      },
+      name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+      },
+      role: {
+        fontSize: 16,
+      },
+      buttonsContainer: {
+        justifyContent: "center",
+        flexDirection: 'row',
+        padding: 5,
+        marginBottom:10
+      },
+      followButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        backgroundColor: 'black',
+        borderRadius: 5,
+        marginRight: 10,
+      },
+      followButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      messageButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        backgroundColor: '#788FAD',
+        borderRadius: 5,
+        marginRight: 10,
+      },
+    
+      payButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        backgroundColor: '#788FAD',
+        borderRadius: 5,
+      },
+      messageButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        
+        fontWeight: 'bold',
+      },
+      followersContainer: {
+        flexDirection: 'row',
+        justifyContent: "center",
+        backgroundColor: '#788FAD',
+        borderTopWidth:1,
+        borderBottomWidth:1,
+        padding:8,
+        marginBottom:5
+      },
+      followersCount: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginRight: 100,
+      },
+      followingCount: {
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      tableContainer: {
+        flex: 1,
+        
+      },
+      tableHeader: {
+        flexDirection: 'row',
+        backgroundColor: '#788FAD',
+        paddingVertical: 10,
+        borderTopWidth:1,
+        borderBottomWidth:1,
+        marginTop:5,
+        marginBottom:5
+      },
+      tableHeaderCell: {
+        fontWeight: 'bold',
+        paddingLeft:10
+      },
+      tableRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: '#CCCCCC',
+        paddingVertical: 10,
+      },
+      tableCell: {
+        flex: 1,
+        textAlign: 'center',
+      },
 })

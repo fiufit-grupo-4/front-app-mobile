@@ -67,7 +67,7 @@ function ViewTrainings({ navigation,route }) {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({item}) => (
                             <View style={{marginTop:10 }}>
-                                <Training user={user} item={item} canEdit={true}/>
+                                <Training user={user} item={item} canEdit={true} reload={true}/>
                             </View>
                         )}
                         />
@@ -84,19 +84,10 @@ function ViewTrainings({ navigation,route }) {
                     )}
                 </>
                 
-                
             }         
         </>
         
-      {/* 
-        <FlatList
-            data={posts}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({item}) => (
-                <Training user={user} item={item} canEdit={true} reload={reload}/>
-            )}
-        />
-      */}
+      
     )
 }
 
