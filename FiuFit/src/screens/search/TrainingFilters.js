@@ -20,7 +20,8 @@ const TrainingFilters = ({search}) => {
   const [trainings,setTrainings] =  useState([]);
   const [difficulty, setDifficulty] = useState(5);
   const [lastDifficulty, setLastDifficulty] = useState(5);
-  const [cancel,setCancel]= useState(false)
+  const [cancel,setCancel]= useState(false);
+  const [userData, setUserData] = useState(null);
 
   const handleMinDifficultyChange = (value) => {
     setMinDifficulty(value);
@@ -49,6 +50,7 @@ const TrainingFilters = ({search}) => {
         setLoading(true)
         AsyncStorage.getItem(USER).then((item) => {
             let userInfo = JSON.parse(item)
+            setUserData(userInfo)
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -133,7 +135,7 @@ const TrainingFilters = ({search}) => {
                         keyExtractor={(item) => item.id.toString()}
                         contentContainerStyle={{ paddingBottom: 400 }}
                         renderItem={({ item }) => (
-                            <TrainingListItem item={item} />
+                            <TrainingListItem item={item} user={userData} />
                         )}
                     />
                   {error && (

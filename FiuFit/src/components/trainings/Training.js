@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {getCalification} from "../../screens/training/RateTraining";
+import {getCalification, likeTraining} from "../../screens/training/RateTraining";
 import {favouriteTraining} from "../../screens/training/FavouriteTraining";
 import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
 import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
@@ -22,6 +22,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [showStars, setShowStars] = useState(false);
     const [selectedStars, setSelectedStars] = useState(0);
     const [isFavorite, setIsFavorite] = useState(fav);
+    const [postLiked, setPostLiked] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -56,25 +57,97 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
         toggleCommentPopup();
     };
 
-    // CALIFICACION
-    const handleRate = (value) => {
-        setRating(value);
+    /*LIKES*/
+    const isliked = (item, user) => {
+        const scoreList = item.scores;
+        scoreList.map((score) => {
+            console.log("SCORE: ", score)
+            console.log("USER: ", user)
+            console.log("USER ID: ", user.id)
 
-        axios.post('/api/posts/rate', {
-            postId: item.id,
-            rating: value,
-        }).then((response) => {
-            // Handle the response from the server
-        }).catch((error) => {
-            console.error(error);
+/*            if (score.user.id === user.id) {
+                return true;
+                //setPostLiked(true);
+                //setIsLike(true);
+            }*/
         });
-    };
+        return false;
+    }
 
-    const handleStarPress = (value) => {
-        setSelectedStars(value);
-        setShowStars(false);
-    };
+    const [isLike, setIsLike] = useState(isliked(item, user));
 
+    const handleAddLike = async () => {
+        console.log(item.id)
+        console.log(item.scores)
+        let url = API_GATEWAY + 'trainings/' + item.id + '/score';
+        setIsLike(true)
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+            body: JSON.stringify({
+                "qualification": 1
+            })
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+    }
+
+    const handleDeleteLike = async () => {
+        setIsLike(false)
+        console.log(item.id)
+        let url = API_GATEWAY + 'trainings/' + item.id + '/score';
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+
+    }
+
+    const handleLikePress = () => {
+        isLike? handleDeleteLike() : handleAddLike()
+    }
+
+    /*FAVORITES*/
     const handleAddFavorite = async () => {
         console.log(item.id)
         let url = API_GATEWAY + "users/me/trainings/" + item.id
@@ -157,11 +230,17 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
-                        {/* COMENTATIOS */}
-                        {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            {/* COMENTATIOS */}
+                            {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
+
+                            {/* LIKES */}
+                            {likeTraining(handleLikePress, isLike)}
+                        </View>
 
                         {/* FAVORITOS */}
                         {favouriteTraining(handleFavoritePress, isFavorite)}
+
 
                     </View>
 
@@ -169,7 +248,6 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
                     {trainingContent(item)}
 
 
-                    {getCalification(handleStarPress, handleRate, item)}
 
 
                 </View>

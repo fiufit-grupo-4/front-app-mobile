@@ -5,7 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { API_GATEWAY,USER } from "../../utils/constants";
 
 const TrainingProfile = ( {route} ) => {
-    const {item} = route.params
+    const {item, user} = route.params
     const [training,setTraining] = useState(null)
     const isFocused = useIsFocused();
 
@@ -47,7 +47,7 @@ const TrainingProfile = ( {route} ) => {
 
         <View style={{ padding: 1, marginHorizontal:10,marginTop:10  }}>
             <ScrollView>
-                 <Training item =  {item} canEdit={false}> </Training>
+                 <Training item =  {item} user={user} canEdit={false}> </Training>
             </ScrollView>
             
         </View>
