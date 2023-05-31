@@ -1,3 +1,4 @@
+
 import {
     Modal,
     ScrollView,
@@ -8,46 +9,56 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Ionicons} from "react-native-vector-icons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useNavigation} from "@react-navigation/native";
 
-
 export function getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [comments, setComments] = useState(item.comments);
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigation = useNavigation();
 
     const handleAddComment = () => {
+        if (!commentText) {
+            // Don't add an empty comment
+            return;
+        }
+
         const newComment = {
-            user: user.name,
-            content: commentText,
+            user: {
+                name: user && user.name ? user.name : "Unknown",
+                lastname: user && user.lastname ? user.lastname : "User",
+            },
+            detail: commentText,
         };
-        const updatedComments = [...item.comments, newComment];
-        //setItem({ ...item, comments: updatedComments });
-        //setCommentText('');
-        let url = API_GATEWAY + "trainings/" + item.id + "/comment"
+        const updatedComments = [...comments, newComment];
+        setComments(updatedComments);
+        let url = API_GATEWAY + "trainings/" + item.id + "/comment";
         setLoading(true);
-        setError(false)
-        //let image = profilePicture ? profilePicture : user.image
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-                body: JSON.stringify({
-                    "detail": commentText
-                })
-            }).then((response) => {
+        setError(false);
+
+        AsyncStorage.getItem(USER)
+            .then((item) => {
+                let userInfo = JSON.parse(item);
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + userInfo.access_token,
+                    },
+                    body: JSON.stringify({
+                        "detail": commentText
+                    })
+                });
+            })
+            .then((response) => {
                 setLoading(false);
-                console.log(JSON.stringify(response))
+                console.log(JSON.stringify(response));
                 if (!response.ok) {
                     setError(true);
                     if (response.status === 401) {
@@ -56,19 +67,18 @@ export function getComments(user, handleComment, showCommentPopup, toggleComment
                         setErrorMessage('Failed to connect with the server');
                     }
                 } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        navigation.navigate("Home", {reload: !reload})
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
+                    return response.json();
                 }
             })
-        }).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        })
+            .then((data) => {
+                console.log(JSON.stringify(data));
+                navigation.navigate(0, { reload: !reload });
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorMessage(error);
+            });
+
         setCommentText('');
     }
 
@@ -88,11 +98,13 @@ export function getComments(user, handleComment, showCommentPopup, toggleComment
 
             <View style={styles.commentPopUp}>
                 <ScrollView>
-                    {item.comments && item.comments.map((comment) => {
-                        return (<View key={comment.user.name + " " + comment.user.lastname}>
-                            <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
-                            <Text style={styles.commentContent}>{comment.detail}</Text>
-                        </View>);
+                    {comments && comments.map((comment, index) => { // Add index as second argument
+                        return (
+                            <View key={index}>
+                                <Text style={styles.commentUsername}>{comment.user.name + " " + comment.user.lastname}</Text>
+                                <Text style={styles.commentContent}>{comment.detail}</Text>
+                            </View>
+                        );
                     })}
                 </ScrollView>
 

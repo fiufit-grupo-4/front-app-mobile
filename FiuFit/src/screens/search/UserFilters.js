@@ -40,9 +40,10 @@ const UserFilters = ({search}) => {
       
   }
   useEffect(() => {
-    const url = API_GATEWAY + 'users/'
+    const url = API_GATEWAY + 'users'
     async function getUsers() {
         setLoading(true)
+        setError(false)
         AsyncStorage.getItem(USER).then((item) => {
             let userInfo = JSON.parse(item)
             setMyUser(userInfo)
@@ -55,6 +56,7 @@ const UserFilters = ({search}) => {
             }).then((response) => {
                 setLoading(false);
                 if (!response.ok) {
+                    console.log(response.status)
                     setError(true);
                     if (response.status === 401) {
                         setErrorMessage('Unauthorized, not a valid access token');

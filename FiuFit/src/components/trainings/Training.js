@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {getCalification} from "../../screens/training/RateTraining";
+import {getCalification, likeTraining} from "../../screens/training/RateTraining";
 import {favouriteTraining} from "../../screens/training/FavouriteTraining";
 import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
 import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
 
 
-const Training = ({user, item, canEdit, reload}) => {
+const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
@@ -21,7 +21,8 @@ const Training = ({user, item, canEdit, reload}) => {
     const [showCommentPopup, setShowCommentPopup] = useState(false);
     const [showStars, setShowStars] = useState(false);
     const [selectedStars, setSelectedStars] = useState(0);
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(fav);
+    const [postLiked, setPostLiked] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -56,66 +57,150 @@ const Training = ({user, item, canEdit, reload}) => {
         toggleCommentPopup();
     };
 
-    // CALIFICACION
-    const handleRate = (value) => {
-        setRating(value);
-
-        axios.post('/api/posts/rate', {
-            postId: item.id,
-            rating: value,
-        }).then((response) => {
-            // Handle the response from the server
-        }).catch((error) => {
-            console.error(error);
-        });
+    /*LIKES*/
+    const isliked = (item, user) => {
+        return item.scores.some((score) => (score.user.id === user.id));
     };
 
-    const handleStarPress = (value) => {
-        setSelectedStars(value);
-        setShowStars(false);
-    };
+    const [isLike, setIsLike] = useState(isliked(item, user));
 
-    // AGREGAR/SACAR DE FAVORITOS
+    const handleAddLike = async () => {
+        console.log(item.id)
+        console.log(item.scores)
+        let url = API_GATEWAY + 'trainings/' + item.id + '/score';
+        setIsLike(true)
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+            body: JSON.stringify({
+                "qualification": 1
+            })
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+    }
+
+    const handleDeleteLike = async () => {
+        setIsLike(false)
+        console.log(item.id)
+        let url = API_GATEWAY + 'trainings/' + item.id + '/score';
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+
+    }
+
+    const handleLikePress = () => {
+        isLike? handleDeleteLike() : handleAddLike()
+    }
+
+    /*FAVORITES*/
+    const handleAddFavorite = async () => {
+        console.log(item.id)
+        let url = API_GATEWAY + "users/me/trainings/" + item.id
+        setIsFavorite(true)
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+    }
+
+    const handleDeleteFavorite = async () => {
+        setIsFavorite(false)
+        console.log(item.id)
+        let url = API_GATEWAY + "users/me/trainings/" + item.id
+        setLoading(true);
+        setError(false)
+        let storage = await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(storage)
+        let response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + userInfo.access_token,
+            },
+        })
+        setLoading(false);
+
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+
+    }
 
     const handleFavoritePress = () => {
-        setIsFavorite(!isFavorite);
-        AsyncStorage.getItem(USER).then((item1) => {
-            let user = JSON.parse(item1)
-            let url = API_GATEWAY + "users/me/trainings/" + item.id
-            setLoading(true)
-            setError(false)
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + user.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        //navigation.goBack();
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-            })
-        }).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        })
+        isFavorite? handleDeleteFavorite() : handleAddFavorite()
     }
 
 
@@ -133,11 +218,17 @@ const Training = ({user, item, canEdit, reload}) => {
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
-                        {/* COMENTATIOS */}
-                        {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            {/* COMENTATIOS */}
+                            {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
+
+                            {/* LIKES */}
+                            {likeTraining(handleLikePress, isLike)}
+                        </View>
 
                         {/* FAVORITOS */}
                         {favouriteTraining(handleFavoritePress, isFavorite)}
+
 
                     </View>
 
@@ -145,7 +236,6 @@ const Training = ({user, item, canEdit, reload}) => {
                     {trainingContent(item)}
 
 
-                    {getCalification(handleStarPress, handleRate, item)}
 
 
                 </View>

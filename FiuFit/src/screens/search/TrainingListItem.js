@@ -4,16 +4,17 @@ import {useNavigation} from '@react-navigation/native';
 import Training from "../../components/trainings/Training";
 import CustomButton from '../../components/buttons/CustomButton';
 
-const TrainingListItem = ({ item }) => {
+const TrainingListItem = ({ item, user }) => {
   const navigation = useNavigation();
+  
   function handleOnPress() {
-    navigation.navigate("Training Profile", {item:item})
+    navigation.navigate("Training Profile", {item:item, user:user})
   }
   return (
     
     <View style={styles.container}>
         <TouchableOpacity onPress={handleOnPress}>
-            <Training item={item} canEdit={false} />
+            <Training item={item} user={user} canEdit={false} />
         </TouchableOpacity>   
     </View>
     

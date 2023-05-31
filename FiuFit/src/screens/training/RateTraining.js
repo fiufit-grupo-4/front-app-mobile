@@ -15,7 +15,7 @@ const Rating = ({ onRate }) => {
         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
             {[1, 2, 3, 4, 5].map((value) => (
                 <TouchableWithoutFeedback key={value} onPress={() => handleRate(value)}>
-                    <Icon name={value <= rating ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                    <Icon name={value <= rating ? 'heart' : 'heart-outline'} size={18} color="red" />
                 </TouchableWithoutFeedback>
             ))}
             <Text style={{ marginLeft: 10 }}>{rating > 0 ? ' ' + ' ' : ' '}</Text>
@@ -23,15 +23,25 @@ const Rating = ({ onRate }) => {
     );
 };
 
+export function likeTraining(handleFavoritePress, isLiked) {
+    return <TouchableWithoutFeedback onPress={handleFavoritePress}>
+        <View>
+            <Ionicons
+                name={isLiked ? 'md-heart-sharp' : 'md-heart-outline'}
+                style={{fontSize: 24, padding: 7, alignItems: 'center'}}
+            />
+        </View>
+    </TouchableWithoutFeedback>;
+}
 
-export function getCalification(handleStarPress, handleRate, item) {
+export function getCalification(handleHeartPress, handleNewRate, item) {
     return <>
         {/* Calificacion */}
         <View style={{flexDirection: 'row'}}>
-            <TouchableWithoutFeedback onPress={handleStarPress}>
+            <TouchableWithoutFeedback onPress={handleHeartPress}>
                 <Ionicons name={"md-ribbon-outline"} style={styles.qualifyIcon}/>
             </TouchableWithoutFeedback>
-            <Rating onRate={handleRate}/>
+            <likeTraining onRate={handleNewRate}/>
             {/*<Text style={{
                 paddingHorizontal: 20,
                 paddingVertical: 15,
