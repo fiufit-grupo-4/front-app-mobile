@@ -43,6 +43,10 @@ class Mocked {
           }
           
     }
+
+    responseOk(){
+        return {"ok":true,"status":200}
+    }
 }
 
 export default new Mocked()

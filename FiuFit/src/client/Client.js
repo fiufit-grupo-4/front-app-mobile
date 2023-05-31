@@ -1,8 +1,63 @@
 import { ATHLETE,TRAINER,API_GATEWAY,USER,MOCK } from '../utils/constants';
 import Mocked from './Mocked';
+import { getErrorMessage} from '../utils/getters';
 
 class ApiClient {
-    
+
+    async getMyUserInfo(access_token){
+      if (MOCK) return Mocked.getUserInfo()
+      const url = API_GATEWAY + 'users/me'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        let errorMessage = getErrorMessage(response.status)
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+    async editUserInfo(user,name,lastName,age,image,location){
+      let url = API_GATEWAY + "users/" + user.id
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+            "name": name,
+            "lastname": lastName,
+            "age": age ,
+            "image" : image,
+            "location" : location
+        })
+      })
+      return response
+    }
+
+    async editUserPassword(user,password){
+      let url = API_GATEWAY + "users/" + user.id
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+            "password": password,
+        })
+    })
+      return response
+    }
+
+
+
     async signIn(data,role){
       if (MOCK) return Mocked.getUserInfo()
       let url = API_GATEWAY + 'login';
@@ -98,6 +153,22 @@ class ApiClient {
       })
       return response
     }
+
+    async certify(access_token,uri){
+      if( MOCK) return Mocked.responseOk()
+      let url = API_GATEWAY + "users/me/verification" 
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({
+            "video": uri,
+        })
+      })
+      return response
+    } 
 }
 
 export default new ApiClient()

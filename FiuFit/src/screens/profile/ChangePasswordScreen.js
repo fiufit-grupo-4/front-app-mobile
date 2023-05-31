@@ -5,10 +5,18 @@ import {
     TouchableOpacity,
     Text,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator,
+    Image,
+    TouchableWithoutFeedback,
+    ToastAndroid
 } from 'react-native';
 import {StackActions, useNavigation} from "@react-navigation/native";
-import { API_GATEWAY,USER } from '../../utils/constants';
+import { PasswordVisibility } from '../../utils/PasswordVisibility';
+import {Ionicons} from 'react-native-vector-icons'
+import Client from '../../client/Client';
+import { getErrorMessage } from '../../utils/getters';
+import FiuFitLogo from '../../../assets/images/fiticon.png';
+
 
 const ChangePasswordScreen = ({route}) => {
     const {user,reload} = route.params
@@ -21,8 +29,10 @@ const ChangePasswordScreen = ({route}) => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigation = useNavigation();
+    const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
+        PasswordVisibility();
 
-    const handlePasswordChange = () => {
+    const handlePasswordChange = async () => {
         if (newPassword == '' ){
             setPasswordNullError(true)
             return
@@ -33,9 +43,23 @@ const ChangePasswordScreen = ({route}) => {
         } else {
             setPasswordMatchError(false);
             setPasswordNullError(false)
-            let url = API_GATEWAY + "users/" + user.id
-            setLoading(true);
             setError(false)
+            setLoading(true);
+            let response = await Client.editUserPassword(user,newPassword)
+            setLoading(false);
+            if (!response.ok) {
+                setError(true);
+                setErrorMessage(getErrorMessage(response.status))
+            } else {
+                let data = await response.json()
+                console.log(JSON.stringify(data))     
+                ToastAndroid.show('Password changed successfully!', ToastAndroid.SHORT)           
+                navigation.navigate("Profile",{reload:!reload})
+            }
+        }
+
+
+            /*
             fetch(url, {
                 method: 'PATCH',
                 headers: {
@@ -57,7 +81,8 @@ const ChangePasswordScreen = ({route}) => {
                     }
                 } else {
                     response.json().then((data) => {
-                        console.log(JSON.stringify(data))                
+                        console.log(JSON.stringify(data))     
+                        ToastAndroid.show('Password changed successfully!', ToastAndroid.SHORT)           
                         navigation.navigate("Profile",{reload:!reload})
                     }).catch((error) => {
                         setError(true);
@@ -66,7 +91,7 @@ const ChangePasswordScreen = ({route}) => {
                 }}).catch((error) => {
                     setError(true);
                     setErrorMessage(error);
-                })
+                })*/
             /*
             setPasswordChangeSuccess(true);
             setPasswordChangeError(false);
@@ -77,39 +102,56 @@ const ChangePasswordScreen = ({route}) => {
             navigation.dispatch(
                 StackActions.pop(1)
             );*/
-        }
-    };
+    }
 
     return (
         <View style={styles.container}>
+
+
+            <Image
+                source={FiuFitLogo}
+                style={{marginTop:20,height:200,width:200,marginBottom:50}}
+                resizeMode="contain"
+            />
             <Text style={styles.title}>Change Password</Text>
             {passwordChangeSuccess && (
                 <Text style={styles.successMessage}>Password changed successfully!</Text>
             )}
 
-            <TextInput
-                style={styles.input}
+            <View style={[ styles.containerPassword ]}>
+              <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
+                  <Ionicons name={rightIcon} style= {[styles.iconPassword]} size ={25}/>
+              </TouchableWithoutFeedback>
+              <TextInput
+                style={styles.inputPassword}
                 placeholder="New Password"
                 value={newPassword}
-                secureTextEntry={false}
                 onChangeText={(text) =>{
                     setPasswordNullError(false)
                     setPasswordMatchError(false)
                     setNewPassword(text)
                 }}
-            />
-            <TextInput
-                style={styles.input}
+                secureTextEntry={passwordVisibility}
+              />
+            </View>
+
+            <View style={[ styles.containerPassword ]}>
+              <TouchableWithoutFeedback onPress={handlePasswordVisibility}>
+                  <Ionicons name={rightIcon} style= {[styles.iconPassword]} size ={25}/>
+              </TouchableWithoutFeedback>
+              <TextInput
+                style={styles.inputPassword}
                 placeholder="Confirm New Password"
                 value={confirmPassword}
-                secureTextEntry={false}
                 onChangeText={(text) =>{
-                 setPasswordNullError(false)
-                 setPasswordMatchError(false)
-                 setConfirmPassword(text)
-                 }
-                }
-            />
+                    setPasswordNullError(false)
+                    setPasswordMatchError(false)
+                    setConfirmPassword(text)
+                }}
+                secureTextEntry={passwordVisibility}
+              />
+            </View>
+
             {passwordMatchError && (
                 <Text style={styles.errorMessage}>Passwords do not match.</Text>
             )}
@@ -121,9 +163,11 @@ const ChangePasswordScreen = ({route}) => {
               ? <View style={{marginTop:50, marginHorizontal: 40}}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
-              : <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
-                    <Text style={styles.buttonText}>Confirm</Text>
-                </TouchableOpacity>
+              :<View style={{ alignItems: 'center', padding: 20,width:"100%" }}>
+                    <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
+                        <Text style={styles.buttonText}>Confirm</Text>
+                    </TouchableOpacity>
+                </View>
             }
 
             {error && (
@@ -145,7 +189,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 40,
     },
     input: {
         width: '80%',
@@ -159,17 +203,18 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 18,
-        color: 'rgba(23,29,52,0.93)',
+        color: 'white',
         textAlign: 'center',
         fontWeight:"bold"
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
-        borderRadius: 20,
+        backgroundColor: 'black',
+        borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 60,
         marginTop:30,
-        marginHorizontal: 40
+        marginHorizontal: 40,
+        width:"80%"
     },
     successMessage: {
         color: 'green',
@@ -180,6 +225,39 @@ const styles = StyleSheet.create({
         color: 'red',
         fontWeight: 'bold',
         marginBottom: 3
-    }})
+    },containerPassword: {
+        width:"70%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 15,
+        height:45,
+        padding:5,
+        marginBottom:15,
+        marginTop:15,
+        borderBottomWidth:1,
+        borderColor: '#ccc',
+      },
+      inputPassword: {
+        fontSize: 15,
+        width: '100%',
+        borderRadius: 15,
+        paddingHorizontal: 5,
+        height: 20,
+        flex:1,
+      },
+    
+      iconPassword: {
+        paddingHorizontal: 5,
+        alignItems:"center",
+        color: "gray",
+      },
+
+
+
+
+
+
+
+})
 
 export default ChangePasswordScreen;

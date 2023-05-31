@@ -5,19 +5,19 @@ import {
     TextInput,
     Button,
     Image,
-    TouchableWithoutFeedback,
+    ToastAndroid,
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet
 } from 'react-native';
-
+import { getErrorMessage } from '../../utils/getters';
 import {Ionicons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import { API_GATEWAY } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 import * as ImagePicker from 'expo-image-picker';
 import { getLocation } from '../../utils/locations';
-
+import Client from '../../client/Client';
 
 export const EditProfileScreen = ({route}) => {
     const {user,reload} = route.params
@@ -71,87 +71,28 @@ export const EditProfileScreen = ({route}) => {
     const handleGetLocation = async () => {
         const res = await getLocation()
         setLocation(res)
+        ToastAndroid.show('Got location succesfully', ToastAndroid.SHORT)
     }
 
     const handleSaveChanges = async () => {
-        let url = API_GATEWAY + "users/" + user.id
         setLoading(true);
         setError(false)
-        let image
-        if (profilePicture) {
-            image = await uploadImage()
-        } else {
-            image = user.image
-        }
-        
-        let response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + user.access_token,
-            },
-            body: JSON.stringify({
-                "name": name,
-                "lastname": lastName,
-                "age": age ,
-                "image" : image,
-                "location" : location
-            })
-        })
+        let image 
+        if (profilePicture) image = await uploadImage()
+        else image = user.image  
+        let response = await Client.editUserInfo(user,name,lastName,age,image,location)
         setLoading(false);
         console.log(JSON.stringify(response))
         if (!response.ok) {
             setError(true);
-            if (response.status === 401) {
-                setErrorMessage('Unauthorized, not a valid access token');
-            } else {
-                setErrorMessage('Failed to connect with the server');
-            }
+            setErrorMessage(getErrorMessage(response.status))
         } else {
             let data = await response.json()
             console.log(JSON.stringify(data))                
             navigation.navigate("Profile",{reload:!reload})
         }
         
-        
-        /*
-        
-        fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + user.access_token,
-            },
-            body: JSON.stringify({
-                "name": name,
-                "lastname": lastName,
-                "age": age ,
-                "image" : image,
-                "location" : location
-            })
-        }).then((response) => {
-            setLoading(false);
-            console.log(JSON.stringify(response))
-            if (!response.ok) {
-                setError(true);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
-            } else {
-                response.json().then((data) => {
-                    console.log(JSON.stringify(data))                
-                    navigation.navigate("Profile",{reload:!reload})
-                }).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });
-            }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-    })*/
-}
+    }
 
     return (
         <View style={{flex:1,padding:30,backgroundColor: '#fff'}}>
@@ -171,16 +112,19 @@ export const EditProfileScreen = ({route}) => {
             </View>
 
             <Text style={{ fontSize: 17, color: 'black',  marginLeft:10 }}>Name</Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={{ fontSize: 16, color: 'black',marginLeft:10 }}
-                    placeholder="Enter your name"
-                    value={name}
-                    onChangeText={setName}
-                />
+            <View style = {{alignContent:"center",alignItems:"center"}}>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={{ fontSize: 16, color: 'black',marginLeft:10 }}
+                        placeholder="Enter your name"
+                        value={name}
+                        onChangeText={setName}
+                    />
+                </View>
             </View>
 
             <Text style={{ fontSize: 17, color: 'black', marginLeft:10 }}>Last Name</Text>
+            <View style = {{alignContent:"center",alignItems:"center"}}>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={{ fontSize: 16, color: 'black',marginLeft:10 }}
@@ -189,8 +133,10 @@ export const EditProfileScreen = ({route}) => {
                     onChangeText={setLastName}
                 />
             </View>
+            </View>
 
             <Text style={{ fontSize: 17, color: 'black', marginLeft:10 }}>Age</Text>
+            <View style = {{alignContent:"center",alignItems:"center"}}>
             <View style={styles.inputContainer}>
             
                     <TextInput
@@ -202,19 +148,27 @@ export const EditProfileScreen = ({route}) => {
                         keyboardType="numeric"
                     />
                 </View>
-
-                <TouchableOpacity style={styles.buttonLocation} onPress={handleGetLocation}>
-                  <Text style={styles.buttonText}>Get Location</Text>
+            </View>
+            <View style = {styles.buttonContainer} >
+                <TouchableOpacity onPress={handleGetLocation} style={styles.buttonLocation}>
+                    <Text style={styles.buttonText}>
+                        Add Location
+                    </Text>
                 </TouchableOpacity>
+            </View>
+
+        
 
 
             { loading 
               ? <View style={{marginTop:50, marginHorizontal: 40}}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
-              : <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                  <Text style={styles.buttonText}>Save Changes</Text>
-                </TouchableOpacity>
+              : <View style = {[styles.buttonContainer,{marginTop:50}]} > 
+                    <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+                        <Text style={styles.buttonText}>Save Changes</Text>
+                    </TouchableOpacity>
+                </View>
             }
 
             {error && (
@@ -240,34 +194,41 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '90%',
-        
         height: 50,
         padding: 10,
-        //borderWidth: 1,
         borderBottomWidth:1,
         borderColor: '#ccc',
         borderRadius: 5,
         marginVertical: 10,
-        marginLeft:15
+       
     },
     buttonText: {
-        fontSize: 18,
-        textAlign: 'center',
+        fontSize:16,
         fontWeight: 'bold',
-    color: 'white',
+        color: 'white',
     },
     button: {
-        backgroundColor: 'black',
-        borderRadius: 20,
-        paddingVertical: 10,
-        marginTop:50,
-        marginHorizontal: 40
+        padding: 10,
+        marginVertical: 5,
+        backgroundColor:"black",
+        alignItems: 'center',
+        borderRadius: 10,
+        width: "90%",
+        marginBottom: 20
     },
     buttonLocation: {
-        backgroundColor: 'crimson',
-        borderRadius: 20,
-        paddingVertical: 10,
-        marginTop:50,
-        marginHorizontal: 40
+        padding: 10,
+        marginVertical: 5,
+        backgroundColor:"crimson",
+        alignItems: 'center',
+        borderRadius: 10,
+        width: "90%",
+        marginBottom: 20
+    },
+    buttonContainer: {
+        marginBottom:10,
+        alignContent:"center",
+        alignItems:"center",
+        marginTop:20
     }
 })

@@ -1,12 +1,12 @@
 import React,{useState,useEffect} from 'react';
 import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from 'react-native';
-import {StackActions} from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Screens} from "../../navigation/Screens";
-import {USER, API_GATEWAY ,ADMIN,ATHLETE,TRAINER} from '../../utils/constants';
+import {USER} from '../../utils/constants';
 import {Ionicons} from 'react-native-vector-icons'
-
-
+import { useIsFocused } from '@react-navigation/native';
+import { getUser,getRole,updateUser } from '../../utils/getters';
+import Client from '../../client/Client';
+import { set } from 'react-native-reanimated';
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
@@ -15,95 +15,35 @@ function MenuProfileScreen({ navigation,route }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const isFocused = useIsFocused();
     const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
   };
-  const renderTableRow = ({ item }) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.name}</Text>
-      <Text style={styles.tableCell}>{item.value}</Text>
-      </View>
-  );
 
-    async function handleSetUser(newData,oldData){
-        const updateUser = {
-            "name":newData.name,
-            "lastname":newData.lastname,
-            "age":newData.age,
-            "mail":newData.mail,
-            "role":newData.role,
-            "image":newData.image,
-            "blocked":newData.blocked,
-            "phone_number":newData.phone_number,
-            "trainings":newData.trainings,
-            "location":newData.location,
-            "access_token":oldData.access_token,
-            "token_type":oldData.token_type,
-            "id": newData.id,
-            "verified": newData.verification.verified
-        }
-        //console.log(JSON.stringify(updateUser))
-        setUser(updateUser)
-        await AsyncStorage.setItem(USER,JSON.stringify(updateUser)).then()
-
-    }
 
     useEffect(() => {
-        const url = API_GATEWAY + 'users/me'
-        function getUsers() {
+        setLoading(false)
+        async function getUsers() {
             setLoading(true);
-            AsyncStorage.getItem(USER)
-                .then((item) => {
-                    let user = JSON.parse(item)
-                    fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + user.access_token,
-                        },
-                    }).then((response) => {
-                        setLoading(false);
-                        if (!response.ok) {
-                            setError(true);
-                            console.log("RESPONSE: ", response.status);
-                            if (response.status === 401) {
-                                setErrorMessage('Unauthorized, not a valid access token');
-                            } else {
-                                setErrorMessage('Failed to connect with the server');
-                            }
-                        } else {
-                            response.json().then(async (data) => {
-                                console.log(data)
-                                await handleSetUser(data,user)
-                            })
-                        }
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    })              
-                })
-                .catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });
+            let userInfo = await getUser()
+            setUser(userInfo)
+            Client.getMyUserInfo(userInfo.access_token).then(async data => {
+              let updatedUser= await updateUser(data,userInfo)
+              setUser(updatedUser)
+              setLoading(false);
+            })
+            .catch(error => {
+              setLoading(false)
+              setError(true)
+              setErrorMessage(error.toString())
+            })
         }
         getUsers();
-        }, [reload])
+        }, [isFocused])
 
-        function getRole(role){
-            if (role == ADMIN){
-                return "Admin"
-            } else if (role == TRAINER){
-                return "Trainer"
-            } else if (role == ATHLETE){
-                return "Athlete"
-            } else {
-                return "Undefined"
-            }
-           }
+
 
     return (
         <>
