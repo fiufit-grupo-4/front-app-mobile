@@ -23,11 +23,11 @@ const Rating = ({ onRate }) => {
     );
 };
 
-export function likeTraining(handleFavoritePress, isFavorite) {
+export function likeTraining(handleFavoritePress, isLiked) {
     return <TouchableWithoutFeedback onPress={handleFavoritePress}>
         <View>
             <Ionicons
-                name={isFavorite ? 'md-heart-sharp' : 'md-heart-outline'}
+                name={isLiked ? 'md-heart-sharp' : 'md-heart-outline'}
                 style={{fontSize: 24, padding: 7, alignItems: 'center'}}
             />
         </View>

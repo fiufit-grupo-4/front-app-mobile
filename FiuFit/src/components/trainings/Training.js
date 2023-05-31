@@ -59,19 +59,8 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
     /*LIKES*/
     const isliked = (item, user) => {
-        const scoreList = item.scores;
-        scoreList.map((score) => {
-            console.log("SCORE: ", score)
-            console.log("USER: ", user)
-            console.log("USER ID: ", user.id)
-            if (score.user.id === user.id) {
-                return true;
-                //setPostLiked(true);
-                //setIsLike(true);
-            }
-        });
-        return false;
-    }
+        return item.scores.some((score) => (score.user.id === user.id));
+    };
 
     const [isLike, setIsLike] = useState(isliked(item, user));
 
