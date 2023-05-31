@@ -111,8 +111,8 @@ function MenuProfileScreen({ navigation,route }) {
             ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            : <ScrollView style={{ flex: 1,backgroundColor:"#91AED4" }}>
-                {/* 
+            : <ScrollView style={{ flex: 1}}>
+                
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <View style={styles.profileInfo}>
@@ -124,15 +124,25 @@ function MenuProfileScreen({ navigation,route }) {
                             />
                         }  
                         <View style={styles.nameContainer}>
-                            <Text style={styles.name}>{user.name + " " +user.lastname}</Text>
+                            <Text style={styles.name}>{user.name + " " +user.lastname +" "}
+                              { user.verified && (
+                                <Ionicons name={"checkmark-done-outline"} size={22} color={"lightblue"} />
+                              )}
+                            </Text>
                             <Text style={styles.role}>{getRole(user.role)}</Text>
                             
                         </View>
                         </View>
                     </View>
+
+                    <View style={styles.followersContainer}>
+                        <Text style={styles.followersCount}>Followers: 100</Text>
+                        <Text style={styles.followingCount}>Following: 50</Text>
+                    </View>
                     <View style={styles.buttonsContainer}>
-                        <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
-                            <Text style={ styles.followButtonText }>Edit Profile</Text>
+                      
+                        <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
+                            <Text style={ styles.messageButtonText }>Edit Profile</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
@@ -140,33 +150,28 @@ function MenuProfileScreen({ navigation,route }) {
                         </TouchableOpacity>
                     </View>
 
-                        
-                    <View style={styles.followersContainer}>
-                        <Text style={styles.followersCount}>Followers: 100</Text>
-                        <Text style={styles.followingCount}>Following: 50</Text>
-                    </View>
+                    
 
                     <View style={styles.tableContainer}>
-                        <View style={styles.tableHeader}>
+                        
+                        <View style={styles.table}>
                             <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
-                         </View>
-                        <View style={styles.tableHeader}>
                             <Text style={styles.tableHeaderCell}>Email: {user.mail}</Text>
-                        </View>
-                        <View style={styles.tableHeader}>
                             <Text style={styles.tableHeaderCell}>Age: {user.age}</Text>
                         </View>
+                       
                     </View>
 
-                    <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
-                    <Text style={styles.followButtonText}>Trainings</Text>
+                    <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
+                       <Text style={styles.buttonText}>Trainings</Text>
                     </TouchableOpacity>
+
                 </View>
 
-                */}
+                
 
 
-
+          {/* 
                 <View style={{ alignItems: 'center', padding: 20,marginVertical:50}}>
                     { user.image  
                         ? <Image source={{uri:user.image}} style={{ width: 200, height: 200, borderRadius: 100 }} />
@@ -193,11 +198,12 @@ function MenuProfileScreen({ navigation,route }) {
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
                     <Text style={ styles.buttonText }>Edit Profile</Text>
+                    
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
                     <Text style={styles.buttonText}>Create New Password</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>*/}
 
                 {error && (
                     <View style = {{alignItems:"center",marginTop:15}}>
@@ -218,6 +224,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'rgba(23,29,52,0.93)',
         textAlign: 'center',
+        fontWeight:"bold"
     },
     button: {
         backgroundColor: '#DEE9F8FF',
@@ -227,15 +234,32 @@ const styles = StyleSheet.create({
         marginHorizontal: 40
     },container: {
         flex: 1,
-        padding: 20,
-        backgroundColor:"#91AED4",
-        
+        padding: 10,
+        backgroundColor:"white",
+        margin:10,
+       
+        borderRadius:15,
+        marginTop:25
       },
       header: {
-        marginTop:20,
+        marginTop:5,
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+        padding:10,
+        borderRadius:15,
+        backgroundColor: '#DEE9F8FF',
+       
+      },
+      trainingButton:{
+        borderRadius: 10,
+        marginTop:10,
+        marginBottom:10,
+        paddingVertical: 8,
+        backgroundColor: '#DEE9F8FF',
+        borderRadius: 5,
+        width:"100%",
+        textAlign:"center"
       },
       profileInfo: {
         flexDirection: 'row',
@@ -260,7 +284,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flexDirection: 'row',
         padding: 5,
-        marginBottom:10
+        marginBottom:10,
+        marginTop:10
       },
       followButton: {
         paddingHorizontal: 15,
@@ -273,6 +298,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: 'bold',
+        textAlign:"center"
       },
       messageButton: {
         paddingHorizontal: 15,
@@ -285,7 +311,7 @@ const styles = StyleSheet.create({
       payButton: {
         paddingHorizontal: 15,
         paddingVertical: 8,
-        backgroundColor: '#788FAD',
+        backgroundColor: '#DEE9F8FF',
         borderRadius: 5,
       },
       messageButtonText: {
@@ -297,7 +323,7 @@ const styles = StyleSheet.create({
       followersContainer: {
         flexDirection: 'row',
         justifyContent: "center",
-        backgroundColor: '#788FAD',
+        backgroundColor: '#DEE9F8FF',
         borderTopWidth:1,
         borderBottomWidth:1,
         padding:8,
@@ -313,21 +339,31 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       },
       tableContainer: {
-        flex: 1,
+        //flex: 1,
         
       },
       tableHeader: {
         flexDirection: 'row',
-        backgroundColor: '#788FAD',
+        backgroundColor: '#DEE9F8FF',
         paddingVertical: 10,
         borderTopWidth:1,
         borderBottomWidth:1,
         marginTop:5,
         marginBottom:5
       },
+      table: {
+        backgroundColor: '#DEE9F8FF',
+        paddingVertical: 10,
+        borderTopWidth:1,
+        borderBottomWidth:1,
+        marginTop:5,
+        marginBottom:5,
+      },
       tableHeaderCell: {
         fontWeight: 'bold',
-        paddingLeft:10
+        paddingLeft:10,
+        fontSize:14,
+        marginBottom:5
       },
       tableRow: {
         flexDirection: 'row',

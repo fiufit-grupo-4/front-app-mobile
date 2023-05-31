@@ -154,7 +154,7 @@ export const EditProfileScreen = ({route}) => {
 }
 
     return (
-        <View style={{flex:1,padding:30}}>
+        <View style={{flex:1,padding:30,backgroundColor: '#fff'}}>
 
             <View style={{ alignItems: 'center', padding: 20 }}>
                 <TouchableOpacity onPress={handleImagePicker}>
