@@ -9,6 +9,7 @@ import {useForm} from 'react-hook-form';
 import styles from '../../styles/styles';
 import { PasswordVisibility } from '../../utils/PasswordVisibility';
 import { API_GATEWAY } from '../../utils/constants';
+import ApiClient from "../../client/Client"
 
 const ConfirmCodeScreen = ({route}) => {
   const {mail} = route.params
@@ -28,10 +29,23 @@ const ConfirmCodeScreen = ({route}) => {
   const navigation = useNavigation();
   const pwd = watch("password")
 
-  const onSubmitPressed = (data) => {
-    var url = API_GATEWAY + 'login/reset_password/' + data.code;
+  const onSubmitPressed = async (data) => {
     setLoading(true)
     setError(false)
+    let response = await ApiClient.resetPassword(data,mail)
+    setLoading(false)
+    if (!response.ok) {
+        setError(true)
+        if(response.status == 503){
+          setErrorMessage("The code is not valid")
+        } else {
+          setErrorMessage("Failed to connect with server")
+        }
+    } else {
+      ToastAndroid.show('New password generated successfully', ToastAndroid.SHORT)
+      navigation.navigate('SignIn');
+    }
+    /*
     fetch(url   , {
         method: 'POST',
         headers: {
@@ -43,7 +57,7 @@ const ConfirmCodeScreen = ({route}) => {
           "new_password":data.repeatPassword,
         })
     }).then(response => {
-      console.log(JSON.stringify(response))
+      
         setLoading(false)
         if (!response.ok) {
             setError(true)
@@ -59,7 +73,7 @@ const ConfirmCodeScreen = ({route}) => {
     }).catch(error => {
         setError(true)
         setErrorMessage(error)
-    })  
+    })  */
   };
 
   const onSignInPress = () => {

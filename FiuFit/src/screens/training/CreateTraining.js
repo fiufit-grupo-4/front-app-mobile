@@ -10,15 +10,13 @@ import {
     ScrollView,
     ActivityIndicator
 } from 'react-native';
-import {useForm} from "react-hook-form";
 import {Ionicons} from "@expo/vector-icons";
-import UploadImage from '../../components/utils/UploadImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import TrainingType from "./TrainingType";
+import TrainingType from "../../components/trainings/TrainingType";
 import { API_GATEWAY,USER } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MediaBox from './MediaBox';
+import MediaBox from '../../components/media/MediaBox';
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');

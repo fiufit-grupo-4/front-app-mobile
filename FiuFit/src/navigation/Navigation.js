@@ -8,11 +8,10 @@ import ProfileScreen from '../screens/profile/ProfileScreen';
 import TrainingScreen from '../screens/training/TrainingScreen';
 import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import ConfirmCodeScreen from '../screens/login/ConfirmCodeScreen';
-import ConfirmEmailScreen from '../screens/login/ConfirmEmailScreen';
+import ConfirmPhoneScreen from '../screens/login/ConfirmPhoneScreen';
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import MenuProfileScreen from '../screens/profile/MenuProfileScreen';
 import EditTrainingScreen from "../screens/training/EditTrainingScreen";
-import CodeValidationScreen from "../screens/login/ValidateNumberScreen";
 import ForgotPasswordScreen from '../screens/login/ForgotPasswordScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
@@ -36,9 +35,8 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
 
                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
-                    <Stack.Screen name="CodeValidation" component={CodeValidationScreen} options={{ headerShown: false }}/>
                     
-                    <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} options={{ headerShown: false }}/>
+                    <Stack.Screen name="ConfirmPhone" component={ConfirmPhoneScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>

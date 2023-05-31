@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useForm,Controller} from 'react-hook-form';
 import styles from '../../styles/styles';
 import { API_GATEWAY } from '../../utils/constants';
+import ApiClient from "../../client/Client"
 
 const validator = require('validator');
 
@@ -22,10 +23,24 @@ const ForgotPasswordScreen = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSendPressed = (data) => {
+  const onSendPressed = async (data) => {
     var url = API_GATEWAY + 'login/forgot_password';
     setLoading(true)
     setError(false)
+    let response = await ApiClient.sendEmailToResetPassword(data)
+    setLoading(false)
+    if (!response.ok) {
+        setError(true)
+        if(response.status == 404){
+          setErrorMessage("User does not exist")
+        } else {
+          setErrorMessage("Failed to connect with server")
+        }
+    } else {
+      navigation.navigate('ConfirmCode',{mail : data.email});
+    }
+
+    /*
     fetch(url   , {
         method: 'POST',
         headers: {
@@ -52,7 +67,7 @@ const ForgotPasswordScreen = () => {
     .catch(error => {
         setError(true)
         setErrorMessage(error)
-    })
+    })*/
     
   };
 

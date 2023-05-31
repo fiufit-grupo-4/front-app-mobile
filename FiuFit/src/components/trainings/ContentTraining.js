@@ -1,10 +1,7 @@
 import {Image, StyleSheet, Text, TouchableWithoutFeedback,FlatList,  ScrollView,View} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
-import ImageTraining from "./ImageTraining";
-import Video from "../../components/utils/Video";
-import { DEFAULT_IMAGE } from "../../utils/constants";
-import MediaVisualizableBox from "./MediaVisualizableBox";
+import MediaVisualizableBox from "../media/MediaVisualizableBox";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>

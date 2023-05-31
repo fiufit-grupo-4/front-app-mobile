@@ -14,6 +14,8 @@ import * as Location from 'expo-location';
 import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
 import CustomIconButton from '../../components/buttons/CustomIconButton';
 import { firebase } from '../../config/firebase';
+import ApiClient from "../../client/Client"
+
 const {height} = Dimensions.get("window")
 const validator = require('validator');
 
@@ -23,10 +25,10 @@ const SignUpScreen = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
         PasswordVisibility();
-    const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
+    const [isAthlete, setIsAthlete] = useState(true); 
 
     const toggleSwitch = () => {
-        setIsAthlete(previousState => !previousState); // Cambia el estado del botón
+        setIsAthlete(previousState => !previousState); 
     };
 
 
@@ -53,73 +55,35 @@ const SignUpScreen = () => {
 
     const [location, setLocation] = useState(null);
 
-
     const navigation = useNavigation();
 
     function getRole(){
-        console.log(isAthlete)
         return isAthlete ? ATHLETE : TRAINER
     }
 
     const onRegisterPressed = async (data) => {
-        var url = API_GATEWAY + 'signup/';
         let res = await getLocation()
         console.log(location)
-        console.log(res)
         setLoading(true)
-        
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            },
-            body: JSON.stringify({
-                "mail": data.mail,
-                "password": data.password,
-                "phone_number": data.phone_number,
-                "role":getRole(),
-                "name": data.name,
-                "lastname": data.lastname,
-                "age":data.age,
-                "location":res
-            })
-            })
-            .then(response => {
-                setLoading(false)
-                if (!response.ok) {
-                    console.log(response.status)
-                    if (response.status ==  409) {
-                        setError(true)
-                        setErrorMessage("User email already in use")
-                    }else {
-                        setError(true)
-                        setErrorMessage("Failed to connect with server")
-                    }
-                    
-                } else {
-                    
-                    navigation.navigate('ConfirmEmail',{phone : data.phone_number});
-                }
-            })
-            .catch(error => {
-                setError(true)
-                setErrorMessage(error)
-            })
-        
+        setError(false)
+        let response = await ApiClient.signUp(data,getRole(),res)
+        setLoading(false)
+        if (!response.ok) {
+            console.log(response.status)
+            setError(true)
+            if (response.status ==  409) {
+                setErrorMessage("User email already in use")
+            }else {
+                setErrorMessage("Failed to connect with server")
+            }  
+        } else {
+            navigation.navigate('ConfirmPhone',{phone : data.phone_number});
+        }        
     };
 
     const onSignInPress = () => {
         navigation.navigate('SignIn');
 
-    };
-
-    const onTermsOfUsePressed = () => {
-        console.warn('onTermsOfUsePressed');
-    };
-
-    const onPrivacyPressed = () => {
-        console.warn('onPrivacyPressed');
     };
 
     const { control, handleSubmit, formState: { errors }, watch } = useForm({
@@ -128,9 +92,9 @@ const SignUpScreen = () => {
             password: '1234',
             repeatPassword:'1234',
             phone_number: "+5491161637747",
-            name: "Dante",
-            lastname: "420",
-            age: "24"
+            name: "Joven",
+            lastname: "Entrenador",
+            age: "27"
         }
     });
 
@@ -371,21 +335,3 @@ const signUpStyles = StyleSheet.create({
         paddingHorizontal:5
     },
 });
-
-{/*
-import { PermissionsAndroid } from 'react-native';
-
-async function requestLocationPermission() {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        'title': 'Permiso para acceder a la ubicación',
-        'message': 'Se necesita acceso a la ubicación para poder mostrar tu posición actual'
-      }
-    )
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("Permiso concedido");
-    } else {*/
-
-}
