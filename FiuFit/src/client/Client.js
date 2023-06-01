@@ -78,6 +78,7 @@ class ApiClient {
         throw new Error(errorMessage)
       }
       let json = await response.json()
+      console.log(json)
       return json
     }
 
