@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import { useIsFocused } from '@react-navigation/native';
 import { API_GATEWAY,USER } from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUser,getErrorMessage } from "../../utils/getters";
 
 const FavoriteTrainingProfile = ( {route} ) => {
     const {id} = route.params
@@ -29,6 +30,7 @@ const FavoriteTrainingProfile = ( {route} ) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [user, setUser] = useState({});
     
     useEffect(() => {
         const url = API_GATEWAY + 'trainings/' + id.toString()
@@ -36,6 +38,7 @@ const FavoriteTrainingProfile = ( {route} ) => {
             setLoading(true);
             let storage = await AsyncStorage.getItem(USER)
             let userInfo = JSON.parse(storage)
+            setUser(userInfo)
             let response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -43,21 +46,14 @@ const FavoriteTrainingProfile = ( {route} ) => {
                     'Authorization': 'Bearer ' + userInfo.access_token,
                 },
             })
-            setLoading(false);
-
             if (!response.ok) {
                 setError(true);
-                console.log("RESPONSE: ", response.status);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
+                setErrorMessage(getErrorMessage(response.status))
+                setLoading(false);
             } else {
                 let data = await response.json()
-                console.log(data)
-                setTraining(data);
-                //await handleSetUser(data,user)
+                setTraining(data)
+                setLoading(false);
             }
         }
         getTraining();
@@ -71,7 +67,7 @@ const FavoriteTrainingProfile = ( {route} ) => {
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
                 :<ScrollView>
-                    <Training item =  {training} canEdit={false} fav = {true}> </Training>
+                    <Training item =  {training} user= {user} canEdit={false} fav = {true}> </Training>
                 </ScrollView>
             }
             {error && (

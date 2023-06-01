@@ -1,75 +1,279 @@
-
+import { ATHLETE,TRAINER,API_GATEWAY,USER,MOCK } from '../utils/constants';
+import Mocked from './Mocked';
+import { getErrorMessage} from '../utils/getters';
 
 class ApiClient {
-    
-    curl(url, method, headers,body,setError,setErrorMessage){
-        fetch(url, {
-            method: method,
-            headers: headers,
-            body: JSON.stringify(body)
-          })
-        .then(response => {
-            
-            return response
-        })
-        .catch(error => {
-            console.log(error)
-            setError(true)
-            setErrorMessage(error)
-            return
-        })
 
-    }
 
-    validateResponse(){
-
-    }
-
-    /*
-    fetch(url, {
-      method: 'POST',
+  async getTrainingsById(access_token,id){
+    if (MOCK) return Mocked.getTrainings()
+    const url = API_GATEWAY + 'trainings/' + id.toString()
+    let response = await fetch(url, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
       },
-      body: JSON.stringify({
-        "mail": data.email,
-        "password": data.password,
-        "role": getRole()
+    })
+    if (!response.ok) {
+      console.log(response.status)
+      let errorMessage = getErrorMessage(response.status)     
+      throw new Error(errorMessage)
+    }
+    let json = await response.json()
+    console.log(json)
+    return json
+  }
+
+
+
+    async getMyTrainings(access_token){
+      if (MOCK) return Mocked.getTrainings()
+      const url = API_GATEWAY + 'trainers/me/trainings?'
+      var query = new URLSearchParams({
+          limit: 128
       })
-    })
-    .then(response => {
-      setLoading(false)
+      let response = await fetch(url + query, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
       if (!response.ok) {
-        setError(true)
-        if(response.status == 401){
-          setErrorMessage("Invalid username or password")
-        } else {
-          setErrorMessage("Failed to connect with server")
-        }
-      } else {
-        response.json().then(json => {
-          const accesToken = json.access_token
-          console.log(json.access_token)
-          AsyncStorage.setItem('accesToken', accesToken).then(
-            navigation.navigate("Inicio")
-          ).catch(error => {
-            setError(true)
-            setErrorMessage(error)
-          })
-          ;
-        }).catch(error => {
-          setError(true)
-          setErrorMessage(error)
-        })
-        
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
       }
+      let json = await response.json()
+      return json
+    }
+
+    async getUsers(access_token){
+      if (MOCK) return Mocked.getUsers()
+      const url = API_GATEWAY + 'users'
+      let response = fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+
+    async getTrainings(access_token){
+      if (MOCK) return Mocked.getTrainings()
+      const url = API_GATEWAY + 'trainings'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+
+    async createNewPost(access_token,title,description,type,difficulty,array){
+      let url = API_GATEWAY + "trainers/me/trainings"
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({       
+            "title": title,
+            "description": description,
+            "type": type,
+            "difficulty": difficulty,
+            "media": array
+        })
+      })
+      return response
+    }
+
+
+    async getMyUserInfo(access_token){
+      if (MOCK) return Mocked.getUserInfo()
+      const url = API_GATEWAY + 'users/me'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        let errorMessage = getErrorMessage(response.status)
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+    async editUserInfo(user,name,lastName,age,image,location){
+      let url = API_GATEWAY + "users/" + user.id
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+            "name": name,
+            "lastname": lastName,
+            "age": age ,
+            "image" : image,
+            "location" : location
+        })
+      })
+      return response
+    }
+
+    async editUserPassword(user,password){
+      let url = API_GATEWAY + "users/" + user.id
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+            "password": password,
+        })
     })
-    .catch(error => {
-      setError(true)
-      setErrorMessage(error)
-    })
+      return response
+    }
+
+
+
+    async signIn(data,role){
+      if (MOCK) return Mocked.getUserInfo()
+      let url = API_GATEWAY + 'login';
+      let response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "mail": data.email,
+              "password": data.password,
+              "role": role
+          })
+      })
+      if (!response.ok) {
+        let errorMessage
+        if(response.status == 401) errorMessage ="Invalid username or password"
+        else errorMessage =  "Failed to connect with server" 
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+    async signUp(data,role,location){
+      const url = API_GATEWAY + 'signup';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        },
+        body: JSON.stringify({
+            "mail": data.mail,
+            "password": data.password,
+            "phone_number": data.phone_number,
+            "role":role,
+            "name": data.name,
+            "lastname": data.lastname,
+            "age":data.age,
+            "location":location
+        })
+      })
     
-    */
+      return response
+    }
+
+
+    async sendEmailToResetPassword(data){
+      var url = API_GATEWAY + 'login/forgot_password';
+      let response = await fetch(url   , {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        },
+        body: JSON.stringify({
+          "mail": data.email
+        })
+      })
+      return response
+    }
+
+    async resetPassword(data,mail){
+      var url = API_GATEWAY + 'login/reset_password/' + data.code;
+      let response = await fetch(url   , {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        },
+        body: JSON.stringify({
+          "mail": mail,
+          "new_password":data.repeatPassword,
+        })
+      })
+      return response
+    }
+
+
+    async confirmPhoneNumber(data,phone){
+      var url = API_GATEWAY + 'signup/validate_code?';
+      var query = new URLSearchParams({
+        phone_number: phone,
+        verification_code: data.code,
+      })
+      let response = await fetch(url + query  , {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        }
+      })
+      return response
+    }
+
+    async certify(access_token,uri){
+      if( MOCK) return Mocked.responseOk()
+      let url = API_GATEWAY + "users/me/verification" 
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({
+            "video": uri,
+        })
+      })
+      return response
+    } 
 }
 
-export default ApiClient
+export default new ApiClient()

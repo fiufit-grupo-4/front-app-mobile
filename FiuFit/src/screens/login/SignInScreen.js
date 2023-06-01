@@ -18,12 +18,11 @@ import styles from '../../styles/styles';
 import {Ionicons} from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ATHLETE,TRAINER,API_GATEWAY,USER } from '../../utils/constants';
+import ApiClient from "../../client/Client"
 const validator = require('validator');
 
 
 const SignInScreen = () => {
-    //{route}
-    //const{ role, bgColor, access} = route.params
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -49,60 +48,21 @@ const SignInScreen = () => {
         return isAthlete ? ATHLETE : TRAINER
     }
 
-    const onSignInPressed = (data) => {
-        var url = API_GATEWAY + 'login/';
-        console.log(data)
-        setLoading(true)
+    const onSignInPressed = async (data) => {
         setError(false)
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "mail": data.email,
-                "password": data.password,
-                "role": getRole()
-            })
-        })
-            .then(response => {
+        setLoading(true)
+        ApiClient.signIn(data,getRole())
+            .then(async  response => {
+                const user_info = JSON.stringify(response)
+                await AsyncStorage.setItem(USER,user_info)
                 setLoading(false)
-                if (!response.ok) {
-                    console.log(response.status)
-                    setError(true)
-                    if(response.status == 401){
-                        setErrorMessage("Invalid username or password")
-                    } else {
-                        setErrorMessage("Failed to connect with server")
-                    }
-                } else {
-                    response.json().then(json => {
-                        const user_info = JSON.stringify(json)
-                        AsyncStorage.setItem(USER,user_info).then(
-
-                            navigation.navigate("Inicio")
-                        ).catch(error => {
-                            setError(true)
-                            setErrorMessage(error)
-                        })
-                        {/*
-          AsyncStorage.multiSet([[TOKEN, accesToken],[ROLE, role]]).then(
-            navigation.navigate("Inicio")
-          ).catch(() => {
-            navigation.navigate("Inicio")
-          })*/}
-                    }).catch(error => {
-                        setError(true)
-                        setErrorMessage(error)
-                    })
-
-                }
+                navigation.navigate("Inicio")
             })
             .catch(error => {
+                setLoading(false)
                 setError(true)
-                setErrorMessage(error)
+                setErrorMessage(error.toString())
             })
-
     };
 
     const onForgotPasswordPressed = () => {

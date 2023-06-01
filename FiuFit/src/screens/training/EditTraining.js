@@ -15,7 +15,7 @@ import {API_GATEWAY, USER} from "../../utils/constants";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
-import MediaEditableBox from './MediaEditableBox';
+import MediaEditableBox from '../../components/media/MediaEditableBox';
 import {firebase} from '../../config/firebase'
 
 const EditTraining = ({ onPress , route }) => {

@@ -2,32 +2,18 @@ import React,{useState,useEffect} from 'react';
 import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from 'react-native';
 import { ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
 import {Ionicons} from 'react-native-vector-icons'
+import { getRole } from '../../utils/getters';
 
-const UserProfile = ({ route }) => {
+
+
+const UserProfile = ({ navigation,route }) => {
   const {user} = route.params
   const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
   };
-  const renderTableRow = ({ item }) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.name}</Text>
-      <Text style={styles.tableCell}>{item.value}</Text>
-    </View>
-  );
 
-  function getRole(role){
-    if (role == ADMIN){
-        return "Admin"
-    } else if (role == TRAINER){
-        return "Trainer"
-    } else if (role == ATHLETE){
-        return "Athlete"
-    } else {
-        return "Undefined"
-    }
-   }
 
   return (
     <View style={styles.container}>
@@ -45,8 +31,8 @@ const UserProfile = ({ route }) => {
             <Text style={styles.name}>{user.name + " " +user.lastname + " "} 
             
             { user.verification?.verified && (
-                            <Ionicons name={"checkmark-done-outline"} size={20} color={"lightblue"} />
-                        )
+                  <Ionicons name={"checkmark-done-outline"} size={20} color={"lightskyblue"} />
+              )
             }
             </Text>
             <Text style={styles.role}>{getRole(user.role)}</Text>
@@ -69,36 +55,73 @@ const UserProfile = ({ route }) => {
 
           
         </View>
+        
+        { user.role != ATHLETE && (
+          <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:false})}>
+            <Text style={styles.buttonText}>View Trainings</Text>
+          </TouchableOpacity>
+        )}
+        
+
+
       <View style={styles.followersContainer}>
         <Text style={styles.followersCount}>Followers: 100</Text>
         <Text style={styles.followingCount}>Following: 50</Text>
       </View>
       <View style={styles.tableContainer}>
-            <View style={styles.tableHeader}>
+            <View style={styles.table}>
                 <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
-            </View>
-            <View style={styles.tableHeader}>
                 <Text style={styles.tableHeaderCell}>Email: {user.mail}</Text>
+                <Text style={styles.tableHeaderCell}>Age: {user.age}</Text>
             </View>
-        </View>
-
-        
+      </View>
     </View>
   );
 };
 
 const styles = {
-  container: {
+  buttonText: {
+    fontSize: 16,
+    color: 'rgba(23,29,52,0.93)',
+    textAlign: 'center',
+    fontWeight:"bold"
+},
+button: {
+    backgroundColor: '#DEE9F8FF',
+    borderRadius: 10,
+    paddingVertical: 10,
+    marginTop:20,
+    marginHorizontal: 40,
+    textAlign:"center",
+    width:"60%"
+},container: {
     flex: 1,
-    padding: 20,
-    backgroundColor:"#91AED4",
-    
+    padding: 10,
+    backgroundColor:"white",
+    margin:10,
+    height:720,
+    borderRadius:15,
+    marginTop:20
   },
   header: {
-    marginTop:20,
+    marginTop:5,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    padding:10,
+    borderRadius:15,
+    backgroundColor: '#DEE9F8FF',
+   
+  },
+  trainingButton:{
+    borderRadius: 10,
+    marginTop:10,
+    marginBottom:10,
+    paddingVertical: 8,
+    backgroundColor: '#DEE9F8FF',
+    borderRadius: 5,
+    width:"100%",
+    textAlign:"center"
   },
   profileInfo: {
     flexDirection: 'row',
@@ -123,32 +146,38 @@ const styles = {
     justifyContent: "center",
     flexDirection: 'row',
     padding: 5,
-    marginBottom:10
+    marginBottom:10,
+    marginTop:10
   },
   followButton: {
     paddingHorizontal: 15,
     paddingVertical: 8,
     backgroundColor: 'black',
     borderRadius: 5,
-    marginRight: 10,
+    marginRight:5,
+    alignItems:"center",
+    width:"50%"
   },
   followButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign:"center"
   },
   messageButton: {
     paddingHorizontal: 15,
     paddingVertical: 8,
     backgroundColor: '#788FAD',
     borderRadius: 5,
-    marginRight: 10,
+    marginLeft:5,
+    width:"50%",
+    alignItems:"center",
   },
 
   payButton: {
     paddingHorizontal: 15,
     paddingVertical: 8,
-    backgroundColor: '#788FAD',
+    backgroundColor: '#DEE9F8FF',
     borderRadius: 5,
   },
   messageButtonText: {
@@ -160,37 +189,52 @@ const styles = {
   followersContainer: {
     flexDirection: 'row',
     justifyContent: "center",
-    backgroundColor: '#788FAD',
+    backgroundColor: '#DEE9F8FF',
     borderTopWidth:1,
     borderBottomWidth:1,
     padding:8,
-    marginBottom:5
+    marginBottom:5,
+    marginTop:20,
+    borderColor:"rgba(23,29,52,0.93)"
   },
   followersCount: {
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 100,
+    color:"rgba(23,29,52,0.93)"
   },
   followingCount: {
     fontSize: 16,
     fontWeight: 'bold',
+    color:"rgba(23,29,52,0.93)"
   },
   tableContainer: {
-    flex: 1,
+    marginTop:20
     
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#788FAD',
+    backgroundColor: '#DEE9F8FF',
     paddingVertical: 10,
     borderTopWidth:1,
     borderBottomWidth:1,
     marginTop:5,
     marginBottom:5
   },
+  table: {
+    backgroundColor: '#DEE9F8FF',
+    paddingVertical: 10,
+    borderTopWidth:1,
+    borderBottomWidth:1,
+    marginTop:5,
+    marginBottom:5,
+    borderColor:"rgba(23,29,52,0.93)"
+  },
   tableHeaderCell: {
-    fontWeight: 'bold',
-    paddingLeft:10
+    borderColor:"rgba(23,29,52,0.93)",
+    paddingLeft:10,
+    fontSize:18,
+    marginBottom:10,
   },
   tableRow: {
     flexDirection: 'row',

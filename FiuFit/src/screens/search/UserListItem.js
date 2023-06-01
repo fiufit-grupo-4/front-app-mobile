@@ -56,6 +56,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+   
+    backgroundColor:"white",
+    padding:12,
+    borderRadius:20,
+    //borderWidth:0.5
   },
   avatarContainer: {
     width: 50,

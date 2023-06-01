@@ -3,13 +3,12 @@ import React, {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {getCalification, likeTraining} from "../../screens/training/RateTraining";
-import {favouriteTraining} from "../../screens/training/FavouriteTraining";
-import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
-import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
+import {getCalification, likeTraining} from "./RateTraining";
+import {favouriteTraining} from "./FavouriteTraining";
+import {topContent, trainingPlace} from "./TopBarTraining";
+import {trainingContent, trainingPrincipalContent} from "./ContentTraining";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FavoriteTrainingScreen from "../../screens/training/FavoriteTrainingScreen";
 
 
 const Training = ({user, item, canEdit, reload, fav = false}) => {
@@ -59,7 +58,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
     /*LIKES*/
     const isliked = (item, user) => {
-        return item.scores.some((score) => (score.user.id === user.id));
+        return item.scores.some((score) => (score?.user.id === user.id));
     };
 
     const [isLike, setIsLike] = useState(isliked(item, user));

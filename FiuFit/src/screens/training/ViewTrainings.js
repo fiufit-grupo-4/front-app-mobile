@@ -2,64 +2,59 @@ import {FlatList,ActivityIndicator,View,Text} from "react-native";
 import Training from "../../components/trainings/Training";
 import React,{useState,useEffect} from 'react';
 import {API_GATEWAY } from '../../utils/constants';
-
+import TrainingListItem from "../search/TrainingListItem";
+import Client from "../../client/Client";
+import { useIsFocused } from '@react-navigation/native';
+import { getUser } from "../../utils/getters";
 
 function ViewTrainings({ navigation,route }) {
-    const {user, reload} = route.params
+    const {user, myUser} = route.params
     const [trainings,setTrainings] = useState([])
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [notTrainigs, setNotTrainigs] = useState(false);
-
-
+    const isFocused = useIsFocused();
 
     useEffect(() => {
-        const url = API_GATEWAY + 'trainers/me/trainings?'
-        var query = new URLSearchParams({
-            limit: 128
-        })
-        console.log(url + query)
+
         async function getTrainings() {
             setLoading(true)
-            fetch(url + query, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + user.access_token,
-                    },
-                }).then((response) => {
-                    setLoading(false);
-                    if (!response.ok) {
-                        console.log(response.status)
-                        setError(true);
-                        if (response.status == 404) {
-                           setNotTrainigs(true)
-                        } else {
-                            setErrorMessage('Failed to connect with the server');
-                        }
 
-                    } else {
-                        response.json().then((data) => {
-                            console.log(JSON.stringify(data))
-                            setTrainings(data)
+            if (myUser){
+                Client.getMyTrainings(user.access_token)
+                    .then((response) => {
+                        console.log(JSON.stringify(response))
+                        setTrainings(response)
+                        setLoading(false) 
                     }).catch((error) => {
                         setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
+                        setErrorMessage(error.toString());
+                        setLoading(false)
+                    })
+            } else {
+                let userInfo = await getUser()
+                Client.getTrainingsById(userInfo.access_token,user.id)
+                .then((response) => {
+                    console.log(JSON.stringify(response))
+                    setTrainings(response)
+                    setLoading(false) 
+                }).catch((error) => {
                     setError(true);
-                    setErrorMessage(error);
-            })}
+                    setErrorMessage(error.toString());
+                    setLoading(false)
+                })
+            }
+            }
             getTrainings();
-        }, [])
+        }, [isFocused])
 
     return (
         <>
             {loading 
-                ? <View style={{marginTop:50, marginHorizontal: 40}}>
-                    <ActivityIndicator size="large" color = "black"/>
-                </View>
+                ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                        <ActivityIndicator size="large" color = "black"/>
+                    </View>
                 : <>
                     <View style={{padding:10 }}>
                         <FlatList
@@ -67,7 +62,7 @@ function ViewTrainings({ navigation,route }) {
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({item}) => (
                             <View style={{marginTop:10 }}>
-                                <Training user={user} item={item} canEdit={true} reload={true}/>
+                                <TrainingListItem user={user} item={item} canEdit={myUser}></TrainingListItem>  
                             </View>
                         )}
                         />

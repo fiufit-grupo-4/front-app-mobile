@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 16,
-        minHeight:40,
+        height:40,
         backgroundColor: 'rgba(163,205,255,0.42)',
         paddingHorizontal: 5,
-        borderRadius: 25,
+        borderRadius: 10,
     },
     icon: {
         paddingHorizontal: 5,

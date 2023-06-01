@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import {View,ActivityIndicator, Button, Image, Text, StyleSheet, error, TextInput, TouchableOpacity, Alert} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View,ActivityIndicator, Image, Text, StyleSheet, ToastAndroid, TouchableOpacity, Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {firebase} from '../../config/firebase'
 import * as ImagePicker from 'expo-image-picker';
-import { API_GATEWAY,USER } from '../../utils/constants';
+import { MOCK,DEFAULT_IMAGE } from '../../utils/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from "@react-navigation/native";
+import { getUser } from '../../utils/getters';
+import ApiClient from "../../client/Client"
+import { useIsFocused } from '@react-navigation/native';
+
 
 export const CertifyScreen = ({ onPress }) => {
     const [video, setVideo] = useState("");
+    const [user, setUser] = useState(null);
+    const isFocused = useIsFocused();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -33,6 +39,7 @@ export const CertifyScreen = ({ onPress }) => {
     };
 
     const uploadVideo = async (user) => {
+        if (MOCK) return DEFAULT_IMAGE
         setLoading(true);
         const response = await fetch(video);
         const blob = await response.blob();
@@ -51,12 +58,32 @@ export const CertifyScreen = ({ onPress }) => {
             setErrorMessage('You must upload a video');
             return
         } else {
-            let url = API_GATEWAY + "users/me/verification" 
             setLoading(true);
             setError(false)
-            let user_string = await AsyncStorage.getItem(USER)
-            let user = JSON.parse(user_string)
+            let user = await getUser()
+            if (user.verification?.verified){
+                setError(true)
+                setErrorMessage('You already are verified');
+                return
+            }
             const uri = await uploadVideo(user)
+            let response = await ApiClient.certify(user.access_token,uri)
+            if (!response.ok) {
+                if (response.status === 400) {
+                    ToastAndroid.show('You are already verified', ToastAndroid.SHORT)
+                    navigation.navigate("Home")
+                }
+                setError(true);
+                console.log(response.status)
+                if (response.status === 401) {
+                    setErrorMessage('Unauthorized, not a valid access token');
+                } else {
+                    setErrorMessage('Failed to connect with server');
+                }
+            } else {              
+                navigation.navigate("Home")
+            }
+            /*
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -80,9 +107,20 @@ export const CertifyScreen = ({ onPress }) => {
                 let data = await response.json()
                 console.log(JSON.stringify(data))                
                 navigation.navigate("Home")
-            }
+            }*/
         }
     };
+
+    useEffect(()=> {
+        setVideo(null)
+        setError(false)
+        setLoading(false)
+        async function setUserInfo(){
+            let userInfo =  await getUser()
+            setUser(userInfo)
+        }
+        setUserInfo()
+    },[isFocused])
 
 
     return (
@@ -110,12 +148,48 @@ export const CertifyScreen = ({ onPress }) => {
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <>
-                    <View style = {{marginBottom:10}} >
-                        <Button title="Select" onPress={handleSelectVideo} />
+                    <View style = {{marginBottom:10,alignContent:"center",alignItems:"center"}} >
+                    
+                        <TouchableOpacity
+                            onPress={handleSelectVideo}
+                            style={{
+                                padding: 10,
+                                marginVertical: 5,
+                                backgroundColor:"black",
+                                alignItems: 'center',
+                                borderRadius: 5,
+                                width: "80%",
+                                marginBottom: 20
+                              }}>
+                            <Text
+                                style={{fontSize:15,
+                                    fontWeight: 'bold',
+                                    color: 'white',}}>
+                                Select video
+                            </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                            onPress={sendVerify}
+                            style={{
+                                padding: 10,
+                                marginVertical: 5,
+                                backgroundColor:"#91AED4",
+                                alignItems: 'center',
+                                borderRadius: 5,
+                                width: "80%"
+                              }}>
+                            <Text
+                                style={{fontSize:15,
+                                    fontWeight: 'bold',
+                                    color: 'white',}}>
+                                Send
+                            </Text>
+                            </TouchableOpacity>
                         
                     </View>
                     <View style = {{marginBottom:10}} >
-                        <Button title="Send" onPress={sendVerify} style = {{backgroundColor:"orange"}}  />
+                        <TouchableOpacity title="Send" onPress={sendVerify} style = {{width:"10%"}}  />
                     </View>
                 </>
                 }
@@ -150,7 +224,7 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.63)',
         fontSize: 20,
         marginTop:20,
-        
+        marginBottom:20,
         textAlign: 'center'
     },
     container: {
@@ -220,10 +294,10 @@ const boxStyles = StyleSheet.create({
         borderWidth: 1,
         borderStyle: 'dashed',
         width: '80%',
-        height: '60%',
+        height: 260,
         marginLeft:38,
         marginRight:38,
-        marginBottom:15,
+        marginBottom:20,
         marginTop:10
     },
     videoPreview: {
@@ -233,7 +307,7 @@ const boxStyles = StyleSheet.create({
     placeholder: {
       width: '100%',
       height: '100%',
-      backgroundColor: '#ccc',
+      backgroundColor: 'lightgray',
     },
     plusIcon: {
       position: 'absolute',
