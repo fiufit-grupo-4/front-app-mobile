@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FavTraining from "../../components/trainings/favTrainings";
 import { useIsFocused } from '@react-navigation/native';
 import FavoriteListItem from "../search/FavoriteListItem";
+import { getErrorMessage,getUser, updateUser } from "../../utils/getters";
 
 const FavoriteTrainingScreen = () => {
     const isFocused = useIsFocused();
@@ -15,26 +16,14 @@ const FavoriteTrainingScreen = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigation = useNavigation();
-    
-    
 
-    const favorites = [
-        { title: 'Running 32k', type: 'Running', difficulty: '1', description: 'Debes correr por una pradera muchoo sadasdas asdsad ' },
-        { title: 'Caminata 2k', type: 'Caminata', difficulty: '2', description: 'Descripción 2' },
-        { title: 'Yoga 30 min', type: 'Yoga', difficulty: '3', description: 'Descripción 3' },
-        // ... más elementos de la lista de favoritos
-      ];
-
-
-    
       
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
         async function getUsers() {
             setLoading(true);
             setError(false)
-            let storage = await AsyncStorage.getItem(USER)
-            let userInfo = JSON.parse(storage)
+            let userInfo = await getUser()
             let response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -42,22 +31,17 @@ const FavoriteTrainingScreen = () => {
                     'Authorization': 'Bearer ' + userInfo.access_token,
                 },
             })
-            setLoading(false);
-
             if (!response.ok) {
                 setError(true);
                 console.log("RESPONSE: ", response.status);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
+                setErrorMessage(getErrorMessage(response.status))
+                setLoading(false);
             } else {
                 let data = await response.json()
-                console.log(data)
-                setUser(data)
                 setPosts(data.trainings);
-                //await handleSetUser(data,user)
+                let updatedUser = await updateUser(data,userInfo)
+                setUser(updatedUser)
+                setLoading(false);
             }
         }
         getUsers();
@@ -67,7 +51,7 @@ const FavoriteTrainingScreen = () => {
     return (
         <View>
             <View style={styles.container}>
-                <Text style={styles.title}> {"Favoritos "}
+                <Text style={styles.title}> {"Favorites "}
                     
                 </Text>
                     { loading 

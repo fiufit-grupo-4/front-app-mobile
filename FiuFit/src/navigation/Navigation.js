@@ -26,38 +26,34 @@ import FavoriteTrainingProfile from '../screens/search/FavoriteTrainingProfile';
 const Stack = createNativeStackNavigator();
 
 class Navigation extends React.Component {
+
+
     render() {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
                     {/*<Stack.Screen name="Prueba" component={Prueba} options={{ headerShown: false }} /> */}
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
-
                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     
                     <Stack.Screen name="ConfirmPhone" component={ConfirmPhoneScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
-                    
+                
+                    <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
                     <Stack.Screen name="Profile" component={MenuProfileScreen} />
                     <Stack.Screen name="Edit Profile" component={EditProfileScreen}  />
                     <Stack.Screen name="Change Password" component={ChangePasswordScreen}  />
                     <Stack.Screen name="User Profile" component={UserProfile}  />
-
                     <Stack.Screen name="Edit Training" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
-
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
-
-                    <Stack.Screen name="My Trainings" component={ViewTrainings}  />
-
-                   
+                    <Stack.Screen name="Trainings" component={ViewTrainings}  />
+                    
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
-
 
                 </Stack.Navigator>
             </NavigationContainer>

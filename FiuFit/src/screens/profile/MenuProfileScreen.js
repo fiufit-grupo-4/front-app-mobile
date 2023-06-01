@@ -1,12 +1,11 @@
 import React,{useState,useEffect} from 'react';
 import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {USER} from '../../utils/constants';
+
 import {Ionicons} from 'react-native-vector-icons'
 import { useIsFocused } from '@react-navigation/native';
 import { getUser,getRole,updateUser } from '../../utils/getters';
 import Client from '../../client/Client';
-import { set } from 'react-native-reanimated';
+
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
@@ -66,7 +65,7 @@ function MenuProfileScreen({ navigation,route }) {
                         <View style={styles.nameContainer}>
                             <Text style={styles.name}>{user.name + " " +user.lastname +" "}
                               { user.verified && (
-                                <Ionicons name={"checkmark-done-outline"} size={22} color={"lightblue"} />
+                                <Ionicons name={"checkmark-done-outline"} size={22} color={"lightskyblue"} />
                               )}
                             </Text>
                             <Text style={styles.role}>{getRole(user.role)}</Text>
@@ -75,12 +74,8 @@ function MenuProfileScreen({ navigation,route }) {
                         </View>
                     </View>
 
-                    <View style={styles.followersContainer}>
-                        <Text style={styles.followersCount}>Followers: 100</Text>
-                        <Text style={styles.followingCount}>Following: 50</Text>
-                    </View>
+                    
                     <View style={styles.buttonsContainer}>
-                      
                         <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
                             <Text style={ styles.messageButtonText }>Edit Profile</Text>
                         </TouchableOpacity>
@@ -89,22 +84,24 @@ function MenuProfileScreen({ navigation,route }) {
                             <Text style={styles.followButtonText}>Edit Password</Text>
                         </TouchableOpacity>
                     </View>
-
                     
+                    <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:true})}>
+                       <Text style={styles.buttonText}>View Trainings</Text>
+                    </TouchableOpacity>
+                    <View style={styles.followersContainer}>
+                        <Text style={styles.followersCount}>Followers: 100</Text>
+                        <Text style={styles.followingCount}>Following: 50</Text>
+                    </View>
 
                     <View style={styles.tableContainer}>
-                        
                         <View style={styles.table}>
                             <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
                             <Text style={styles.tableHeaderCell}>Email: {user.mail}</Text>
                             <Text style={styles.tableHeaderCell}>Age: {user.age}</Text>
                         </View>
-                       
                     </View>
 
-                    <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('My Trainings',{user : user,reload:reload})}>
-                       <Text style={styles.buttonText}>Trainings</Text>
-                    </TouchableOpacity>
+                    
 
                 </View>
 
@@ -171,15 +168,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 10,
         marginTop:20,
-        marginHorizontal: 40
+        marginHorizontal: 40,
+        textAlign:"center",
+        width:"60%"
     },container: {
         flex: 1,
         padding: 10,
         backgroundColor:"white",
         margin:10,
-       
+        height:720,
         borderRadius:15,
-        marginTop:25
+        marginTop:20
       },
       header: {
         marginTop:5,
@@ -232,7 +231,9 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         backgroundColor: 'black',
         borderRadius: 5,
-        marginRight: 10,
+        marginLeft:5,
+        alignItems:"center",
+        width:"50%"
       },
       followButtonText: {
         color: '#FFFFFF',
@@ -245,7 +246,9 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         backgroundColor: '#788FAD',
         borderRadius: 5,
-        marginRight: 10,
+        marginRight:5,
+        width:"50%",
+        alignItems:"center",
       },
     
       payButton: {
@@ -267,7 +270,8 @@ const styles = StyleSheet.create({
         borderTopWidth:1,
         borderBottomWidth:1,
         padding:8,
-        marginBottom:5
+        marginBottom:5,
+        marginTop:20
       },
       followersCount: {
         fontSize: 16,
@@ -279,7 +283,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       },
       tableContainer: {
-        //flex: 1,
+        marginTop:20
         
       },
       tableHeader: {
@@ -300,10 +304,10 @@ const styles = StyleSheet.create({
         marginBottom:5,
       },
       tableHeaderCell: {
-        fontWeight: 'bold',
+        
         paddingLeft:10,
-        fontSize:14,
-        marginBottom:5
+        fontSize:18,
+        marginBottom:10
       },
       tableRow: {
         flexDirection: 'row',

@@ -5,6 +5,8 @@ import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constant
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserListItem from './UserListItem';
 import { distance} from '../../utils/locations';
+import { getRole,getUser } from '../../utils/getters';
+import Client from '../../client/Client';
 
 const UserFilters = ({search}) => {
   const [type,setType] = useState('');
@@ -44,6 +46,17 @@ const UserFilters = ({search}) => {
     async function getUsers() {
         setLoading(true)
         setError(false)
+        let userInfo = await getUser()
+        setMyUser(userInfo)
+        Client.getUsers().then((data) => {
+          setUsers(data)
+          setLoading(false)
+        }).catch((error) => {
+          setError(true);
+          setErrorMessage(error.toString());
+          setLoading(false)
+        })
+        /*
         AsyncStorage.getItem(USER).then((item) => {
             let userInfo = JSON.parse(item)
             setMyUser(userInfo)
@@ -77,23 +90,12 @@ const UserFilters = ({search}) => {
         })}).catch((error) => {
             setError(true);
             setErrorMessage(error);
-        });
+        });*/
         }
         getUsers();
     }, [])
 
 
-    function getRole(role){
-        if (role == ADMIN){
-            return "Admin"
-        } else if (role == TRAINER){
-            return "Trainer"
-        } else if (role == ATHLETE){
-            return "Athlete"
-        } else {
-            return "Undefined"
-        }
-        }
 
     function getFilteredUsers() {
       if (!maxDistance) {
@@ -132,26 +134,25 @@ const UserFilters = ({search}) => {
             )}
           <TypeSelector setType={setType} types={types}></TypeSelector>
         </View> 
-       
+        {error && (
+            <View style = {{alignItems:"center",marginTop:15}}>
+                <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+            </View>
+        )}
         <View>
           { loading 
-            ? <View style={{marginTop:10}}>
+            ? <View style={{marginTop:200, transform: [{ scaleX: 2 }, { scaleY: 2 }]}}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            :  <View style={{marginTop:10 }}>
+            :  <View style={{height:"86%",marginTop:10}}>
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}
-                        contentContainerStyle={{ paddingBottom: 500 }}
+                        ListFooterComponent={<View/>}
                         renderItem={({ item }) => (
                             <UserListItem user = {item} myDistance = {myUser.location}/>
                         )}
                     />
-                {error && (
-                    <View style = {{alignItems:"center",marginTop:15}}>
-                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                    </View>
-                    )}
                </View>              
           }  
         

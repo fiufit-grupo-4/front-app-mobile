@@ -8,15 +8,16 @@ import {
     Alert,
     TouchableWithoutFeedback,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    ToastAndroid
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import TrainingType from "../../components/trainings/TrainingType";
-import { API_GATEWAY,USER } from '../../utils/constants';
 import {firebase} from '../../config/firebase'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import MediaBox from '../../components/media/MediaBox';
+import { getUser,getErrorMessage } from '../../utils/getters';
+import Client from '../../client/Client';
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -107,12 +108,23 @@ export const CreateTraining = ({ navigation }) => {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        let item = await AsyncStorage.getItem(USER)
-        let user = JSON.parse(item)
+        let user = await getUser()
         let array = await handleMedia(user)
-        let url = API_GATEWAY + "trainers/me/trainings"
         setLoading(true)
-        setError(false)     
+        setError(false)  
+        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array)
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))
+            ToastAndroid.show('Post created succesfully!', ToastAndroid.SHORT)                
+            navigation.goBack();
+        }
+
+        /*
         let response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -139,7 +151,7 @@ export const CreateTraining = ({ navigation }) => {
             let data = await response.json()
             console.log(JSON.stringify(data))                
             navigation.goBack();
-        }
+        }*/
         resetStates()
         
     };
@@ -230,7 +242,7 @@ const styles = StyleSheet.create({
         padding: 10,
         color: 'rgba(32,38,70,0.63)',
         fontSize: 20,
-        marginTop:15,
+        marginTop:35,
         alignContent: 'center',
         textAlign: 'center'
     },
@@ -253,7 +265,7 @@ const styles = StyleSheet.create({
         minHeight:40,
         backgroundColor: 'rgba(163,205,255,0.42)',
         paddingHorizontal: 5,
-        borderRadius: 18,
+        borderRadius: 10,
 
     },
     input: {
@@ -281,7 +293,7 @@ const styles = StyleSheet.create({
     nextButton: {
         backgroundColor: '#DEE9F8FF',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: 10,
         padding: 10,
         marginHorizontal: 5,
         marginBottom:1,
@@ -296,10 +308,12 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#F0A500',
-        borderRadius: 20,
+        borderRadius: 10,
         paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        marginTop:50,
+        marginHorizontal: 40,
+        width:"80%",
+        
     },
     trainingType: {
         height: 50,

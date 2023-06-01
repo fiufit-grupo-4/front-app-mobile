@@ -58,7 +58,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
     /*LIKES*/
     const isliked = (item, user) => {
-        return item.scores.some((score) => (score.user.id === user.id));
+        return item.scores.some((score) => (score?.user.id === user.id));
     };
 
     const [isLike, setIsLike] = useState(isliked(item, user));

@@ -4,6 +4,111 @@ import { getErrorMessage} from '../utils/getters';
 
 class ApiClient {
 
+
+  async getTrainingsById(access_token,id){
+    if (MOCK) return Mocked.getTrainings()
+    const url = API_GATEWAY + 'trainings/' + id.toString()
+    let response = await fetch(url, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+    })
+    if (!response.ok) {
+      console.log(response.status)
+      let errorMessage = getErrorMessage(response.status)     
+      throw new Error(errorMessage)
+    }
+    let json = await response.json()
+    console.log(json)
+    return json
+  }
+
+
+
+    async getMyTrainings(access_token){
+      if (MOCK) return Mocked.getTrainings()
+      const url = API_GATEWAY + 'trainers/me/trainings?'
+      var query = new URLSearchParams({
+          limit: 128
+      })
+      let response = await fetch(url + query, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+    async getUsers(access_token){
+      if (MOCK) return Mocked.getUsers()
+      const url = API_GATEWAY + 'users'
+      let response = fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+
+    async getTrainings(access_token){
+      if (MOCK) return Mocked.getTrainings()
+      const url = API_GATEWAY + 'trainings'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+
+    async createNewPost(access_token,title,description,type,difficulty,array){
+      let url = API_GATEWAY + "trainers/me/trainings"
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({       
+            "title": title,
+            "description": description,
+            "type": type,
+            "difficulty": difficulty,
+            "media": array
+        })
+      })
+      return response
+    }
+
+
     async getMyUserInfo(access_token){
       if (MOCK) return Mocked.getUserInfo()
       const url = API_GATEWAY + 'users/me'
