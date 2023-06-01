@@ -6,6 +6,7 @@ import TrainingListItem from "../search/TrainingListItem";
 import Client from "../../client/Client";
 import { useIsFocused } from '@react-navigation/native';
 import { getUser } from "../../utils/getters";
+import Errors from "../../components/utils/Error";
 
 function ViewTrainings({ navigation,route }) {
     const {user, myUser} = route.params
@@ -56,17 +57,27 @@ function ViewTrainings({ navigation,route }) {
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <>
-                    <View style={{padding:10 }}>
-                        <FlatList
-                        data={trainings}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({item}) => (
-                            <View style={{marginTop:10 }}>
-                                <TrainingListItem user={user} item={item} canEdit={myUser}></TrainingListItem>  
+
+
+
+
+
+                    {trainings.length == 0  
+                        ? <Errors message={"This trainer dont have any posts yet"} icon={"image-outline"}></Errors>
+                        : <View style={{padding:10 }}>
+                                <FlatList
+                                data={trainings}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({item}) => (
+                                    <View style={{marginTop:10 }}>
+                                        <TrainingListItem user={user} item={item} canEdit={myUser}></TrainingListItem>  
+                                    </View>
+                                )}
+                                />
                             </View>
-                        )}
-                        />
-                    </View>
+                    }
+
+                    
                     {notTrainigs && (
                         <View style = {{alignItems:"center",marginTop:15}}>
                             <Text style = {{fontSize:18}}> You don't have any trainings yet  </Text>

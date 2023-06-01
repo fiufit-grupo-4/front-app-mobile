@@ -7,6 +7,7 @@ import FavTraining from "../../components/trainings/favTrainings";
 import { useIsFocused } from '@react-navigation/native';
 import FavoriteListItem from "../search/FavoriteListItem";
 import { getErrorMessage,getUser, updateUser } from "../../utils/getters";
+import Errors from "../../components/utils/Error";
 
 const FavoriteTrainingScreen = () => {
     const isFocused = useIsFocused();

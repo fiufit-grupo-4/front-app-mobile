@@ -10,7 +10,7 @@ export async function getUser(){
 
 
 export function getErrorMessage(status){
-    if(status == 401) "Invalid username or password"
+    if(status == 401) return "Unauthorized"
     else return "Failed to connect with server"
 }
 

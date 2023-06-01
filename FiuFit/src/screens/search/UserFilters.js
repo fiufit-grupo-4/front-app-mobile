@@ -48,7 +48,7 @@ const UserFilters = ({search}) => {
         setError(false)
         let userInfo = await getUser()
         setMyUser(userInfo)
-        Client.getUsers().then((data) => {
+        Client.getUsers(userInfo.access_token).then((data) => {
           setUsers(data)
           setLoading(false)
         }).catch((error) => {
@@ -144,13 +144,13 @@ const UserFilters = ({search}) => {
             ? <View style={{marginTop:200, transform: [{ scaleX: 2 }, { scaleY: 2 }]}}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            :  <View style={{height:"86%",marginTop:10}}>
+            :  <View style={{height:"85%",marginTop:10}}>
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}
                         ListFooterComponent={<View/>}
                         renderItem={({ item }) => (
-                            <UserListItem user = {item} myDistance = {myUser.location}/>
+                            <UserListItem user = {item} myDistance = {myUser.location} myId = {myUser.id}/>
                         )}
                     />
                </View>              

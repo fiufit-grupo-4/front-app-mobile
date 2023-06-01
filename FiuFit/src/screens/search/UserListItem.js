@@ -4,10 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import { distance} from '../../utils/locations';
 import {Ionicons} from 'react-native-vector-icons'
 
-const UserListItem = ({ user, myDistance }) => {
+const UserListItem = ({ user, myDistance,myId }) => {
   const navigation = useNavigation();
   function handleOnPress() {
-    navigation.navigate("User Profile", {user:user})
+    navigation.navigate("User Profile", {user:user,id:myId})
   }
 
   function distancia (){
