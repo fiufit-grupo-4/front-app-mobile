@@ -9,7 +9,8 @@ import {topContent, trainingPlace} from "./TopBarTraining";
 import {trainingContent, trainingPrincipalContent} from "./ContentTraining";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { getUser,getErrorMessage } from "../../utils/getters";
+import Client from "../../client/Client";
 
 const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [showModal, setShowModal] = useState(false);
@@ -64,6 +65,22 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [isLike, setIsLike] = useState(isliked(item, user));
 
     const handleAddLike = async () => {
+        
+        setIsLike(true)
+        setLoading(true);
+        setError(false)
+        let userInfo = await getUser()
+        let response = await Client.handleAddLike(userInfo.access_token, item.id)
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            setErrorMessage(getErrorMessage(response.status));
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+        setLoading(false);
+        /*
         console.log(item.id)
         console.log(item.scores)
         let url = API_GATEWAY + 'trainings/' + item.id + '/score';
@@ -95,10 +112,26 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
         } else {
             let data = await response.json()
             console.log(data)
-        }
+        }*/
     }
 
     const handleDeleteLike = async () => {
+        
+        setIsLike(false)
+        setLoading(true);
+        setError(false)
+        let userInfo = await getUser()
+        let response = await Client.handleDeleteLike(userInfo.access_token, item.id)
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            setErrorMessage(getErrorMessage(response.status));
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+        setLoading(false);
+        /*
         setIsLike(false)
         console.log(item.id)
         let url = API_GATEWAY + 'trainings/' + item.id + '/score';
@@ -126,17 +159,31 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
         } else {
             let data = await response.json()
             console.log(data)
-        }
-
+        }*/
     }
 
     const handleLikePress = () => {
         isLike? handleDeleteLike() : handleAddLike()
     }
 
-    /*FAVORITES*/
+
     const handleAddFavorite = async () => {
-        console.log(item.id)
+        /*
+        setIsFavorite(true)
+        setLoading(true);
+        setError(false)
+        let userInfo = await getUser()
+        let response = await Client.handleAddFavorite(userInfo.access_token, item.id)
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            setErrorMessage(getErrorMessage(response.status));
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+        setLoading(false);*/
+
         let url = API_GATEWAY + "users/me/trainings/" + item.id
         setIsFavorite(true)
         setLoading(true);
@@ -151,15 +198,10 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
             },
         })
         setLoading(false);
-
         if (!response.ok) {
             setError(true);
             console.log("RESPONSE: ", response.status);
-            if (response.status === 401) {
-                setErrorMessage('Unauthorized, not a valid access token');
-            } else {
-                setErrorMessage('Failed to connect with the server');
-            }
+            setErrorMessage(getErrorMessage(response.status));
         } else {
             let data = await response.json()
             console.log(data)
@@ -167,8 +209,24 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
     }
 
     const handleDeleteFavorite = async () => {
+        
         setIsFavorite(false)
-        console.log(item.id)
+        setLoading(true);
+        setError(false)
+
+        let userInfo = await getUser()
+        let response = await Client.handleDeleteFavorite(userInfo.access_token, item.id)
+        if (!response.ok) {
+            setError(true);
+            console.log("RESPONSE: ", response.status);
+            setErrorMessage(getErrorMessage(response.status));
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+        /*
+        setLoading(false);
+        setIsFavorite(false)
         let url = API_GATEWAY + "users/me/trainings/" + item.id
         setLoading(true);
         setError(false)
@@ -194,7 +252,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
         } else {
             let data = await response.json()
             console.log(data)
-        }
+        }*/
 
     }
 

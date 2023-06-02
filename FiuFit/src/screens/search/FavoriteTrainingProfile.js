@@ -61,7 +61,7 @@ const FavoriteTrainingProfile = ( {route} ) => {
 
     return (
 
-        <View style={{ padding: 1, marginHorizontal:10,marginTop:10  }}>
+        <View style={{ padding: 5, marginHorizontal:10,marginTop:10  }}>
             { loading 
                 ? <View style={{marginTop:315, transform: [{ scaleX: 2.2 }, { scaleY: 2.2 }] }}>
                     <ActivityIndicator size="large" color = "black"/>

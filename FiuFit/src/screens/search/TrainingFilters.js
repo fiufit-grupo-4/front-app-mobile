@@ -1,11 +1,9 @@
 import React, { useState,useEffect } from 'react';
 import { FlatList,ActivityIndicator,View, Text, TouchableWithoutFeedback,SafeAreaView, TextInput, Button } from 'react-native';
 import TypeSelector from './TypeSelector';
-import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrainingListItem from './TrainingListItem';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { getUser,getErrorMessage } from '../../utils/getters';
+import { getUser} from '../../utils/getters';
 import Client from '../../client/Client';
 
 const TrainingFilters = ({search}) => {
@@ -49,7 +47,7 @@ const TrainingFilters = ({search}) => {
         let userInfo = await getUser()
         setUserData(userInfo)
         Client.getTrainings(userInfo.access_token).then((data) => {
-          console.log(JSON.stringify(data))
+          //console.log(JSON.stringify(data))
           setTrainings(data)
           setLoading(false);
         }).catch((error) => {
@@ -104,11 +102,12 @@ const TrainingFilters = ({search}) => {
             ? <View style={{marginTop:200, transform: [{ scaleX: 2 }, { scaleY: 2 }]}}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            :  <View style={{height:"86%"}}>
+            :  <View style={{marginTop:20,padding:5}}>
                 <FlatList
                         data={getFilteredTrainings()}
                         keyExtractor={(item) => item.id.toString()}
                         ListFooterComponent={<View/>}
+                        horizontal={true}
                         renderItem={({ item }) => (
                             <TrainingListItem item={item} user={userData} canEdit={false} />
                         )}

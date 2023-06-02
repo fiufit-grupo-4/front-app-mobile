@@ -10,7 +10,7 @@ export async function getUser(){
 
 
 export function getErrorMessage(status){
-    if(status == 401) "Invalid username or password"
+    if(status == 401) return "Unauthorized"
     else return "Failed to connect with server"
 }
 
@@ -43,7 +43,9 @@ export async function updateUser(newData,oldData){
         "access_token":oldData.access_token,
         "token_type":oldData.token_type,
         "id": newData.id,
-        "verified": newData.verification.verified
+        "verified": newData.verification.verified,
+        "followers": newData.followers,
+        "following":newData.following
     }
     await AsyncStorage.setItem(USER,JSON.stringify(updateUser))
     return updateUser

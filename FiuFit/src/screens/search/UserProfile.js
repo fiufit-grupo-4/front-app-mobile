@@ -2,16 +2,43 @@ import React,{useState,useEffect} from 'react';
 import {ScrollView,View, Image, Text, TouchableOpacity, StyleSheet,ActivityIndicator} from 'react-native';
 import { ADMIN, ATHLETE, TRAINER } from '../../utils/constants';
 import {Ionicons} from 'react-native-vector-icons'
-import { getRole } from '../../utils/getters';
-
-
+import { getRole,getUser,getErrorMessage } from '../../utils/getters';
+import { useIsFocused } from '@react-navigation/native';
+import Client from '../../client/Client';
+import FollowersContainer from '../../components/followers/FollowersContainer';
 
 const UserProfile = ({ navigation,route }) => {
-  const {user} = route.params
-  const [isFollowing, setIsFollowing] = useState(false);
+  const {user,id} = route.params;
+  const followed = () => {
+      user.followers.map( follows => {
+        if (id == follows?.id)
+          return true
+      })
+      return false
+  }
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const [isFollowing, setIsFollowing] = useState(followed());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("false");
+  
+  const handleFollow = async () => {
+    setLoading(true)
+    setError(false)
+    let myUser = await getUser()
+    let endpoint = isFollowing? "/unfollow" : "/follow"
+    let response = await Client.handleFollowUser(myUser.access_token,user.id,endpoint) 
+    if (!response.ok) { 
+      console.log(response.status)
+      setError(true)
+      setErrorMessage(getErrorMessage(response.status))  
+          
+    } else {
+      let json = await response.json()
+      console.log(json)
+      setIsFollowing(!isFollowing);
+    }
+    setLoading(false)
   };
 
 
@@ -41,20 +68,32 @@ const UserProfile = ({ navigation,route }) => {
         </View>
       </View>
       <View style={styles.buttonsContainer}>
+         
           <TouchableOpacity
             style={styles.followButton}
             onPress={handleFollow}
            >
-            <Text style={styles.followButtonText}>
-              {isFollowing ? 'Unfollow' : 'Follow'}
-            </Text>
+            {loading 
+              ? <ActivityIndicator color = "white"></ActivityIndicator>
+              :<Text style={styles.followButtonText}>
+                {isFollowing ? 'Unfollow' : 'Follow'}
+               </Text>
+            }
           </TouchableOpacity>
+          
           <TouchableOpacity style={styles.messageButton}>
             <Text style={styles.messageButtonText}>Message</Text>
           </TouchableOpacity> 
 
           
         </View>
+
+        {error && (
+            <View style = {{alignItems:"center",marginTop:15}}>
+                <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+            </View>
+        )}
+        
         
         { user.role != ATHLETE && (
           <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:false})}>
@@ -63,11 +102,8 @@ const UserProfile = ({ navigation,route }) => {
         )}
         
 
-
-      <View style={styles.followersContainer}>
-        <Text style={styles.followersCount}>Followers: 100</Text>
-        <Text style={styles.followingCount}>Following: 50</Text>
-      </View>
+      <FollowersContainer followers={user.followers} following={user.following}></FollowersContainer>
+      
       <View style={styles.tableContainer}>
             <View style={styles.table}>
                 <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
@@ -111,7 +147,7 @@ button: {
     padding:10,
     borderRadius:15,
     backgroundColor: '#DEE9F8FF',
-   
+    borderWidth:1
   },
   trainingButton:{
     borderRadius: 10,
@@ -148,6 +184,11 @@ button: {
     padding: 5,
     marginBottom:10,
     marginTop:10
+  },
+  followButtonContainer: {
+
+    backgroundColor: 'black',
+
   },
   followButton: {
     paddingHorizontal: 15,

@@ -1,15 +1,13 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Training from "../../components/trainings/Training";
-import CustomButton from '../../components/buttons/CustomButton';
-import Recommended from '../home/Recommended';
+import Recommended from './Recommended';
 
-const TrainingListItem = ({ item, user,canEdit }) => {
+const ListRecommended = ({ item, user,canEdit }) => {
   const navigation = useNavigation();
   
   function handleOnPress() {
-    navigation.navigate("Training Profile", {item:item, user:user,canEdit:canEdit ? canEdit : false})
+    navigation.navigate("Training Profile", {item:item, user:user})
   }
   return (
     
@@ -28,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrainingListItem;
+export default ListRecommended;

@@ -5,8 +5,77 @@ import { getErrorMessage} from '../utils/getters';
 class ApiClient {
 
 
+  async handleDeleteLike(access_token,id){
+    let url = API_GATEWAY + 'trainings/' + id + '/score';
+    let response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+      body: JSON.stringify({
+        "qualification": 1
+      })
+    })
+    return response
+  }
+
+
+  async handleAddLike(access_token,id){
+    let url = API_GATEWAY + 'trainings/' + id + '/score';
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+      body: JSON.stringify({
+        "qualification": 1
+      })
+    })
+    return response
+  }
+
+  async handleAddFavorite(access_token,id){
+    let url = API_GATEWAY + "users/me/trainings/" + id
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+  })
+    return response
+  }
+
+  async handleDeleteFavorite(access_token,id){
+    let url = API_GATEWAY + "users/me/trainings/" + id
+    let response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+  })
+    return response
+  }
+
+
+  async handleFollowUser(access_token,id,endpoint){
+    const url = API_GATEWAY + 'users/' + id.toString() + endpoint
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+    })
+    return response
+  }
+
   async getTrainingsById(access_token,id){
     if (MOCK) return Mocked.getTrainings()
+    console.log(id)
     const url = API_GATEWAY + 'trainings/' + id.toString()
     let response = await fetch(url, {
       method: 'GET',
@@ -17,11 +86,11 @@ class ApiClient {
     })
     if (!response.ok) {
       console.log(response.status)
+      if (response.status == 404) return []
       let errorMessage = getErrorMessage(response.status)     
       throw new Error(errorMessage)
     }
     let json = await response.json()
-    console.log(json)
     return json
   }
 
@@ -41,8 +110,8 @@ class ApiClient {
         },
       })
       if (!response.ok) {
-        console.log(response.status)
-        let errorMessage = getErrorMessage(response.status)     
+        if (response.status == 404) return []
+        let errorMessage = getErrorMessage(response.status)   
         throw new Error(errorMessage)
       }
       let json = await response.json()
@@ -51,8 +120,8 @@ class ApiClient {
 
     async getUsers(access_token){
       if (MOCK) return Mocked.getUsers()
-      const url = API_GATEWAY + 'users'
-      let response = fetch(url, {
+      const url = API_GATEWAY + 'users/'
+      let response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -65,6 +134,7 @@ class ApiClient {
         throw new Error(errorMessage)
       }
       let json = await response.json()
+      
       return json
     }
 
