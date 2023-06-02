@@ -5,14 +5,12 @@ import {Ionicons} from 'react-native-vector-icons'
 import { getRole,getUser,getErrorMessage } from '../../utils/getters';
 import { useIsFocused } from '@react-navigation/native';
 import Client from '../../client/Client';
-
+import FollowersContainer from '../../components/followers/FollowersContainer';
 
 const UserProfile = ({ navigation,route }) => {
   const {user,id} = route.params;
   const followed = () => {
       user.followers.map( follows => {
-        console.log("FOllow es")  
-        console.log(follows)
         if (id == follows?.id)
           return true
       })
@@ -96,6 +94,7 @@ const UserProfile = ({ navigation,route }) => {
             </View>
         )}
         
+        
         { user.role != ATHLETE && (
           <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:false})}>
             <Text style={styles.buttonText}>View Trainings</Text>
@@ -103,11 +102,8 @@ const UserProfile = ({ navigation,route }) => {
         )}
         
 
-
-      <View style={styles.followersContainer}>
-        <Text style={styles.followersCount}>Followers: 100</Text>
-        <Text style={styles.followingCount}>Following: 50</Text>
-      </View>
+      <FollowersContainer followers={user.followers} following={user.following}></FollowersContainer>
+      
       <View style={styles.tableContainer}>
             <View style={styles.table}>
                 <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
@@ -151,7 +147,7 @@ button: {
     padding:10,
     borderRadius:15,
     backgroundColor: '#DEE9F8FF',
-   
+    borderWidth:1
   },
   trainingButton:{
     borderRadius: 10,

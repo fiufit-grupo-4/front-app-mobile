@@ -2,18 +2,20 @@
 import Logo from '../../components/utils/Logo';
 import React, { useState,useEffect } from 'react';
 import { FlatList,ActivityIndicator,View,ScrollView, Text, StyleSheet,SafeAreaView, TextInput, Button } from 'react-native';
-
+import { useIsFocused } from '@react-navigation/native';
 import ListRecommended from './ListRecommended';
 import { getUser} from '../../utils/getters';
 import Client from '../../client/Client';
 
 
 export const HomeTab = () => {
-  const [trainings,setTrainings] =  useState([]);
+  const [recommendedTrainings,setRecommendedTrainings] =  useState([]);
+  const [nearestTrainings,setNearestTrainings] =  useState([]);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     async function getTrainings() {
@@ -21,8 +23,10 @@ export const HomeTab = () => {
         let userInfo = await getUser()
         setUserData(userInfo)
         Client.getTrainings(userInfo.access_token).then((data) => {
-          console.log(JSON.stringify(data))
-          setTrainings(data)
+          let recommended = data
+          let near = data.slice().reverse()
+          setRecommendedTrainings(recommended)
+          setNearestTrainings(near)
           setLoading(false);
         }).catch((error) => {
             setLoading(false);
@@ -31,7 +35,7 @@ export const HomeTab = () => {
         })
         }
         getTrainings();
-    }, [])
+    }, [isFocused])
 
 
     return (
@@ -60,7 +64,7 @@ export const HomeTab = () => {
                             <Text style ={styles.subtitle}> Trainings just for you:</Text>
                         </View>
                         <FlatList
-                                data={trainings}
+                                data={recommendedTrainings}
                                 keyExtractor={(item) => item.id.toString()}
                                 ListFooterComponent={<View/>}
                                 horizontal= {true}
@@ -73,10 +77,11 @@ export const HomeTab = () => {
                             <Text style ={styles.subtitle}>Trainings near to you: </Text>
                         </View>
                           <FlatList
-                                data={trainings}
+                                data={nearestTrainings}
                                 keyExtractor={(item) => item.id.toString()}
                                 ListFooterComponent={<View/>}
                                 horizontal= {true}
+                                contentContainerStyle={{ marginBottom: 50 }}
                                 renderItem={({ item }) => (
                                     <ListRecommended item={item} user={userData} canEdit={false} />
                                 )}

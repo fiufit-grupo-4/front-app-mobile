@@ -1,24 +1,12 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import { distance} from '../../utils/locations';
 import {Ionicons} from 'react-native-vector-icons'
 
-const UserListItem = ({ user, myDistance,myId }) => {
+const FollowItem = ({ user, myId }) => {
   const navigation = useNavigation();
   function handleOnPress() {
     navigation.navigate("User Profile", {user:user,id:myId})
-  }
-
-  function distancia (){
-    if (user.location == null || myDistance == null){
-      return 0
-    } else {
-      return distance( myDistance, user.location)
-    }
-  }
-  function showDistance(){
-    return myDistance !=null &&  user.location !=null
   }
 
   return (
@@ -40,11 +28,6 @@ const UserListItem = ({ user, myDistance,myId }) => {
         </Text>
         <Text style={styles.role}>{user.mail}</Text>
       </View>
-      {showDistance() && (
-        <View style={styles.distanceInfo}>
-          <Text style={styles.role}> {distancia()} km</Text>
-        </View>
-      )}
       
     </View>
     </TouchableOpacity>
@@ -55,10 +38,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
+   
     backgroundColor:"white",
-    padding:9,
-    borderRadius:30,
+    padding:12,
+    borderRadius:20,
     //borderWidth:0.5
   },
   avatarContainer: {
@@ -78,12 +62,10 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft:2
   },
   role: {
     fontSize: 14,
     color: 'gray',
-    marginLeft:2
   },
   distanceInfo: {
     justifyContent:"flex-end",
@@ -91,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserListItem;
+export default FollowItem;

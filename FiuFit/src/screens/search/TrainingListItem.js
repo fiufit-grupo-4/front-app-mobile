@@ -9,7 +9,7 @@ const TrainingListItem = ({ item, user,canEdit }) => {
   const navigation = useNavigation();
   
   function handleOnPress() {
-    navigation.navigate("Training Profile", {item:item, user:user})
+    navigation.navigate("Training Profile", {item:item, user:user,canEdit:canEdit ? canEdit : false})
   }
   return (
     

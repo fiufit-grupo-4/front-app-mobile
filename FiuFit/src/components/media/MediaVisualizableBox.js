@@ -35,6 +35,7 @@ const styles = {
     width: 300,
     height: 300,
     margin: 10,
+    borderRadius:10
   },
   placeholderContainer: {
     flex: 1,
@@ -48,10 +49,12 @@ const styles = {
   imageContainer: {
     flex: 1,
     position: 'relative',
+    borderRadius:10
   },
   image: {
     width: '100%',
     height: '100%',
+    borderRadius:5,
   },
   removeButton: {
     position: 'absolute',

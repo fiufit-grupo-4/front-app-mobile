@@ -5,11 +5,13 @@ import {Ionicons} from 'react-native-vector-icons'
 import { useIsFocused } from '@react-navigation/native';
 import { getUser,getRole,updateUser } from '../../utils/getters';
 import Client from '../../client/Client';
-
+import FollowersContainer from '../../components/followers/FollowersContainer';
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({
+
+    });
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -31,6 +33,7 @@ function MenuProfileScreen({ navigation,route }) {
             Client.getMyUserInfo(userInfo.access_token).then(async data => {
               let updatedUser= await updateUser(data,userInfo)
               setUser(updatedUser)
+              console.log(updatedUser)
               setLoading(false);
             })
             .catch(error => {
@@ -74,7 +77,7 @@ function MenuProfileScreen({ navigation,route }) {
                         </View>
                     </View>
 
-                    
+                    <FollowersContainer followers={user.followers} following={user.following}></FollowersContainer>
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
                             <Text style={ styles.messageButtonText }>Edit Profile</Text>
@@ -88,10 +91,9 @@ function MenuProfileScreen({ navigation,route }) {
                     <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:true})}>
                        <Text style={styles.buttonText}>View Trainings</Text>
                     </TouchableOpacity>
-                    <View style={styles.followersContainer}>
-                        <Text style={styles.followersCount}>Followers: 100</Text>
-                        <Text style={styles.followingCount}>Following: 50</Text>
-                    </View>
+
+                    
+                    
 
                     <View style={styles.tableContainer}>
                         <View style={styles.table}>
@@ -178,17 +180,20 @@ const styles = StyleSheet.create({
         margin:10,
         height:720,
         borderRadius:15,
-        marginTop:20
+        marginTop:20,
+        
       },
       header: {
         marginTop:5,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 5,
         padding:10,
         borderRadius:15,
         backgroundColor: '#DEE9F8FF',
-       
+        borderWidth:1
+        //borderTopWidth:1,
+        //borderBottomWidth:1,
       },
       trainingButton:{
         borderRadius: 10,

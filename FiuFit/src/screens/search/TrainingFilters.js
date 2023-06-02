@@ -47,7 +47,7 @@ const TrainingFilters = ({search}) => {
         let userInfo = await getUser()
         setUserData(userInfo)
         Client.getTrainings(userInfo.access_token).then((data) => {
-          console.log(JSON.stringify(data))
+          //console.log(JSON.stringify(data))
           setTrainings(data)
           setLoading(false);
         }).catch((error) => {

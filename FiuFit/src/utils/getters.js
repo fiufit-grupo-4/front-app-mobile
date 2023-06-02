@@ -43,7 +43,9 @@ export async function updateUser(newData,oldData){
         "access_token":oldData.access_token,
         "token_type":oldData.token_type,
         "id": newData.id,
-        "verified": newData.verification.verified
+        "verified": newData.verification.verified,
+        "followers": newData.followers,
+        "following":newData.following
     }
     await AsyncStorage.setItem(USER,JSON.stringify(updateUser))
     return updateUser

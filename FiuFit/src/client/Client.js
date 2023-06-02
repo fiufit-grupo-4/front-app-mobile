@@ -4,6 +4,63 @@ import { getErrorMessage} from '../utils/getters';
 
 class ApiClient {
 
+
+  async handleDeleteLike(access_token,id){
+    let url = API_GATEWAY + 'trainings/' + id + '/score';
+    let response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+      body: JSON.stringify({
+        "qualification": 1
+      })
+    })
+    return response
+  }
+
+
+  async handleAddLike(access_token,id){
+    let url = API_GATEWAY + 'trainings/' + id + '/score';
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+      body: JSON.stringify({
+        "qualification": 1
+      })
+    })
+    return response
+  }
+
+  async handleAddFavorite(access_token,id){
+    let url = API_GATEWAY + "users/me/trainings/" + id
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+  })
+    return response
+  }
+
+  async handleDeleteFavorite(access_token,id){
+    let url = API_GATEWAY + "users/me/trainings/" + id
+    let response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+      },
+  })
+    return response
+  }
+
+
   async handleFollowUser(access_token,id,endpoint){
     const url = API_GATEWAY + 'users/' + id.toString() + endpoint
     let response = await fetch(url, {
@@ -34,7 +91,6 @@ class ApiClient {
       throw new Error(errorMessage)
     }
     let json = await response.json()
-    console.log(json)
     return json
   }
 
@@ -78,7 +134,7 @@ class ApiClient {
         throw new Error(errorMessage)
       }
       let json = await response.json()
-      console.log(json)
+      
       return json
     }
 

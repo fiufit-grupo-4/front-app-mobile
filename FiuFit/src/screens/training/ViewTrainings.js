@@ -17,15 +17,26 @@ function ViewTrainings({ navigation,route }) {
     const [notTrainigs, setNotTrainigs] = useState(false);
     const isFocused = useIsFocused();
 
+
+    const filterTrainings = (allTrainings) => {
+        let userTrainings = []
+        allTrainings.map(training =>{
+            if (training.trainer.id == user.id){
+                userTrainings.push(training)
+            }
+        })
+        setTrainings( userTrainings)
+    }
+
     useEffect(() => {
 
         async function getTrainings() {
             setLoading(true)
-
-            if (myUser){
+            let userInfo = await getUser()
+            if (userInfo.id == user.id){
+                console.log(user.id)
                 Client.getMyTrainings(user.access_token)
                     .then((response) => {
-                        console.log(JSON.stringify(response))
                         setTrainings(response)
                         setLoading(false) 
                     }).catch((error) => {
@@ -34,11 +45,12 @@ function ViewTrainings({ navigation,route }) {
                         setLoading(false)
                     })
             } else {
-                let userInfo = await getUser()
-                Client.getTrainingsById(userInfo.access_token,user.id)
+               
+                console.log(user.id)
+                Client.getTrainings(userInfo.access_token)
                 .then((response) => {
-                    console.log(JSON.stringify(response))
-                    setTrainings(response)
+                    //console.log(JSON.stringify(response))
+                    filterTrainings(response)
                     setLoading(false) 
                 }).catch((error) => {
                     setError(true);
@@ -57,10 +69,6 @@ function ViewTrainings({ navigation,route }) {
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <>
-
-
-
-
 
                     {trainings.length == 0  
                         ? <Errors message={"This trainer dont have any posts yet"} icon={"image-outline"}></Errors>

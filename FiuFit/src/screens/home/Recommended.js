@@ -51,10 +51,11 @@ const Recommended = ({user, item, canEdit, reload, fav = false}) => {
                             <Text style={newstyles.titulo}>{item.title}</Text>
                             <Text style={newstyles.dificultad}>{renderStars(parseInt(item.difficulty))}</Text>
                         </View>
-                        <Text style={newstyles.tipo}>{item.type}</Text>
-                        
+                        <Text style={newstyles.tipo}>{item.type}</Text>       
                     </View>
+                    <View style={{alignContent:"center",alignItems:"center"}} >
                     <MediaVisualizableBox media = { item.media[0]}/>
+                    </View>
                     <View style={styles.item}>
                         <Ionicons name={'bicycle-outline'} style={styles.icon}/>
                         <Text style={styles.itemText}>{"Trainer: "+item.trainer.name + " " + item.trainer.lastname}</Text>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     },
     postBackground: {
         marginBottom: 15,
-        //backgroundColor: 'rgba(217,227,240,0.75)'
+        backgroundColor: 'rgba(217,227,240,0.75)',
         backgroundColor: 'white'
     },
     item: {

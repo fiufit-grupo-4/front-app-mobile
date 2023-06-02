@@ -18,6 +18,7 @@ import {Picker} from "@react-native-picker/picker";
 import MediaEditableBox from '../../components/media/MediaEditableBox';
 import {firebase} from '../../config/firebase'
 
+
 const EditTraining = ({ onPress , route }) => {
     const {post, reload} = route.params;
     const [title, setTitle] = useState(post.title);
@@ -88,6 +89,7 @@ const EditTraining = ({ onPress , route }) => {
         let url = API_GATEWAY + "trainers/me/trainings/" + post.id
         setLoading(true);
         setError(false)
+        
         let item =  await AsyncStorage.getItem(USER)
         let userInfo = JSON.parse(item)
         let array = await handleMedia(userInfo)
@@ -108,10 +110,11 @@ const EditTraining = ({ onPress , route }) => {
             })
         })
 
-        setLoading(false);
-        console.log(JSON.stringify(response))
+       
+        
         if (!response.ok) {
             setError(true);
+            setLoading(false);
             if (response.status === 401) {
                 setErrorMessage('Unauthorized, not a valid access token');
             } else {
@@ -120,8 +123,10 @@ const EditTraining = ({ onPress , route }) => {
         } else {
             let data = await response.json()
             console.log(JSON.stringify(data))
+            setLoading(false);
             navigation.navigate("Profile",{reload:!reload})
-        }/*
+        }
+        /*
         AsyncStorage.getItem(USER).then(async (item) => {
             let userInfo = JSON.parse(item)
             let array = await uploadMedia(userInfo)
@@ -281,16 +286,21 @@ const EditTraining = ({ onPress , route }) => {
 
 
             { loading 
-                ? <View style={{marginTop:50, marginHorizontal: 40}}>
+                ? <View style={{marginBottom:100, marginHorizontal: 40}}>
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <>
-                    <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                        <Text style={styles.buttonText}>Save</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                        <Text style={styles.deleteButtonText}>Delete Post</Text>
-                    </TouchableOpacity>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                            <Text style={styles.deleteButtonText}>Delete Post</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+                            <Text style={styles.buttonText}>Save</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
+
+
                   </>
             }
 
@@ -315,6 +325,12 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#fff',
     },
+    buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:50
+    },
     inputContainer: {
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
@@ -333,16 +349,18 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 18,
-        color: 'rgba(23,29,52,0.93)',
+        color: 'white',
         textAlign: 'center',
         fontWeight:"bold"
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
-        borderRadius: 15,
-        paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        backgroundColor: 'black',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+       
     },
     deleteButtonText: {
         fontSize: 18,
@@ -352,10 +370,12 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         backgroundColor: 'crimson',
-        borderRadius: 15,
-        paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        
     },
     text: {
         fontSize: 16,
