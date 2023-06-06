@@ -6,12 +6,13 @@ import { useIsFocused } from '@react-navigation/native';
 import { getUser,getRole,updateUser } from '../../utils/getters';
 import Client from '../../client/Client';
 import FollowersContainer from '../../components/followers/FollowersContainer';
+import {ATHLETE, TRAINER} from "../../utils/constants";
+import FollowersScreen from "../Followers/FollowersScreen";
+import {AntDesign} from "@expo/vector-icons";
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
-    const [user, setUser] = useState({
-
-    });
+    const [user, setUser] = useState({});
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -87,12 +88,19 @@ function MenuProfileScreen({ navigation,route }) {
                             <Text style={styles.followButtonText}>Edit Password</Text>
                         </TouchableOpacity>
                     </View>
-                    
-                    <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:true})}>
-                       <Text style={styles.buttonText}>View Trainings</Text>
-                    </TouchableOpacity>
 
-                    
+                    { user.role !== ATHLETE &&(
+                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user, myUser:true})}>
+                            <Text style={styles.buttonText}>View Trainings</Text>
+                        </TouchableOpacity>
+                    )}
+
+
+                    { user.role !== TRAINER &&(
+                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Metrics',{user : user, myUser:true})}>
+                            <Text style={styles.buttonText}>View Metrics</Text>
+                        </TouchableOpacity>
+                    )}
                     
 
                     <View style={styles.tableContainer}>
@@ -201,7 +209,6 @@ const styles = StyleSheet.create({
         marginBottom:10,
         paddingVertical: 8,
         backgroundColor: '#DEE9F8FF',
-        borderRadius: 5,
         width:"100%",
         textAlign:"center"
       },

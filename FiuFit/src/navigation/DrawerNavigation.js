@@ -35,6 +35,7 @@ function DrawerComponent() {
     }, [])
 
 
+    console.log("USER EN EL DRAWER: ", userInfo);
 
     return (
         <Drawer.Navigator
@@ -92,21 +93,6 @@ function DrawerComponent() {
                     ),
                     headerShown: true,
                 })}/>
-
-            {/* 
-            <Drawer.Screen
-                name="         Settings"
-                color="#F0A500"
-                component={MenuProfileScreen}
-                options={() => ({
-                    drawerIcon: () => (
-                        <AntDesign
-                            name="setting"
-                        />
-                    ),
-                    headerShown: true,
-                })}
-            />*/} 
 
 
         <Drawer.Screen
@@ -179,6 +165,7 @@ function DrawerComponent() {
                         name="         New Follower"
                         color="#F0A500"
                         component={FollowersScreen}
+                        initialParams={ {user: userInfo} }
                         options={() => ({
                             drawerIcon: () => (
                                 <AntDesign

@@ -63,7 +63,9 @@
     "react-native-video": "^5.2.1",
     "react-native-web": "~0.18.11",
     "react-navigation": "^4.4.4",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "expo-notifications": "~0.18.1",
+    "expo-device": "~5.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
