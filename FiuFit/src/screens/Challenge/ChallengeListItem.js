@@ -7,26 +7,18 @@ import FirstChallengeView from "./FirstChallengeView";
 
 const ChallengeListItem = ({ item, user, canEdit }) => {
     const navigation = useNavigation();
-    const [selectedPost, setSelectedPost] = useState(null);
 
     function handleOnPress() {
         navigation.navigate("ViewGoal", {item:item, user:user, challengeId:item.id, canEdit:canEdit ? canEdit : false})
     }
 
 
-    const handleEditPress = (item) => {
-        setSelectedPost(item);
-        navigation.navigate('Edit Challenge', {post: item});
-    }
-
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handleOnPress}>
-                <FirstChallengeView item={item} user={user} canEdit={canEdit} />
-                <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
-                    <Text style={styles.buttonText}>Edit Challenge</Text>
-                </TouchableOpacity>
+                <FirstChallengeView item={item} user={user} canEdit={canEdit}  navigation={navigation} />
             </TouchableOpacity>
+
         </View>
     );
 };

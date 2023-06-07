@@ -36,7 +36,7 @@ function DrawerComponent() {
     }, [])
 
 
-    console.log("USER EN EL DRAWER: ", userInfo);
+    //console.log("USER EN EL DRAWER: ", userInfo);
 
     return (
         <Drawer.Navigator

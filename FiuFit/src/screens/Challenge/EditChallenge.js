@@ -4,13 +4,11 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Alert,
     StyleSheet,
     ActivityIndicator,
-    TouchableWithoutFeedback, ScrollView
+    ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,10 +16,10 @@ import {Picker} from "@react-native-picker/picker";
 
 
 const EditChallenge = ({ route }) => {
-    const {post, reload} = route.params;
-    const [title, setTitle] = useState(post.title);
-    const [description, setDescription] = useState(post.description);
-    const [challengeType, setChallengeType] = useState(post.type);
+    const {post: challengePost} = route.params;
+    const [title, setTitle] = useState(challengePost.title);
+    const [description, setDescription] = useState(challengePost.description);
+    const [challengeType, setChallengeType] = useState(challengePost.type);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -29,9 +27,10 @@ const EditChallenge = ({ route }) => {
 
     const navigation = useNavigation();
 
+    console.log("ESTE ES UNDEFINED !!!! ", challengePost)
 
     const handleSaveChanges = async () => {
-        let url = API_GATEWAY + "trainers/me/trainings/" + post.id
+        let url = API_GATEWAY + "trainers/me/trainings/" + challengePost.id
         setLoading(true);
         setError(false)
 
@@ -69,7 +68,7 @@ const EditChallenge = ({ route }) => {
 
 
     function handleDelete() {
-        let url = API_GATEWAY + "trainers/me/trainings/" + post.id
+        let url = API_GATEWAY + "trainers/me/trainings/" + challengePost.id
         setLoading(true);
         setError(false)
         AsyncStorage.getItem(USER).then((item) => {
@@ -163,7 +162,7 @@ const EditChallenge = ({ route }) => {
                 : <>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                            <Text style={styles.deleteButtonText}>Delete Post</Text>
+                            <Text style={styles.deleteButtonText}>Delete Challenge</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
                             <Text style={styles.buttonText}>Save</Text>

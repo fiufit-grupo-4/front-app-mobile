@@ -1,22 +1,34 @@
 import axios from "axios";
 import React, {useState} from "react";
-import {StyleSheet, View,Text} from "react-native";
+import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {Ionicons} from "react-native-vector-icons";
+import navigation from "../../navigation/Navigation";
 
+const FirstChallengeView = ({ user, item, canEdit, navigation }) => {
+    const [selectedPost, setSelectedPost] = useState(null);
 
-const FirstChallengeView = ({user, item, canEdit, reload}) => {
-    const [showModal, setShowModal] = useState(false);
-
+    const handleEditPress = () => {
+        setSelectedPost(item);
+        navigation.navigate('Edit Challenge', { post: item });
+    };
 
     return (
         <View style={styles.background}>
             <View style={styles.postContainer}>
                 <View style={styles.postBackground}>
                     <View key = {item.id} style={newstyles.container}>
+
                         <View style={newstyles.header}>
                             <Text style={newstyles.titulo}>{item.title}</Text>
+
+                            {/*EDIT BUTTON*/}
+                            <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
+                                <Ionicons name="md-settings-outline" size={15} color="#A6A6A6" style={styles.editButton}/>
+                            </TouchableOpacity>
+
                         </View>
+
                     </View>
                     <View style={styles.item}>
                         <Ionicons name={'person-outline'} style={styles.icon}/>
@@ -39,15 +51,13 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
         marginLeft:5,
         marginRight:5,
-        borderRadius:10,
-
+        borderRadius:11,
     },
     postContainer: {
 
     },
     postBackground: {
         marginBottom: 15,
-        //backgroundColor: 'rgba(217,227,240,0.75)',
         backgroundColor: 'white'
     },
     item: {
@@ -66,6 +76,11 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.63)',
         marginLeft: 8
     },
+    editButton:{
+        marginVertical: 6,
+        marginHorizontal: 4,
+        alignContent: "center"
+    },
 });
 
 
@@ -74,7 +89,6 @@ const newstyles = {
     container: {
         backgroundColor: '#ffffff',
         padding: 15,
-
         borderRadius:10,
 
     },name: {
