@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from "react-native";
 import React from "react";
 
-function Metric({item, user, canEdit}) {
+function Goal({item, user, canEdit}) {
     return (
         <View style={styles.item}>
             <Text style={styles.itemText}>{item.title}</Text>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Metric;
+export default Goal;

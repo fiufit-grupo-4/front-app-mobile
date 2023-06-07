@@ -17,24 +17,6 @@ const Recommended = ({user, item, canEdit, reload}) => {
     };
 
     /*
-    const renderStars = (dificultad) => {
-        const maxStars = 5;
-        const filledStars = Math.min(dificultad, maxStars);
-
-        return Array(maxStars)
-            .fill()
-            .map((_, index) => (
-                <Icon
-                    key={index}
-                    name={index < filledStars ? 'star' : 'star-outline'}
-                    size={18}
-                    color="#FDB813"
-                />
-            ));
-    };
-    */
-
-    /*
     const handleEdit = (item) => {
         setSelectedPost(item);
         navigation.navigate('Edit Training', {post: item});

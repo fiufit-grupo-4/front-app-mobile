@@ -3,15 +3,15 @@ import React, {useState} from "react";
 import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import Errors from "../../components/utils/Error";
-import MetricsListItem from "./MetricsListItem";
+import GoalsListItem from "./GoalsListItem";
 
 
-const ViewMetrics = ({user, item, canEdit}) => {
+const ViewGoal = ({user, item, canEdit}) => {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [notMetrics, setNotMetrics] = useState(false);
+    const [notGoals, setNotGoals] = useState(false);
 
     const navigation = useNavigation();
 
@@ -59,23 +59,23 @@ const ViewMetrics = ({user, item, canEdit}) => {
 
                 : <>
                     {metric1.length === 0
-                        ? <Errors message={"This athlete dont have any metrics yet"} icon={"image-outline"}></Errors>
+                        ? <Errors message={"This athlete dont have any goal yet"} icon={"image-outline"}></Errors>
                         : <View style={{padding:10 }}>
                             <FlatList
                                 data={metric1}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
-                                        <MetricsListItem user={user} item={item} canEdit={user}></MetricsListItem>
+                                        <GoalsListItem user={user} item={item} canEdit={user}></GoalsListItem>
                                     </View>
                                 )}
                             />
                         </View>
                     }
 
-                    {notMetrics && (
+                    {notGoals && (
                         <View style = {{alignItems:"center",marginTop:15}}>
-                            <Text style = {{fontSize:18}}> You don't have any metrics yet  </Text>
+                            <Text style = {{fontSize:18}}> You don't have any goals yet  </Text>
                         </View>
                     )}
                     {error && (
@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ViewMetrics;
+export default ViewGoal;

@@ -1,14 +1,14 @@
 import {useNavigation} from "@react-navigation/native";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import React from "react";
-import FirstMetricView from "./FirstMetricView";
+import FirstMetricView from "./FirstGoalView";
 
 
-const MetricsListItem = ({ item, user, canEdit }) => {
+const GoalsListItem = ({ item, user, canEdit }) => {
     const navigation = useNavigation();
 
     function handleOnPress() {
-        navigation.navigate("Metric Profile", {item:item, user:user, canEdit:canEdit ? canEdit : false})
+        navigation.navigate("Goal Profile", {item:item, user:user, canEdit:canEdit ? canEdit : false})
     }
 
     return (
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default MetricsListItem;
+export default GoalsListItem;

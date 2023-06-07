@@ -13,7 +13,8 @@ import {ATHLETE,TRAINER,USER} from '../utils/constants';
 import CreateTraining from "../screens/training/CreateTraining";
 import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
-import GoalScreen from "../screens/Goal/GoalScreen";
+import CreateGoal from "../screens/Goal/CreateGoal";
+import CreateChallenge from "../screens/Challenge/CreateChallenge";
 
 const Drawer = createDrawerNavigator();
 
@@ -175,6 +176,8 @@ function DrawerComponent() {
                             headerShown: true,
                         })}
                     />
+
+
                 </>
             )}
 
@@ -183,11 +186,26 @@ function DrawerComponent() {
                     <Drawer.Screen
                         name="         New Goal"
                         color="#F0A500"
-                        component={GoalScreen}
+                        component={CreateGoal}
                         options={() => ({
                             drawerIcon: () => (
                                 <AntDesign
-                                    name="bells"
+                                    name="plus"
+                                />
+                            ),
+                            headerShown: true,
+                        })}
+                    />
+
+
+                    <Drawer.Screen
+                        name="         New Challenge"
+                        color="#F0A500"
+                        component={CreateChallenge}
+                        options={() => ({
+                            drawerIcon: () => (
+                                <AntDesign
+                                    name="plus"
                                 />
                             ),
                             headerShown: true,
