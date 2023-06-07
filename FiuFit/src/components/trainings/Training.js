@@ -168,22 +168,6 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
 
     const handleAddFavorite = async () => {
-        /*
-        setIsFavorite(true)
-        setLoading(true);
-        setError(false)
-        let userInfo = await getUser()
-        let response = await Client.handleAddFavorite(userInfo.access_token, item.id)
-        if (!response.ok) {
-            setError(true);
-            console.log("RESPONSE: ", response.status);
-            setErrorMessage(getErrorMessage(response.status));
-        } else {
-            let data = await response.json()
-            console.log(data)
-        }
-        setLoading(false);*/
-
         let url = API_GATEWAY + "users/me/trainings/" + item.id
         setIsFavorite(true)
         setLoading(true);

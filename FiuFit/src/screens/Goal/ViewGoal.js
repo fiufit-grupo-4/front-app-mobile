@@ -20,9 +20,9 @@ const ViewGoal = ({route}) => {
             "athlete": "ti",
             "challengeId": 1,
             "title": "Weight Loss",
-            "description": "ABS",
+            "description": "ABS con fuerza mistica del mas alla",
             "type": "Caminata",
-            "difficulty": 2
+            "difficulty": 2,
         },
         {
             "id": 2,
