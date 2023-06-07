@@ -55,7 +55,7 @@ const ViewGoal = ({route}) => {
             "id": 5,
             "athlete": "ti",
             "challengeId": 2,
-            "title": "Overall Fitness and Well-being",
+            "title": "Overall Fitness and Well-being aaaaa",
             "description": "GAP",
             "type": "Running",
             "difficulty": 3
