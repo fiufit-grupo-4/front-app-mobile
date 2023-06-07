@@ -1,53 +1,66 @@
 import axios from "axios";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import Errors from "../../components/utils/Error";
 import GoalsListItem from "./GoalsListItem";
+import {getErrorMessage, getUser} from "../../utils/getters";
+import Client from "../../client/Client";
+import {Picker} from "@react-native-picker/picker";
 
 
-const ViewGoal = ({user, item, canEdit}) => {
-    const [showModal, setShowModal] = useState(false);
+const ViewGoal = ({route}) => {
+    const {user, item, challengeId, canEdit} = route.params
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [notGoals, setNotGoals] = useState(false);
-
-    const navigation = useNavigation();
+    const [challengeGoals, setChallengeGoals] = useState([])
 
 
     const metric1 = [
         {
             "id": 1,
             "athlete": "ti",
+            "challengeId": 1,
             "title": "Weight Loss",
-            "description": "Achieve a healthy weight by losing excess body fat through a combination of proper nutrition and regular exercise."
+            "description": "ABS"
         },
         {
             "id": 2,
             "athlete": "ti",
+            "challengeId": 1,
             "title": "Muscle Building",
-            "description": "Increase muscle mass and strength by following a structured resistance training program and consuming adequate protein."
+            "description": "Increase muscle with pesitas"
         },
         {
             "id": 3,
             "athlete": "ti",
+            "challengeId": 2,
             "title": "Cardiovascular Endurance",
-            "description": "Improve cardiovascular fitness and stamina through activities such as running, cycling, or swimming."
+            "description": "MMMM"
         },
         {
             "id": 4,
             "athlete": "ti",
+            "challengeId": 2,
             "title": "Flexibility and Mobility",
-            "description": "Enhance joint flexibility and range of motion through stretching exercises and mobility drills."
+            "description": "mas abs"
         },
         {
             "id": 5,
             "athlete": "ti",
+            "challengeId": 2,
             "title": "Overall Fitness and Well-being",
-            "description": "Maintain a balanced fitness routine that includes a variety of exercises to improve strength, endurance, flexibility, and mental well-being."
+            "description": "GAP"
         }
     ]
+
+
+    useEffect(() => {
+            setChallengeGoals(metric1.filter((goal) => (challengeId === goal.challengeId)))
+    },
+    [])
 
 
     return (
@@ -62,7 +75,7 @@ const ViewGoal = ({user, item, canEdit}) => {
                         ? <Errors message={"This athlete dont have any goal yet"} icon={"image-outline"}></Errors>
                         : <View style={{padding:10 }}>
                             <FlatList
-                                data={metric1}
+                                data={challengeGoals}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>

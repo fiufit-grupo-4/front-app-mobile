@@ -20,32 +20,20 @@ const ViewChallenge = ({user, item, canEdit}) => {
         {
             "id": 1,
             "athlete": "ti",
-            "title": "Weight Loss",
+            "title": "Challenge1",
             "description": "Achieve a healthy weight by losing excess body fat through a combination of proper nutrition and regular exercise."
         },
         {
             "id": 2,
             "athlete": "ti",
-            "title": "Muscle Building",
+            "title": "Challenge2",
             "description": "Increase muscle mass and strength by following a structured resistance training program and consuming adequate protein."
         },
         {
             "id": 3,
             "athlete": "ti",
-            "title": "Cardiovascular Endurance",
+            "title": "Challenge3",
             "description": "Improve cardiovascular fitness and stamina through activities such as running, cycling, or swimming."
-        },
-        {
-            "id": 4,
-            "athlete": "ti",
-            "title": "Flexibility and Mobility",
-            "description": "Enhance joint flexibility and range of motion through stretching exercises and mobility drills."
-        },
-        {
-            "id": 5,
-            "athlete": "ti",
-            "title": "Overall Fitness and Well-being",
-            "description": "Maintain a balanced fitness routine that includes a variety of exercises to improve strength, endurance, flexibility, and mental well-being."
         }
     ]
 

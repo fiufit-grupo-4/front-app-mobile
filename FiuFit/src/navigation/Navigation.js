@@ -57,7 +57,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
 
 
-                    <Stack.Screen name="ViewChallenge" component={ViewChallenge}  />
+                    <Stack.Screen name="View Challenges" component={ViewChallenge}  />
                     <Stack.Screen name="ChallengeProfile" component={ChallengeProfile}  />
 
                     <Stack.Screen name="ViewGoal" component={ViewGoal}  />

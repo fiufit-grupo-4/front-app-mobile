@@ -33,7 +33,7 @@ const FirstChallengeView = ({user, item, canEdit, reload}) => {
                         </View>
                     </View>
                     <View style={styles.item}>
-                        <Ionicons name={'bicycle-outline'} style={styles.icon}/>
+                        <Ionicons name={'person-outline'} style={styles.icon}/>
                         <Text style={styles.itemText}>{"Athlete: " + item.athlete}</Text>
                     </View>
                     <View style={styles.item}>

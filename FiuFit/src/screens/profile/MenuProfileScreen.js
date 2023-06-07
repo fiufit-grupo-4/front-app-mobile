@@ -97,8 +97,8 @@ function MenuProfileScreen({ navigation,route }) {
 
 
                     { user.role !== TRAINER &&(
-                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('ViewChallenge',{user : user, myUser:true})}>
-                            <Text style={styles.buttonText}>View Goals</Text>
+                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('View Challenges',{user : user, myUser:true})}>
+                            <Text style={styles.buttonText}>View Challenges</Text>
                         </TouchableOpacity>
                     )}
                     

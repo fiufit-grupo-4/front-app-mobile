@@ -11,7 +11,7 @@ import {
     ToastAndroid
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
-import TrainingType from "../../components/trainings/TrainingType";
+import TrainingType from "../../components/trainings/ListType";
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
 
@@ -82,8 +82,9 @@ export const CreateChallenge = ({ navigation }) => {
                     </View>
 
 
+                    {/* TODO: ver si tiene un tipo para elegir
                     <TrainingType setType={setType} styles={styles}/>
-
+                        */}
                 </View>
 
 

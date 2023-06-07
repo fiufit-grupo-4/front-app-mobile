@@ -13,22 +13,24 @@ import {
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import TrainingType from "../../components/trainings/TrainingType";
+import TrainingType from "../../components/trainings/ListType";
 import {firebase} from '../../config/firebase'
 import MediaBox from '../../components/media/MediaBox';
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
+import GoalType from "./GoalType";
+import ListType from "../../components/trainings/ListType";
 
 export const CreateGoal = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
+    const [challenge, setChallenge] = useState('');
     const [difficulty, setDifficulty] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
     const [media1, setMedia1] = useState("");
     const [mediaType1, setMediaType1] = useState("");
 
@@ -38,6 +40,19 @@ export const CreateGoal = ({ navigation }) => {
         setDifficulty(value);
     };
 
+    const trainingItems = [
+        { label: " ", value: " " },
+        { label: "Caminata", value: "Caminata" },
+        { label: "Running", value: "Running" },
+    ];
+
+    // TODO: sacar de aca los CHALLENGES QUE TIENE ESTE USER
+    let challengeItems = [
+        { label: " ", value: " " },
+        { label: "Challenge1", value: "Challenge1" },
+        { label: "Challenge2", value: "Challenge2" },
+        { label: "Challenge3", value: "Challenge3" },
+    ];
 
     const uploadMedia = async (video,user) => {
         setLoading(true);
@@ -85,11 +100,11 @@ export const CreateGoal = ({ navigation }) => {
 
     const createGoal = async () => {
         console.log(type)
-        if (!title || !description  || !type || !difficulty) {
+        if (!title || !description  || !type || !difficulty || !challenge) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || type.trim() === '' || !difficulty) {
+        if (title.trim() === '' || description.trim() === '' || type.trim() === '' || !difficulty || type.trim() === '') {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
@@ -97,7 +112,7 @@ export const CreateGoal = ({ navigation }) => {
         let array = await handleMedia(user)
         setLoading(true)
         setError(false)
-        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array)
+        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,challenge,array)
         setLoading(false)
         if (!response.ok) {
             setError(true);
@@ -154,7 +169,11 @@ export const CreateGoal = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <TrainingType setType={setType} styles={styles}/>
+                    {/* Tipo de entrenamiento */}
+                    <ListType setType={setType} listItem={trainingItems} icon={"fitness-outline"} styles={styles}/>
+
+                    {/* Tipo de challenge */}
+                    <ListType setChallenge={setChallenge} listItem={challengeItems} icon={"american-football-outline"} styles={styles} />
 
                 </View>
 
