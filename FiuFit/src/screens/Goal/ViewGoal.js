@@ -1,12 +1,8 @@
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity} from "react-native";
-import {useNavigation} from "@react-navigation/native";
 import Errors from "../../components/utils/Error";
 import GoalsListItem from "./GoalsListItem";
-import {getErrorMessage, getUser} from "../../utils/getters";
-import Client from "../../client/Client";
-import {Picker} from "@react-native-picker/picker";
 
 
 const ViewGoal = ({route}) => {
@@ -104,14 +100,12 @@ const ViewGoal = ({route}) => {
 
 const styles = StyleSheet.create({
     background: {
-        //backgroundColor: 'rgba(222,233,248,0.29)'
         backgroundColor: 'white',
         paddingTop:15,
         paddingHorizontal:10
     },
     postBackground: {
         marginBottom: 40,
-        //backgroundColor: 'rgba(217,227,240,0.75)'
         backgroundColor: 'white'
     },
     postImage: {
@@ -126,7 +120,6 @@ const styles = StyleSheet.create({
         color: 'rgba(23,29,52,0.76)'
     },
     item: {
-        //flexDirection: 'row',
         alignItems: 'center'
     },
     itemText: {

@@ -21,18 +21,21 @@ const ViewChallenge = ({user, item, canEdit}) => {
             "id": 1,
             "athlete": "ti",
             "title": "Challenge1",
+            "type": "Caminata",
             "description": "Achieve a healthy weight by losing excess body fat through a combination of proper nutrition and regular exercise."
         },
         {
             "id": 2,
             "athlete": "ti",
             "title": "Challenge2",
+            "type": "Running",
             "description": "Increase muscle mass and strength by following a structured resistance training program and consuming adequate protein."
         },
         {
             "id": 3,
             "athlete": "ti",
             "title": "Challenge3",
+            "type": "Caminata",
             "description": "Improve cardiovascular fitness and stamina through activities such as running, cycling, or swimming."
         }
     ]

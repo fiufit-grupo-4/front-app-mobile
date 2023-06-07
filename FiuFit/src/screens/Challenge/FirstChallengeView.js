@@ -8,20 +8,6 @@ import {Ionicons} from "react-native-vector-icons";
 const FirstChallengeView = ({user, item, canEdit, reload}) => {
     const [showModal, setShowModal] = useState(false);
 
-    const navigation = useNavigation();
-
-
-    const toggleModal = () => {
-        setShowModal(!showModal);
-    };
-
-    /*
-    const handleEdit = (item) => {
-        setSelectedPost(item);
-        navigation.navigate('Edit Training', {post: item});
-    }
-    */
-
 
     return (
         <View style={styles.background}>
