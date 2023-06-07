@@ -9,7 +9,7 @@ const ChallengeListItem = ({ item, user, canEdit }) => {
     const navigation = useNavigation();
 
     function handleOnPress() {
-        navigation.navigate("ViewGoal", {item:item, user:user, challengeId:item.id, canEdit:canEdit ? canEdit : false})
+        navigation.navigate("View Goal", {item:item, user:user, challengeId:item.id, canEdit:canEdit ? canEdit : false})
     }
 
 

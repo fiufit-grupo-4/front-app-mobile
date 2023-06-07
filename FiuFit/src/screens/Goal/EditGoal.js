@@ -1,39 +1,76 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    ActivityIndicator,
-    ScrollView
-} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, TouchableWithoutFeedback, ScrollView} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
-import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
+import MediaEditableBox from '../../components/media/MediaEditableBox';
+import {firebase} from '../../config/firebase'
 
 
-const EditChallenge = ({ route }) => {
-    const {post: challengePost} = route.params;
-    const [title, setTitle] = useState(challengePost.title);
-    const [description, setDescription] = useState(challengePost.description);
-    const [challengeType, setChallengeType] = useState(challengePost.type);
+const EditGoal = ({ route }) => {
+    const {post: goalPost, navigation} = route.params;
+    const [title, setTitle] = useState(goalPost.title);
+    const [description, setDescription] = useState(goalPost.description);
+    const [goalType, setGoalType] = useState(goalPost.type);
+    const [difficulty, setDifficulty] = useState(goalPost.difficulty);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [media1, setMedia1] = useState(goalPost.media ? goalPost.media[0] ? goalPost.media[0].url : "" : "" );
+    const [mediaType1, setMediaType1] = useState(goalPost.media ? goalPost.media[0] ? goalPost.media[0].media_type : "" : "" );
 
-    const navigation = useNavigation();
+
+    const handleDifficulty = (value) => {
+        setDifficulty(value);
+    };
+/*
+    const uploadMedia = async (video,user) => {
+        setLoading(true);
+        const response = await fetch(video);
+        const blob = await response.blob();
+        let date = new Date().getTime()
+        await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).getDownloadURL()
+        setLoading(false)
+        return uri
+    }
+
+
+    const uploadElement = async (user,media,media_type,array,old)=>{
+        let old_url = old? old.url : ""
+        let old_type = old? old.media_type : ""
+        if (old_url == media && old_url != ""){
+            let element = {
+                "media_type": old_type,
+                "url" : old_url
+            }
+            array.push(element)
+        } else if (media){
+            let uri = await uploadMedia(media,user)
+            let element = {
+                "media_type": media_type,
+                "url" : uri
+            }
+            array.push(element)
+        }
+    }
+    const handleMedia = async (user)=> {
+        let array = []
+        await uploadElement(user,media1,mediaType1,array,goalPost.media[0])
+        return array
+    }*/
 
     const handleSaveChanges = async () => {
-        let url = API_GATEWAY + "trainers/me/trainings/" + challengePost.id
+        let url = API_GATEWAY + "trainers/me/trainings/" + goalPost.id
         setLoading(true);
         setError(false)
 
         let item =  await AsyncStorage.getItem(USER)
         let userInfo = JSON.parse(item)
+        //let array = await handleMedia(userInfo)
 
         let response = await fetch(url, {
             method: 'PATCH',
@@ -44,10 +81,11 @@ const EditChallenge = ({ route }) => {
             body: JSON.stringify({
                 "title": title,
                 "description": description,
-                "type": challengeType,
+                "type": goalType,
+                "difficulty" : difficulty,
+                "media":array
             })
         })
-
         if (!response.ok) {
             setError(true);
             setLoading(false);
@@ -60,13 +98,12 @@ const EditChallenge = ({ route }) => {
             let data = await response.json()
             console.log(JSON.stringify(data))
             setLoading(false);
-            navigation.navigate("Profile",{reload:!reload})
+            navigation.navigate("View Challenges",{reload:!reload})
         }
     }
 
-
     function handleDelete() {
-        let url = API_GATEWAY + "trainers/me/trainings/" + challengePost.id
+        let url = API_GATEWAY + "trainers/me/goal/" + goalPost.id
         setLoading(true);
         setError(false)
         AsyncStorage.getItem(USER).then((item) => {
@@ -90,7 +127,7 @@ const EditChallenge = ({ route }) => {
                 } else {
                     response.json().then((data) => {
                         console.log(JSON.stringify(data))
-                        navigation.navigate("Profile",{reload:!reload})
+                        navigation.navigate("View Challenges",{reload:!reload})
                     }).catch((error) => {
                         setError(true);
                         setErrorMessage(error);
@@ -131,16 +168,31 @@ const EditChallenge = ({ route }) => {
                     </View>
                 </View>
 
+                <View style={styles.inputContainer}>
+                    <Text style={styles.text}> Difficulty </Text>
+                    <View style={{flexDirection: 'row', marginTop: 8}}>
+                        <Ionicons name="ios-stats-chart-outline" size={16} color="#A6A6A6" style={styles.icon}/>
+                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
+                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                </TouchableWithoutFeedback>
+                            ))}
+                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
+                        </View>
+                    </View>
+                </View>
+
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
                     <View style={{padding:1, marginTop:10, paddingTop:10 }}>
-                        <Text style={styles.text}>Challenge Type</Text>
+                        <Text style={styles.text}>Training Type</Text>
                         <View style={{flexDirection:"row"}}>
                             <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
                             <Picker
-                                selectedValue={challengeType}
+                                selectedValue={goalType}
                                 style={{ height: 50, width: '99%', marginLeft: -17, marginTop: -12, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
                                 onValueChange={(itemValue) =>
-                                {setChallengeType(itemValue)}}
+                                {setGoalType(itemValue)}}
                             >
                                 <Picker.Item label="Caminata" value="Caminata" />
                                 <Picker.Item label="Running" value="Running" />
@@ -152,6 +204,17 @@ const EditChallenge = ({ route }) => {
 
             </ScrollView>
 
+            {/*
+            <ScrollView
+                contentContainerStyle={styles.mediaContainer}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+            >
+                <MediaEditableBox setElement = {setMedia1} setMediaElement = {setMediaType1} oldMedia = {goalPost.media[0]}/>
+
+            </ScrollView>
+
+            */}
 
             { loading
                 ? <View style={{marginBottom:100, marginHorizontal: 40}}>
@@ -160,7 +223,7 @@ const EditChallenge = ({ route }) => {
                 : <>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                            <Text style={styles.deleteButtonText}>Delete Challenge</Text>
+                            <Text style={styles.deleteButtonText}>Delete Goal</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
                             <Text style={styles.buttonText}>Save</Text>
@@ -250,6 +313,11 @@ const styles = StyleSheet.create({
         color: '#333',
         marginBottom: 10
     },
+    trainingType: {
+        height:5,
+        maxHeight:10,
+        backgroundColor: 'red'
+    },
     typeIcon: {
         marginRight: 10,
         marginTop: 5,
@@ -259,4 +327,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default EditChallenge;
+export default EditGoal;

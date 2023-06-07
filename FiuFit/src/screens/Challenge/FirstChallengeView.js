@@ -1,9 +1,7 @@
 import axios from "axios";
 import React, {useState} from "react";
 import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
-import {useNavigation} from "@react-navigation/native";
 import {Ionicons} from "react-native-vector-icons";
-import navigation from "../../navigation/Navigation";
 
 const FirstChallengeView = ({ user, item, canEdit, navigation }) => {
     const [selectedPost, setSelectedPost] = useState(null);

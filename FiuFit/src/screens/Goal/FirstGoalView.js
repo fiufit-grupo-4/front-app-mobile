@@ -1,28 +1,10 @@
 import axios from "axios";
 import React, {useState} from "react";
-import {StyleSheet, View,Text} from "react-native";
-import {useNavigation} from "@react-navigation/native";
+import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
-const Recommended = ({user, item, canEdit, reload}) => {
-    const [showModal, setShowModal] = useState(false);
-
-    const navigation = useNavigation();
-
-
-    const toggleModal = () => {
-        setShowModal(!showModal);
-    };
-
-    /*
-    const handleEdit = (item) => {
-        setSelectedPost(item);
-        navigation.navigate('Edit Training', {post: item});
-    }
-    */
-
+const FirstGoalView = ({user, item, canEdit}) => {
 
     return (
         <View style={styles.background}>
@@ -31,6 +13,7 @@ const Recommended = ({user, item, canEdit, reload}) => {
                     <View key = {item.id} style={newstyles.container}>
                         <View style={newstyles.header}>
                             <Text style={newstyles.titulo}>{item.title}</Text>
+
                         </View>
                     </View>
                     <View style={styles.item}>
@@ -55,9 +38,6 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight:5,
         borderRadius:10,
-
-    },
-    postContainer: {
 
     },
     postBackground: {
@@ -122,4 +102,4 @@ const newstyles = {
 };
 
 
-export default Recommended;
+export default FirstGoalView;

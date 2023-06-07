@@ -20,35 +20,45 @@ const ViewGoal = ({route}) => {
             "athlete": "ti",
             "challengeId": 1,
             "title": "Weight Loss",
-            "description": "ABS"
+            "description": "ABS",
+            "type": "Caminata",
+            "difficulty": 2
         },
         {
             "id": 2,
             "athlete": "ti",
             "challengeId": 1,
             "title": "Muscle Building",
-            "description": "Increase muscle with pesitas"
+            "description": "Increase muscle with pesitas",
+            "type": "Caminata",
+            "difficulty": 5
         },
         {
             "id": 3,
             "athlete": "ti",
             "challengeId": 2,
             "title": "Cardiovascular Endurance",
-            "description": "MMMM"
+            "description": "MMMM",
+            "type": "Running",
+            "difficulty": 5
         },
         {
             "id": 4,
             "athlete": "ti",
             "challengeId": 2,
             "title": "Flexibility and Mobility",
-            "description": "mas abs"
+            "description": "mas abs",
+            "type": "Running",
+            "difficulty": 4
         },
         {
             "id": 5,
             "athlete": "ti",
             "challengeId": 2,
             "title": "Overall Fitness and Well-being",
-            "description": "GAP"
+            "description": "GAP",
+            "type": "Running",
+            "difficulty": 3
         }
     ]
 

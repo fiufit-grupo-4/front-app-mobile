@@ -25,6 +25,7 @@ import GoalProfile from "../screens/Goal/GoalProfile";
 import ViewChallenge from "../screens/Challenge/ViewChallenge";
 import ChallengeProfile from "../screens/Challenge/ChallengeProfile";
 import EditChallenge from "../screens/Challenge/EditChallenge";
+import EditGoal from "../screens/Goal/EditGoal";
 
 
 const Stack = createNativeStackNavigator();
@@ -62,8 +63,9 @@ class Navigation extends React.Component {
                     <Stack.Screen name="ChallengeProfile" component={ChallengeProfile}  />
                     <Stack.Screen name="Edit Challenge" component={EditChallenge}  />
 
-                    <Stack.Screen name="ViewGoal" component={ViewGoal}  />
+                    <Stack.Screen name="View Goal" component={ViewGoal}  />
                     <Stack.Screen name="Goal Profile" component={GoalProfile}  />
+                    <Stack.Screen name="Edit Goal" component={EditGoal}  />
 
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
 
