@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Video from '../../components/utils/Video';
 import { DEFAULT_IMAGE } from '../../utils/constants';
 const MediaVisualizableBox = ({media}) => {
-    if (!media){return(<></>)} 
+    if (!media){<></>} 
     else {
         return (
         <View style={styles.mediaBox}>

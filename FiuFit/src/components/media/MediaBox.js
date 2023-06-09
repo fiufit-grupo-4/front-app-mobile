@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useIsFocused } from '@react-navigation/native';
 
 const MediaBox = ({setElement,setMediaElement}) => {
   const [media, setMedia] = useState("");
+  const isFocused = useIsFocused();
 
   const handleMediaSelection = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -34,6 +36,11 @@ const MediaBox = ({setElement,setMediaElement}) => {
     setElement("")
     setMediaElement("")
   };
+
+
+  useEffect(() => {
+    setMedia("")
+  }, [isFocused])
 
   return (
     <View style={styles.mediaBox}>

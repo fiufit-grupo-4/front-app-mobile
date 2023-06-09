@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 5,
         
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         paddingVertical: 10,
     },
     searchContainer: {
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
+        marginLeft:5,
         borderRadius: 5,
         flex: 1,
         paddingHorizontal: 10,

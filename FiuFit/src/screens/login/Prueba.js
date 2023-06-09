@@ -7,34 +7,20 @@ import { firebase } from '../../config/firebase';
 import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import { WEB_CLIENT,ANDROID_ID,EXPO_CLIENT_ID} from '../../utils/constants';
-
 const {height} = Dimensions.get("window")
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 import { Linking } from 'react-native';
+import GoogleFit, { Scopes } from 'react-native-google-fit'
 
+
+
+// ...
+// Call when authorized
 
 /*
-
-WebBrowser.maybeCompleteAuthSession();
-
-  const discovery = {
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token',
-    revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
-  };
-const config = {
-  expoClientId: 'TU_CLIENT_ID_DE_EXPO',
-  iosClientId: 'TU_CLIENT_ID_DE_IOS',
-  androidClientId: 'TU_CLIENT_ID_DE_ANDROID',
-  scopes: ['https://www.googleapis.com/auth/fitness.activity.read'],
-};
-  const config = {
-    clientId: '294589327367-ijhbpgp76o4ejk9ciluefgc9actb55nl.apps.googleusercontent.com',
-    redirectUri: makeRedirectUri({
-      scheme: 'fiufit',
-    }),
-    scopes: ['openid', 'profile', 'email'],
-  };*/
+GoogleFit.startRecording((callback) => {
+  // Process data from Google Fit Recording API (no google fit app needed)
+});*/
 
 
   
@@ -45,23 +31,6 @@ export default function App() {
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
   const [fitness,setFitness] = useState(null)
-
-  /*
-  if (__DEV__ && Platform.OS === 'web') {
-    const useProxy = true;
-    Google.useAuthRequest({ useProxy });
-  }
-  const [request,response,promptAsync] = Google.useAuthRequest({
-      androidClientId: ANDROID_ID,
-      webClientId:WEB_CLIENT,
-      expoClientId: EXPO_CLIENT_ID,
-      prompt: 'select_account',
-    },{
-      projectNameForProxy: "@dantereinaudo420/FiuFit"
-    },
-    discovery)
-  */
-
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_ID,
@@ -75,12 +44,30 @@ export default function App() {
   
   useEffect(() => {
     if (response?.type === "success") {
+      let access_token = response.authentication.accessToken
+      let id_token = response.authentication.idToken
       setToken(response.authentication.accessToken);
       console.log('Token:',response.authentication.accessToken)
+      console.log('id token:',response.authentication.idToken)
+
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token, access_token);
+      console.log('Credential:',credential)
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log('Inicio de sesión con Google exitoso:', user);
+          // Realiza las acciones adicionales después del inicio de sesión exitoso
+        })
+        .catch((error) => {
+          console.log('Error en el inicio de sesión con Google:', error);
+        });
       getUserInfo(response.authentication.accessToken);
       getFitnessData(response.authentication.accessToken)
     }
   }, [response]);
+
   
   const getUserInfo = async (token) => {
     try {
@@ -91,7 +78,6 @@ export default function App() {
 
       const user = await userResponse.json();
       console.log('Datos de User:', user);
-      console.log('Picture:', user.picture);
       setUser(user);
 
     } catch (error) {
@@ -125,6 +111,31 @@ export default function App() {
     }
   };
 
+  const googleFit = async () => {
+    const options = {
+      scopes: [
+        Scopes.FITNESS_ACTIVITY_READ,
+        Scopes.FITNESS_ACTIVITY_WRITE,
+        Scopes.FITNESS_BODY_READ,
+        Scopes.FITNESS_BODY_WRITE,
+      ],
+    }
+    GoogleFit.authorize(options)
+      .then(authResult => {
+        console.log("Result", authResult);
+        if (authResult.success) {
+         
+          console.log("AUTH_SUCCESS");
+        } else {
+          console.log("AUTH_DENIED", authResult.message);
+        }
+      })
+      .catch(() => {
+        console.log("AUTH_ERROR");
+      })
+  };
+
+
   const getFitnessData = async (token) => {
     try {
       let url = 'https://www.googleapis.com/fitness/v1/users/me/dataSources'
@@ -139,23 +150,7 @@ export default function App() {
     }
   };
   
-/*
-  // Función para iniciar sesión con Google
-  const handleSignIn = async () => {
-    await promptAsync()
-    try {
-      if (response?.type === 'success') {
-        console.log(response)
-        getUserInfo(response.authentication.accessToken)
-  
-      } else {
-        console.log(JSON.stringify(response))
-        console.log("u.u")
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión con Google:', error);
-    }
-  };*/
+
 
   // Función para registrarse con Google
   const handleSignUp = async () => {
@@ -192,15 +187,14 @@ export default function App() {
 
       {user ? (
         <View>
-
-          <Image
-              source={{uri: user.picture}}
-              style= {{width:150,height:150,borderRadius:100,marginBottom:30}}
-          />
-
-          <Text style= {{fontWeight: "bold", fontSize:20, marginBottom:20}}>{user.name }</Text>
-          <Text style= {{fontWeight: "bold", fontSize:16, marginBottom:20}}>{user.email }</Text>
-          
+          <View style= {{justifyContent:"center",alignContent:"center",alignItems:"center"}}>
+            <Image
+                source={{uri: user.picture}}
+                style= {{width:150,height:150,borderRadius:100,marginBottom:30}}
+            />
+            <Text style= {{fontWeight: "bold", fontSize:20, marginBottom:20}}>{user.name }</Text>
+            <Text style= {{fontWeight: "bold", fontSize:16, marginBottom:20}}>{user.email }</Text>
+          </View>
           <CustomIconButton
                 text="Subscribe to steps "
                 onPress={subscribeToSteps}
@@ -210,8 +204,18 @@ export default function App() {
                 iconColor="white"
             />
 
+          <CustomIconButton
+                text="Google fit "
+                onPress={googleFit}
+                bgColor="lightskyblue"
+                fgColor="white"
+                icon= "logo-google"
+                iconColor="white"
+            /> 
+
 
           <Button title="Sign Out" onPress={handleSignOut} />
+          
         </View>
       ) : (
         <>
@@ -232,6 +236,7 @@ export default function App() {
                 iconColor="white"
             />
 
+              {/* 
             <CustomIconButton
                 text="Sign Up with Google "
                 onPress={handleSignUp}
@@ -239,7 +244,7 @@ export default function App() {
                 fgColor="white"
                 icon= "logo-google"
                 iconColor="white"
-            />
+            />*/}
         </>
       )}
     </View>
