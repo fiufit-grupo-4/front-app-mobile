@@ -5,63 +5,31 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
-import MediaEditableBox from '../../components/media/MediaEditableBox';
-import {firebase} from '../../config/firebase'
 
 
 const EditGoal = ({ route }) => {
     const {post: goalPost, navigation} = route.params;
     const [title, setTitle] = useState(goalPost.title);
     const [description, setDescription] = useState(goalPost.description);
-    const [goalType, setGoalType] = useState(goalPost.type);
+    const [metric, setMetric] = useState(goalPost.metric);
     const [difficulty, setDifficulty] = useState(goalPost.difficulty);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const [media1, setMedia1] = useState(goalPost.media ? goalPost.media[0] ? goalPost.media[0].url : "" : "" );
-    const [mediaType1, setMediaType1] = useState(goalPost.media ? goalPost.media[0] ? goalPost.media[0].media_type : "" : "" );
-
+    const [selectedValue, setSelectedValue] = useState(" ");
 
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
-/*
-    const uploadMedia = async (video,user) => {
-        setLoading(true);
-        const response = await fetch(video);
-        const blob = await response.blob();
-        let date = new Date().getTime()
-        await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).put(blob)
-        const uri = await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).getDownloadURL()
-        setLoading(false)
-        return uri
-    }
 
-
-    const uploadElement = async (user,media,media_type,array,old)=>{
-        let old_url = old? old.url : ""
-        let old_type = old? old.media_type : ""
-        if (old_url == media && old_url != ""){
-            let element = {
-                "media_type": old_type,
-                "url" : old_url
-            }
-            array.push(element)
-        } else if (media){
-            let uri = await uploadMedia(media,user)
-            let element = {
-                "media_type": media_type,
-                "url" : uri
-            }
-            array.push(element)
-        }
-    }
-    const handleMedia = async (user)=> {
-        let array = []
-        await uploadElement(user,media1,mediaType1,array,goalPost.media[0])
-        return array
-    }*/
+    const metricItems = [
+        { label: " ", value: " " },
+        { label: "Distancia recorrida", value: "Distancia recorrida" },
+        { label: "Tiempo utilizado", value: "Tiempo utilizado" },
+        { label: "Calorias utilizadas", value: "Calorias utilizadas" },
+        { label: "Cantidad de hitos realizados", value: "Cantidad de hitos realizados" },
+        { label: "Tipo de actividad realizada", value: "Tipo de actividad realizada" },
+    ];
 
     const handleSaveChanges = async () => {
         let url = API_GATEWAY + "trainers/me/trainings/" + goalPost.id
@@ -70,7 +38,6 @@ const EditGoal = ({ route }) => {
 
         let item =  await AsyncStorage.getItem(USER)
         let userInfo = JSON.parse(item)
-        //let array = await handleMedia(userInfo)
 
         let response = await fetch(url, {
             method: 'PATCH',
@@ -81,9 +48,8 @@ const EditGoal = ({ route }) => {
             body: JSON.stringify({
                 "title": title,
                 "description": description,
-                "type": goalType,
+                "metric": metric,
                 "difficulty" : difficulty,
-                "media":array
             })
         })
         if (!response.ok) {
@@ -145,9 +111,9 @@ const EditGoal = ({ route }) => {
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}>Title</Text>
                     <View style={{flexDirection: 'row'}}>
-                        <Ionicons name="md-barbell-outline" size={16} color="#A6A6A6" style={styles.icon}/>
+                        <Ionicons name="md-barbell-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
                         <TextInput
-                            style={{fontSize: 16, color: '#333', width: '99%'}}
+                            style={{fontSize: 16, color: "rgba(53,63,79,0.74)", width: '99%'}}
                             placeholder="Enter the title"
                             value={title}
                             onChangeText={setTitle}
@@ -158,13 +124,35 @@ const EditGoal = ({ route }) => {
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}>Description</Text>
                     <View style={{flexDirection: 'row'}}>
-                        <Ionicons name="md-pencil-outline" size={16} color="#A6A6A6" style={styles.icon}/>
+                        <Ionicons name="md-pencil-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
                         <TextInput
-                            style={{fontSize: 16, color: '#333', width: '99%',}}
+                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}
                             placeholder="Enter the description"
                             value={description}
                             onChangeText={setDescription}
                         />
+                    </View>
+                </View>
+
+                <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
+                    <View style={{padding:1, marginTop:10, paddingTop:10 }}>
+                        <Text style={styles.text}>Training Type</Text>
+                        <View style={{flexDirection:"row"}}>
+                            <Ionicons name="fitness-outline" size={24} color={"rgba(53,63,79,0.74)"} style={styles.icon}/>
+                            <Picker
+                                selectedValue={selectedValue}
+                                style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
+                                itemStyle={styles.pickerItem}
+                                onValueChange={(itemValue) =>
+                                {   setMetric(itemValue)
+                                    setSelectedValue(itemValue)
+                                }}
+                            >
+                                {metricItems.map((item, index) => (
+                                    <Picker.Item key={index} label={item.label} value={item.value} />
+                                ))}
+                            </Picker>
+                        </View>
                     </View>
                 </View>
 
@@ -183,38 +171,8 @@ const EditGoal = ({ route }) => {
                     </View>
                 </View>
 
-                <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
-                    <View style={{padding:1, marginTop:10, paddingTop:10 }}>
-                        <Text style={styles.text}>Training Type</Text>
-                        <View style={{flexDirection:"row"}}>
-                            <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                            <Picker
-                                selectedValue={goalType}
-                                style={{ height: 50, width: '99%', marginLeft: -17, marginTop: -12, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
-                                onValueChange={(itemValue) =>
-                                {setGoalType(itemValue)}}
-                            >
-                                <Picker.Item label="Caminata" value="Caminata" />
-                                <Picker.Item label="Running" value="Running" />
-                            </Picker>
-                        </View>
-                    </View>
-                </View>
-
-
             </ScrollView>
 
-            {/*
-            <ScrollView
-                contentContainerStyle={styles.mediaContainer}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-            >
-                <MediaEditableBox setElement = {setMedia1} setMediaElement = {setMediaType1} oldMedia = {goalPost.media[0]}/>
-
-            </ScrollView>
-
-            */}
 
             { loading
                 ? <View style={{marginBottom:100, marginHorizontal: 40}}>

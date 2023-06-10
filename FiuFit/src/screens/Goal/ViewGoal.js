@@ -1,73 +1,68 @@
 import axios from "axios";
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList, Image, TouchableOpacity} from "react-native";
+import {StyleSheet, View, Text, ActivityIndicator, FlatList} from "react-native";
 import Errors from "../../components/utils/Error";
 import GoalsListItem from "./GoalsListItem";
 
 
 const ViewGoal = ({route}) => {
-    const {user, item, challengeId, canEdit} = route.params
+    const {user} = route.params
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [notGoals, setNotGoals] = useState(false);
-    const [challengeGoals, setChallengeGoals] = useState([])
 
-
-    const metric1 = [
+    const goals = [
         {
-            "id": 1,
-            "athlete": "ti",
-            "challengeId": 1,
-            "title": "Weight Loss",
-            "description": "ABS con fuerza mistica del mas alla",
-            "type": "Caminata",
+            "id": "1",
+            "title": "Caminata",
+            "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
+            "metric": "Distancia recorrida",
+            "limit_time": "2023-07-08T15:26:20.558Z",
+            "quantity": 0,
+            "progress": 0,
             "difficulty": 2,
         },
         {
-            "id": 2,
-            "athlete": "ti",
-            "challengeId": 1,
-            "title": "Muscle Building",
-            "description": "Increase muscle with pesitas",
-            "type": "Caminata",
-            "difficulty": 5
+            "id":"2",
+            "title": "Caminata",
+            "description": "Caminar por palermo 5 hora",
+            "metric": "Distancia recorrida",
+            "limit_time": "2023-07-08T15:26:20.558Z",
+            "quantity": 0,
+            "progress": 0,
+            "difficulty": 3,
         },
         {
-            "id": 3,
-            "athlete": "ti",
-            "challengeId": 2,
-            "title": "Cardiovascular Endurance",
-            "description": "MMMM",
-            "type": "Running",
-            "difficulty": 5
+            "id":"3",
+            "title": "Abdominales",
+            "description": "1.30 de abs.",
+            "metric": "Calorias utilizadas",
+            "limit_time": "2023-07-08T15:26:20.558Z",
+            "quantity": 0,
+            "progress": 0,
+            "difficulty": 4,
         },
         {
-            "id": 4,
-            "athlete": "ti",
-            "challengeId": 2,
-            "title": "Flexibility and Mobility",
-            "description": "mas abs",
-            "type": "Running",
-            "difficulty": 4
+            "id":"4",
+            "title": "GAP",
+            "description": "abs ggggggg oppp ",
+            "metric": "Calorias utilizadas",
+            "limit_time": "2023-07-08T15:26:20.558Z",
+            "quantity": 0,
+            "progress": 0,
+            "difficulty": 4,
         },
         {
-            "id": 5,
-            "athlete": "ti",
-            "challengeId": 2,
-            "title": "Overall Fitness and Well-being aaaaa",
-            "description": "GAP",
-            "type": "Running",
-            "difficulty": 3
-        }
+            "id":"5",
+            "title": "GAPX2",
+            "description": "abs ggggggg oppp ",
+            "metric": "Calorias utilizadas",
+            "limit_time": "2023-07-08T15:26:20.558Z",
+            "quantity": 0,
+            "progress": 0,
+            "difficulty": 5,
+        },
     ]
-
-
-    useEffect(() => {
-            setChallengeGoals(metric1.filter((goal) => (challengeId === goal.challengeId)))
-    },
-    [])
-
 
     return (
         <>
@@ -77,26 +72,21 @@ const ViewGoal = ({route}) => {
             </View>
 
                 : <>
-                    {metric1.length === 0
+                    {goals.length === 0
                         ? <Errors message={"This athlete dont have any goal yet"} icon={"image-outline"}></Errors>
                         : <View style={{padding:10 }}>
                             <FlatList
-                                data={challengeGoals}
-                                keyExtractor={(item) => item.id.toString()}
+                                data={goals}
+                                keyExtractor={(goalItem) => goalItem}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
-                                        <GoalsListItem user={user} item={item} canEdit={user}></GoalsListItem>
+                                        <GoalsListItem item={item} user={user} ></GoalsListItem>
                                     </View>
                                 )}
                             />
                         </View>
                     }
 
-                    {notGoals && (
-                        <View style = {{alignItems:"center",marginTop:15}}>
-                            <Text style = {{fontSize:18}}> You don't have any goals yet  </Text>
-                        </View>
-                    )}
                     {error && (
                         <View style = {{alignItems:"center",marginTop:15}}>
                             <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>

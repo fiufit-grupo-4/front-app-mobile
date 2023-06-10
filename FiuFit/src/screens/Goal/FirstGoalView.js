@@ -4,7 +4,7 @@ import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 
 
-const FirstGoalView = ({user, item, canEdit}) => {
+const FirstGoalView = ({item, user}) => {
 
     return (
         <View style={styles.background}>
@@ -17,12 +17,12 @@ const FirstGoalView = ({user, item, canEdit}) => {
                         </View>
                     </View>
                     <View style={styles.item}>
-                        <Ionicons name={'bicycle-outline'} style={styles.icon}/>
-                        <Text style={styles.itemText}>{"Athlete: " + item.athlete}</Text>
+                        <Ionicons name={'person-outline'} style={styles.icon}/>
+                        <Text style={styles.description}>{user.name + " " + user.lastname}</Text>
                     </View>
                     <View style={styles.item}>
                         <Ionicons name={'md-pencil-outline'} style={styles.icon}/>
-                        <Text style={styles.itemText}>{'Description: ' + item.description}</Text>
+                        <Text style={styles.description}>{item.description}</Text>
                     </View>
                 </View>
             </View>
@@ -32,7 +32,6 @@ const FirstGoalView = ({user, item, canEdit}) => {
 
 const styles = StyleSheet.create({
     background: {
-        //backgroundColor: 'rgba(222,233,248,0.29)'
         backgroundColor: 'white',
         paddingHorizontal:10,
         marginLeft:5,
@@ -42,7 +41,6 @@ const styles = StyleSheet.create({
     },
     postBackground: {
         marginBottom: 15,
-        //backgroundColor: 'rgba(217,227,240,0.75)',
         backgroundColor: 'white'
     },
     item: {
@@ -61,6 +59,14 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.63)',
         marginLeft: 8
     },
+    description: {
+        marginLeft: 10,
+        marginRight: 10,
+        fontSize: 15,
+        padding: 6,
+        color:'rgba(32,38,70,0.89)',
+
+    }
 });
 
 
@@ -69,7 +75,6 @@ const newstyles = {
     container: {
         backgroundColor: '#ffffff',
         padding: 15,
-
         borderRadius:10,
 
     },name: {
@@ -85,7 +90,9 @@ const newstyles = {
     titulo: {
         fontSize: 18,
         fontWeight: 'bold',
-        color:'rgba(32,38,70,0.63)'
+        color:'rgba(32,38,70,0.99)',
+        borderBottomWidth:1,
+        borderBottomColor: "rgba(255,164,92,0.74)"
     },
     dificultad: {
         flexDirection: 'row',

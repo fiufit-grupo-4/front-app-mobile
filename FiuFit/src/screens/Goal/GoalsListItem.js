@@ -5,17 +5,17 @@ import FirstGoalView from "./FirstGoalView";
 import {Ionicons} from "@expo/vector-icons";
 
 
-function GoalsListItem({ item, user, canEdit }) {
+function GoalsListItem({item, user}) {
     const navigation = useNavigation();
 
     function handleOnPress() {
-        navigation.navigate("Goal Profile", { item, user, canEdit, navigation });
+        navigation.navigate("Goal Profile", { item, user, navigation });
     }
 
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handleOnPress}>
-                <FirstGoalView item={item} user={user} canEdit={canEdit} />
+                <FirstGoalView item={item} user={user} />
             </TouchableOpacity>
         </View>
     );

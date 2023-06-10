@@ -7,8 +7,7 @@ import { getUser,getRole,updateUser } from '../../utils/getters';
 import Client from '../../client/Client';
 import FollowersContainer from '../../components/followers/FollowersContainer';
 import {ATHLETE, TRAINER} from "../../utils/constants";
-import FollowersScreen from "../Followers/FollowersScreen";
-import {AntDesign} from "@expo/vector-icons";
+
 
 function MenuProfileScreen({ navigation,route }) {
     const {reload} = route.params
@@ -80,11 +79,11 @@ function MenuProfileScreen({ navigation,route }) {
 
                     <FollowersContainer followers={user.followers} following={user.following}></FollowersContainer>
                     <View style={styles.buttonsContainer}>
-                        <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Edit Profile',{user : user,reload:reload})}>
+                        <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Edit Profile',{user: user,reload:reload})}>
                             <Text style={ styles.messageButtonText }>Edit Profile</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Change Password',{user : user,reload:reload})}>
+                        <TouchableOpacity style={styles.followButton} onPress={() => navigation.navigate('Change Password',{user: user,reload:reload})}>
                             <Text style={styles.followButtonText}>Edit Password</Text>
                         </TouchableOpacity>
                     </View>
@@ -97,8 +96,8 @@ function MenuProfileScreen({ navigation,route }) {
 
 
                     { user.role !== TRAINER &&(
-                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('View Challenges',{user : user, myUser:true})}>
-                            <Text style={styles.buttonText}>View Challenges</Text>
+                        <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('View Goal',{user: user, myUser:true})}>
+                            <Text style={styles.buttonText}>View Goals</Text>
                         </TouchableOpacity>
                     )}
                     

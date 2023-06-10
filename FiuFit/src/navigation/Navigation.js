@@ -22,9 +22,6 @@ import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 import FavoriteTrainingProfile from '../screens/search/FavoriteTrainingProfile';
 import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
-import ViewChallenge from "../screens/Challenge/ViewChallenge";
-import ChallengeProfile from "../screens/Challenge/ChallengeProfile";
-import EditChallenge from "../screens/Challenge/EditChallenge";
 import EditGoal from "../screens/Goal/EditGoal";
 
 
@@ -57,11 +54,6 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
-
-
-                    <Stack.Screen name="View Challenges" component={ViewChallenge}  />
-                    <Stack.Screen name="ChallengeProfile" component={ChallengeProfile}  />
-                    <Stack.Screen name="Edit Challenge" component={EditChallenge}  />
 
                     <Stack.Screen name="View Goal" component={ViewGoal}  />
                     <Stack.Screen name="Goal Profile" component={GoalProfile}  />

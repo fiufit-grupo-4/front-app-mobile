@@ -13,106 +13,66 @@ import {
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import TrainingType from "../../components/trainings/ListType";
-import {firebase} from '../../config/firebase'
-import MediaBox from '../../components/media/MediaBox';
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
-import GoalType from "./GoalType";
 import ListType from "../../components/trainings/ListType";
 
 export const CreateGoal = ({ navigation }) => {
-    const [imageUri, setImageUri] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [type, setType] = useState('');
+    const [metric, setMetric] = useState('');
     const [challenge, setChallenge] = useState('');
     const [difficulty, setDifficulty] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [media1, setMedia1] = useState("");
-    const [mediaType1, setMediaType1] = useState("");
 
 
-    // TODO: tiene dificultad?
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
 
+    const metricItems = [
+        { label: " ", value: " " },
+        { label: "Distancia recorrida", value: "Distancia recorrida" },
+        { label: "Tiempo utilizado", value: "Tiempo utilizado" },
+        { label: "Calorias utilizadas", value: "Calorias utilizadas" },
+        { label: "Cantidad de hitos realizados", value: "Cantidad de hitos realizados" },
+        { label: "Tipo de actividad realizada", value: "Tipo de actividad realizada" },
+    ];
+    
     const trainingItems = [
         { label: " ", value: " " },
         { label: "Caminata", value: "Caminata" },
         { label: "Running", value: "Running" },
     ];
 
-    // TODO: sacar de aca los CHALLENGES QUE TIENE ESTE USER
-    let challengeItems = [
-        { label: " ", value: " " },
-        { label: "Challenge1", value: "Challenge1" },
-        { label: "Challenge2", value: "Challenge2" },
-        { label: "Challenge3", value: "Challenge3" },
-    ];
-
-    const uploadMedia = async (video,user) => {
-        setLoading(true);
-        const response = await fetch(video);
-        const blob = await response.blob();
-        let date = new Date().getTime()
-        await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).put(blob)
-        const uri = await firebase.storage().ref().child(`users/${user.mail}/goal/${date}`).getDownloadURL()
-        setLoading(false)
-        return uri
-    }
-
-
-    const uploadElement = async (user,media,media_type,array)=>{
-        if (media){
-            let uri = await uploadMedia(media,user)
-            let element = {
-                "media_type": media_type,
-                "url" : uri
-            }
-            array.push(element)
-        }
-    }
-
-    const handleMedia = async (user)=> {
-        let array = []
-        await uploadElement(user,media1,mediaType1,array)
-        return array
-
-    }
 
     const resetStates =  ()=> {
-        setImageUri('');
         setTitle('');
         setDescription('');
-        setType('');
+        setMetric('');
         setDifficulty(0);
         setLoading(false);
         setError(false);
         setErrorMessage("");
-        setMedia1("");
-        setMediaType1("")
     }
 
-
     const createGoal = async () => {
-        console.log(type)
-        if (!title || !description  || !type || !difficulty || !challenge) {
+        console.log(metric)
+        if (!title || !description  || !metric || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || type.trim() === '' || !difficulty || type.trim() === '') {
+        if (title.trim() === '' || description.trim() === '' || metric.trim() === '' || metric.trim() === '') {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
         let user = await getUser()
-        let array = await handleMedia(user)
+
         setLoading(true)
         setError(false)
-        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,challenge,array)
+        let response = await Client.createNewPost(user.access_token,title,description,metric,difficulty,challenge)
         setLoading(false)
         if (!response.ok) {
             setError(true);
@@ -169,22 +129,16 @@ export const CreateGoal = ({ navigation }) => {
                         </View>
                     </View>
 
-                    {/* Tipo de entrenamiento */}
-                    <ListType setType={setType} listItem={trainingItems} icon={"fitness-outline"} styles={styles}/>
+                    {/* Tipo de metrica */}
+                    <ListType setType={setMetric} listItem={metricItems} icon={"fitness-outline"} styles={styles}/>
 
-                    {/* Tipo de challenge */}
-                    <ListType setChallenge={setChallenge} listItem={challengeItems} icon={"american-football-outline"} styles={styles} />
-
+                    
+                    {/* Fecha limite */}
+                    
+                    
                 </View>
 
-                <ScrollView
-                    contentContainerStyle={styles.mediaContainer}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                >
-                    <MediaBox setElement = {setMedia1} setMediaElement = {setMediaType1}/>
 
-                </ScrollView>
 
 
                 { loading
@@ -301,11 +255,6 @@ const styles = StyleSheet.create({
     typeIcon: {
         size: 24,
         color: "#A6A6A6"
-    },
-    mediaContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
     }
 });
 
