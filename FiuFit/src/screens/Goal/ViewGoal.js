@@ -77,7 +77,7 @@ const ViewGoal = ({route}) => {
                         : <View style={{padding:10 }}>
                             <FlatList
                                 data={goals}
-                                keyExtractor={(goalItem) => goalItem}
+                                keyExtractor={(goalItem) => goalItem.id}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
                                         <GoalsListItem item={item} user={user} ></GoalsListItem>

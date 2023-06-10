@@ -2,7 +2,6 @@ import {useNavigation} from "@react-navigation/native";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import React, {useState} from "react";
 import FirstGoalView from "./FirstGoalView";
-import {Ionicons} from "@expo/vector-icons";
 
 
 function GoalsListItem({item, user}) {
