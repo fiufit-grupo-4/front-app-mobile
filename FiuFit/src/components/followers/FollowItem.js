@@ -4,10 +4,16 @@ import {useNavigation} from '@react-navigation/native';
 import {Ionicons} from 'react-native-vector-icons'
 
 const FollowItem = ({ user, myId }) => {
+
   const navigation = useNavigation();
   function handleOnPress() {
-    navigation.navigate("User Profile", {user:user,id:myId})
-  }
+    if (user.id != myId){
+      navigation.navigate("User Profile", {user:user,id:myId})
+    } else {
+      navigation.navigate("Profile", {reload:true})
+    }
+    }
+    
 
   return (
     <TouchableOpacity onPress={handleOnPress}>

@@ -118,6 +118,25 @@ class ApiClient {
       return json
     }
 
+    async getUserById(access_token,id){
+      if (MOCK) return Mocked.getUserInfo()
+      const url = API_GATEWAY + 'users/' + id
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        let errorMessage = getErrorMessage(response.status)
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
+
     async getUsers(access_token){
       if (MOCK) return Mocked.getUsers()
       const url = API_GATEWAY + 'users/'

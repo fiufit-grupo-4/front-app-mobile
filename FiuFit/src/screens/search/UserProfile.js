@@ -9,25 +9,49 @@ import FollowersContainer from '../../components/followers/FollowersContainer';
 
 const UserProfile = ({ navigation,route }) => {
   const {user,id} = route.params;
-  const followed = () => {
-      user.followers.map( follows => {
-        if (id == follows?.id)
-          return true
-      })
-      return false
+  const followed = (user) => {
+    let followed = false
+    user.followers.map( follows => {
+      if (id == follows) {
+        followed = true 
+        return }
+    })
+    return followed
   }
-
-  const [isFollowing, setIsFollowing] = useState(followed());
+  const isFocused = useIsFocused();
+  const [userInfo, setUser] = useState(user);
+  const [isFollowing, setIsFollowing] = useState(followed(user));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("false");
+
+ 
+  useEffect(() => {
+    setLoading(false)
+    setUser(user)
+    async function getUsers() {
+        let  myUser = await getUser()
+        Client.getUserById(myUser.access_token,user.id).then(async data => {
+          console.log(data)
+          setIsFollowing(followed(data))
+          setUser(data)
+         
+        })
+        .catch(error => {
+          setError(true)
+          setErrorMessage(error.toString())
+        })
+    }
+    getUsers();
+    }, [isFocused,isFollowing,user])
+  
   
   const handleFollow = async () => {
     setLoading(true)
     setError(false)
     let myUser = await getUser()
     let endpoint = isFollowing? "/unfollow" : "/follow"
-    let response = await Client.handleFollowUser(myUser.access_token,user.id,endpoint) 
+    let response = await Client.handleFollowUser(myUser.access_token,userInfo.id,endpoint) 
     if (!response.ok) { 
       console.log(response.status)
       setError(true)
@@ -46,8 +70,8 @@ const UserProfile = ({ navigation,route }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileInfo}>
-          { user.image  
-            ? <Image source={{uri:user.image}} style={styles.profileImage}/>
+          { userInfo.image  
+            ? <Image source={{uri:userInfo.image}} style={styles.profileImage}/>
             : <Image
                 style={styles.profileImage}
                 source={require('../../../assets/images/profilepic.jpeg')}
@@ -55,14 +79,14 @@ const UserProfile = ({ navigation,route }) => {
           }  
           
           <View style={styles.nameContainer}>
-            <Text style={styles.name}>{user.name + " " +user.lastname + " "} 
+            <Text style={styles.name}>{userInfo.name + " " +userInfo.lastname + " "} 
             
-            { user.verification?.verified && (
+            { userInfo.verification?.verified && (
                   <Ionicons name={"checkmark-done-outline"} size={20} color={"lightskyblue"} />
               )
             }
             </Text>
-            <Text style={styles.role}>{getRole(user.role)}</Text>
+            <Text style={styles.role}>{getRole(userInfo.role)}</Text>
             
           </View>
         </View>
@@ -95,20 +119,20 @@ const UserProfile = ({ navigation,route }) => {
         )}
         
         
-        { user.role != ATHLETE && (
+        { userInfo.role != ATHLETE && (
           <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('Trainings',{user : user,myUser:false})}>
             <Text style={styles.buttonText}>View Trainings</Text>
           </TouchableOpacity>
         )}
         
 
-      <FollowersContainer followers={user.followers} following={user.following}></FollowersContainer>
+      <FollowersContainer followers={userInfo.followers} following={userInfo.following}></FollowersContainer>
       
       <View style={styles.tableContainer}>
             <View style={styles.table}>
-                <Text style={styles.tableHeaderCell}>Phone: {user.phone_number}</Text>
-                <Text style={styles.tableHeaderCell}>Email: {user.mail}</Text>
-                <Text style={styles.tableHeaderCell}>Age: {user.age}</Text>
+                <Text style={styles.tableHeaderCell}>Phone: {userInfo.phone_number}</Text>
+                <Text style={styles.tableHeaderCell}>Email: {userInfo.mail}</Text>
+                <Text style={styles.tableHeaderCell}>Age: {userInfo.age}</Text>
             </View>
       </View>
     </View>
