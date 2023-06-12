@@ -30,7 +30,11 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE"
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.ACTIVITY_RECOGNITION",
+        "android.gms.permission.ACTIVITY_RECOGNITION",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK"
       ]
     },
     "web": {
@@ -53,7 +57,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "46921160-511e-4126-a9ac-a43d7eb5b31f"
+        "projectId": "328698f9-d8bd-4426-86bc-a4e44658a679"
       }
     }
   }
