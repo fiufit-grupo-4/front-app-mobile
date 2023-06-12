@@ -1,6 +1,11 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import Navigation from './src/navigation/Navigation';
+import { firebase } from './src/config/firebase';
+// import { google } from './src/utils/google';
+import GoogleFit, { Scopes, ActivityType, BucketUnit } from 'react-native-google-fit'
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 import 'expo-dev-client';
 import { PermissionsAndroid } from 'react-native';
 import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
