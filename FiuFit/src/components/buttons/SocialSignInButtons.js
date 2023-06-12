@@ -1,32 +1,33 @@
 import React from 'react';
 import CustomIconButton from './CustomIconButton';
-import { firebase } from '../../config/firebase';
-
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin,} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
+
 
 const SocialSignInButtons = () => {
-  const onSignInFacebook = () => {
-    console.warn('onSignInFacebook');
-  };
+  const navigation = useNavigation();
 
   const onSignInGoogle = async () => {
     
     try {
       console.log('onSignInGoogle');
       await GoogleSignin.hasPlayServices();
-      // await GoogleSignin.signOut();
       const { idToken } = await GoogleSignin.signIn();
-  
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-        const user_signin = await auth().signInWithCredential(googleCredential);
-        console.log('Inicio de sesión exitoso:', user_signin);
-        console.log("User email: ", user_signin.user.email);
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const user_signin = await auth().signInWithCredential(googleCredential);
+      console.log('Inicio de sesión exitoso:', user_signin);
+      console.log("User: ", user_signin.additionalUserInfo);
+
+      let user = {
+        "picture" : user_signin.additionalUserInfo.profile.picture,
+        "name":user_signin.additionalUserInfo.profile.given_name ,
+        "lastname": user_signin.additionalUserInfo.profile.family_name,
+        "mail": user_signin.additionalUserInfo.profile.email, 
+      }
+      navigation.navigate('GoogleSignUp',{user : user})
+
     } catch (error) {
         console.log('Error desconocido:', error);
     }
@@ -34,16 +35,6 @@ const SocialSignInButtons = () => {
 
   return (
     <>
-      {/* 
-      <CustomIconButton
-        text="Sign In with Facebook "
-        onPress={onSignInFacebook}
-        bgColor="#3b5998"
-        fgColor="white"
-        icon= "logo-facebook"
-        iconColor="white"
-      />
-      */}
       <CustomIconButton
         text="Sign In with Google "
         onPress={onSignInGoogle}

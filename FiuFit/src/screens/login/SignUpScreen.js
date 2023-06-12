@@ -114,38 +114,6 @@ const SignUpScreen = () => {
     };
 
 
-    const onSignUpGoogle = async () => {
-            try {
-              const provider = new firebase.auth.GoogleAuthProvider();
-          
-              const { user: firebaseUser } = await firebase.auth().signInWithPopup(provider);
-          
-              // Crea el usuario en tu base de datos con los datos de Firebase
-              const userData = {
-                googleUserId: firebaseUser.uid,
-                email: firebaseUser.email,
-                // Otros datos que desees almacenar
-              };
-          
-              // Envía los datos al backend para el registro
-              await fetch('TU_URL_DEL_ENDPOINT_DE_REGISTRO', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-              });
-          
-              // El registro es exitoso, puedes redirigir o hacer otras acciones
-              console.log('Registro exitoso:', firebaseUser);
-            } catch (error) {
-              // Manejo de errores
-              console.log('Error de registro:', error);
-            }
-          
-      };
-    
-
     return (
 
         <View style={styles.root}>
@@ -163,7 +131,7 @@ const SignUpScreen = () => {
                 : <>
                     <Image
                         source={FiuFitLogo}
-                        style={ {width: "60%", height: height * 0.1,marginTop:10}}
+                        style={ {width: "60%", height: height * 0.15,marginTop:40}}
                         resizeMode="contain"
                     />
                 <Text style={[styles.title]}>Create an Account</Text>
@@ -280,15 +248,6 @@ const SignUpScreen = () => {
                         <Text style = {{fontSize:15,color : "crimson",padding:5}}> {errorMessage} </Text>
                     )}
 
-                    <CustomIconButton
-                            text="Sign Up with Google "
-                            onPress={onSignUpGoogle}
-                            bgColor="crimson"
-                            fgColor="white"
-                            icon= "logo-google"
-                            iconColor="white"
-                            containerWidth="100%"
-                    />
 
                     <CustomButton
                         text="Have an account? Sign in"
