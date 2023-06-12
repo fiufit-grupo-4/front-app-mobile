@@ -1,49 +1,94 @@
 {
   "project_info": {
-    "project_number": "656208108442",
-    "project_id": "fiufit-99b25",
-    "storage_bucket": "fiufit-99b25.appspot.com"
+    "project_number": "880473744329",
+    "project_id": "react-native-fiufit",
+    "storage_bucket": "react-native-fiufit.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:656208108442:android:e67bfc5a886fe0595eb823",
+        "mobilesdk_app_id": "1:880473744329:android:a612796bf3c8bf1cfc3e18",
         "android_client_info": {
-          "package_name": "fiufit.app.mobile"
+          "package_name": "fiu.fit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "656208108442-t6u5iq446g9sqs36ek67p265ac43ntlj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fiufit.app.mobile",
-            "certificate_hash": "9a5484e622fdc5daa6f7feff415ee16b2078624e"
-          }
-        },
-        {
-          "client_id": "656208108442-v61u3tkpj3ed94jfh8vtk1d2ionvjqrp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fiufit.app.mobile",
-            "certificate_hash": "d723f3e88ad5432238e5d8eee7a712e48f571e3a"
-          }
-        },
-        {
-          "client_id": "656208108442-981efem2rtp6q4bntfip6912ok7crd7o.apps.googleusercontent.com",
+          "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAJveMDx1NymOrnEg7LPshv2nU2yxmf0iU"
+          "current_key": "AIzaSyBiwHRBfRb3a_LFFls62MsUNNaXarn7iIA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "656208108442-981efem2rtp6q4bntfip6912ok7crd7o.apps.googleusercontent.com",
+              "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880473744329:android:8fb34a10bdcee6a8fc3e18",
+        "android_client_info": {
+          "package_name": "fiufit.app.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880473744329-ofb4ou7obvjjq7s1b5a8c884kbse7363.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "f56b9df814423177641e8ab2ec7f01328146e2c1"
+          }
+        },
+        {
+          "client_id": "880473744329-okfd52sa8p182gqse04r88ruo8i2o5ti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "e55ad5dcee2a6af5711c9bcebb5a56f6ced1471d"
+          }
+        },
+        {
+          "client_id": "880473744329-ua8on8m52l5ipukh245ciftvtj1sfs2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "ee1f1a2c69f568c1019aa5274178e6b9c982b299"
+          }
+        },
+        {
+          "client_id": "880473744329-vm7gchtu2f2n5tjc7j3al5d74m9t6s8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "51de0aea0390871b140604a46f8555e7379bea4d"
+          }
+        },
+        {
+          "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiwHRBfRb3a_LFFls62MsUNNaXarn7iIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
