@@ -75,7 +75,7 @@ const TrainingFilters = ({search}) => {
     <SafeAreaView  >
         <View style={styles.filtersContainer}>
             <View style={styles.distanceContainer}>
-              <Text style={styles.textInput}>Difficulty:</Text>
+              <Text style={styles.textInput}>Max Difficulty:</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:10}}>
                   {[1, 2, 3, 4, 5].map((value) => (
                       <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
@@ -187,5 +187,6 @@ const styles = {
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft:5,
-  }
+  },
+
 };

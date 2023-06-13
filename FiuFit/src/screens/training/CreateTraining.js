@@ -128,7 +128,8 @@ export const CreateTraining = ({ navigation }) => {
         } else {
             let data = await response.json()
             console.log(JSON.stringify(data))
-            ToastAndroid.show('Post created succesfully!', ToastAndroid.SHORT)                
+            ToastAndroid.show('Post created succesfully!', ToastAndroid.SHORT)
+            resetStates()                
             navigation.goBack();
         }
 
@@ -160,7 +161,7 @@ export const CreateTraining = ({ navigation }) => {
             console.log(JSON.stringify(data))                
             navigation.goBack();
         }*/
-        resetStates()
+        
         
     };
 

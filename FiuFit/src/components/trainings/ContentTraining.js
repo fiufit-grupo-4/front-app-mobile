@@ -2,6 +2,7 @@ import {Image, StyleSheet, Text, TouchableWithoutFeedback,FlatList,  ScrollView,
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
 import MediaVisualizableBox from "../media/MediaVisualizableBox";
+import { DEFAULT_IMAGE } from "../../utils/constants";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>
@@ -14,10 +15,20 @@ export function trainingPrincipalContent(item, toggleModal) {
             horizontal
             showsHorizontalScrollIndicator={false}
             >
+
+            {item.media[0] ?
+              <>
                 <MediaVisualizableBox media = { item.media[0]}/>
                 <MediaVisualizableBox media = { item.media[1]}/>
                 <MediaVisualizableBox media = { item.media[2]}/>
-                <MediaVisualizableBox media = { item.media[3]}/>             
+                <MediaVisualizableBox media = { item.media[3]}/> 
+              </>
+            :
+                <View style={styles.mediaBox}>
+                    <Image source={{ uri: DEFAULT_IMAGE }} style={styles.imageBox} /> 
+                </View>
+            }
+                        
         </ScrollView>
     {/*
         <FlatList
@@ -111,5 +122,16 @@ const styles = StyleSheet.create({
       image: {
         width: 300,
         height: 300,
-      }
+      },
+      mediaBox: {
+        width: 300,
+        height: 300,
+        margin: 10,
+        borderRadius:10
+      },
+      imageBox: {
+        width: '100%',
+        height: '100%',
+        borderRadius:5,
+      },
 });

@@ -29,14 +29,13 @@ const UserFilters = ({search}) => {
   };
 
   const calculateDistance = (myDistance,userDistance) =>{
+    console.log("--------")
     if (userDistance == null || myDistance == null){
       return false
     } else if (maxDistance == "") {
       return true
     } else {
        let dist = distance(myDistance,userDistance)
-       console.log(dist)
-       console.log(maxDistance)
        return dist <= parseInt(maxDistance)
     }
       
@@ -56,41 +55,6 @@ const UserFilters = ({search}) => {
           setErrorMessage(error.toString());
           setLoading(false)
         })
-        /*
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-            setMyUser(userInfo)
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                if (!response.ok) {
-                    console.log(response.status)
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        setUsers(data)
-                }).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });
-            }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-        })}).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        });*/
         }
         getUsers();
     }, [])
@@ -100,7 +64,6 @@ const UserFilters = ({search}) => {
     function getFilteredUsers() {
       if (!maxDistance) {
         return users.filter((user) => {
-
           const notMyUser = myUser.mail != user.mail
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
@@ -108,7 +71,7 @@ const UserFilters = ({search}) => {
           });
       } else {
         return users.filter((user) => {
-          const notMyUser = myUser.mail =! user.mail
+          const notMyUser = myUser.mail != user.mail
           const distanceMatches = calculateDistance(myUser.location,user.location)
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    

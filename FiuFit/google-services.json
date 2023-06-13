@@ -51,11 +51,27 @@
           }
         },
         {
+          "client_id": "880473744329-okfd52sa8p182gqse04r88ruo8i2o5ti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "e55ad5dcee2a6af5711c9bcebb5a56f6ced1471d"
+          }
+        },
+        {
           "client_id": "880473744329-ua8on8m52l5ipukh245ciftvtj1sfs2q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "fiufit.app.mobile",
             "certificate_hash": "ee1f1a2c69f568c1019aa5274178e6b9c982b299"
+          }
+        },
+        {
+          "client_id": "880473744329-vm7gchtu2f2n5tjc7j3al5d74m9t6s8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiufit.app.mobile",
+            "certificate_hash": "51de0aea0390871b140604a46f8555e7379bea4d"
           }
         },
         {

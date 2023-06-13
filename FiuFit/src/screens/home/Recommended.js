@@ -1,13 +1,11 @@
 import axios from "axios";
 import React, {useState} from "react";
-import {StyleSheet, View,Text} from "react-native";
+import {StyleSheet, View,Text,Image} from "react-native";
 import {useNavigation} from "@react-navigation/native";
-import {topContent} from "../../components/trainings/TopBarTraining";
-import {trainingContent, trainingPrincipalContent} from "../../components/trainings/ContentTraining";
 import MediaVisualizableBox from "../../components/media/MediaVisualizableBox";
 import {Ionicons} from "react-native-vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { DEFAULT_IMAGE } from "../../utils/constants";
 
 const Recommended = ({user, item, canEdit, reload, fav = false}) => {
     const [showModal, setShowModal] = useState(false);
@@ -54,7 +52,14 @@ const Recommended = ({user, item, canEdit, reload, fav = false}) => {
                         <Text style={newstyles.tipo}>{item.type}</Text>       
                     </View>
                     <View style={{alignContent:"center",alignItems:"center"}} >
-                    <MediaVisualizableBox media = { item.media[0]}/>
+
+                    {!item.media[0] && (
+                        <View style={styles.mediaBox}>
+                            <Image source={{ uri: DEFAULT_IMAGE }} style={styles.image} /> 
+                        </View>)
+                    }
+      
+                        <MediaVisualizableBox media = { item.media[0]}/>
                     </View>
                     <View style={styles.item}>
                         <Ionicons name={'bicycle-outline'} style={styles.icon}/>
@@ -95,7 +100,7 @@ const styles = StyleSheet.create({
     },
     itemText: {
         marginLeft: 5,
-        marginRight: 14,
+        marginRight: 0,
         fontSize: 15,
         padding: 6,
         color: 'rgba(32,38,70,0.63)'
@@ -105,6 +110,17 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.63)',
         marginLeft: 8
     },
+    mediaBox: {
+        width: 300,
+        height: 300,
+        margin: 10,
+        borderRadius:10
+      },
+      image: {
+        width: '100%',
+        height: '100%',
+        borderRadius:5,
+      },
 });
 
 
@@ -119,7 +135,7 @@ const newstyles = {
     },name: {
         fontSize: 16,
         color: 'rgba(23,29,52,0.93)',
-        marginHorizontal: 10
+        
     },
     header: {
       flexDirection: 'row',
