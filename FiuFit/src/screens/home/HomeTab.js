@@ -1,8 +1,29 @@
-import React from 'react';
-import {View, Text,StyleSheet,ActivityIndicator} from 'react-native';
+import React, { useEffect } from 'react';
+import {View, Text,StyleSheet} from 'react-native';
 import Logo from '../../components/utils/Logo';
 
 export const HomeTab = () => {
+    useEffect(() => {
+      
+      getDeviceToken();
+    }, []); 
+
+    const getDeviceToken = () => {
+      await requestUserPermission();
+      const token = await messaging().getToken();
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+            "devicetoken" : token
+        })
+      }).then((response) => {})
+      .catch((error) => {console.log(error)})
+    }
+
     return (
         <View style ={styles.root}>
 
