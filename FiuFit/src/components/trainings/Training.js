@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, {useState} from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View,Text,TouchableOpacity, ScrollView} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
 import {getCalification, likeTraining} from "./RateTraining";
@@ -11,6 +11,9 @@ import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUser,getErrorMessage } from "../../utils/getters";
 import Client from "../../client/Client";
+import CustomIconButton from "../buttons/CustomIconButton";
+import { Ionicons } from "@expo/vector-icons";
+import VisualizeTrainingGoal from "../../screens/Goal/VisualizeTrainingGoal";
 
 const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [showModal, setShowModal] = useState(false);
@@ -29,6 +32,24 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
     const navigation = useNavigation();
 
+    let goals = [
+        {"metric":"Adelgazar",
+         "quantity":2,
+         "title":"Bajar de peso",
+         "description":"Bajas",
+        },
+        {"metric":"Caminar",
+         "quantity":10,
+         "title":"Caminata extrema",
+         "description":"Caminas",
+        },
+        {"metric":"Correr",
+         "quantity":22,
+         "title":"COrrido tumbao",
+         "description":"que le parece esa morra",
+        },
+
+    ]
 
     const toggleModal = (image) => {
         setSelectedImage(image);
@@ -256,27 +277,42 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
                     {trainingPrincipalContent(item, toggleModal)}
 
+                    {goals && (
+                    <>
+                        {/*<Text style = {styles.goalsTitle}>Goals</Text>*/}
+                        <ScrollView style = {{padding:5}} horizontal= {true} >
+                            {goals.map((goal, index) => (
+                                <VisualizeTrainingGoal key={index} item={goal} />
+                            ))}
+                        </ScrollView>
+                    
+                    </>
+
+                    )}
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            {/* COMENTATIOS */}
+                            
                             {getComments(user, handleComment, showCommentPopup, toggleCommentPopup, item, setCommentText, commentText, reload)}
 
-                            {/* LIKES */}
+                           
                             {likeTraining(handleLikePress, isLike)}
+
+                    
                         </View>
 
-                        {/* FAVORITOS */}
+                        
                         {favouriteTraining(handleFavoritePress, isFavorite)}
 
 
                     </View>
 
-
+                    
                     {trainingContent(item)}
 
 
+                    
 
 
                 </View>
@@ -290,7 +326,20 @@ const styles = StyleSheet.create({
         //backgroundColor: 'rgba(222,233,248,0.29)'
         backgroundColor: 'white',
         paddingTop:15,
-        paddingHorizontal:10
+        paddingHorizontal:10,
+        borderRadius:15
+    },
+    button:{
+        backgroundColor:"orange",
+
+        marginVertical: 10,
+        alignItems: 'center',
+        borderRadius: 10,
+        width:"50%",
+        alignSelf:"center",
+        justifyContent:"center",
+        marginLeft:25
+        
     },
     postContainer: {
         backgroundColor: 'white',
@@ -300,7 +349,15 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         //backgroundColor: 'rgba(217,227,240,0.75)'
         backgroundColor: 'white'
-    }
+    },
+    goalsTitle: {
+        marginTop:10,
+        fontSize: 18,
+        //color: 'rgba(32,38,70,0.83)',
+        marginHorizontal: 10,
+        fontWeight:"bold"
+    },
+
 });
 
 export default Training;

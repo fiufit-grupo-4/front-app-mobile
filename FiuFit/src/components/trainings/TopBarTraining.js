@@ -1,20 +1,29 @@
-import {Image, Text, View, TouchableWithoutFeedback, StyleSheet} from "react-native";
+import {Image, Text, View, TouchableOpacity, StyleSheet} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
-import {editPostDots} from "./EditTrainingButton";
-
+import {editPostDots,viewPostStats} from "./EditTrainingButton";
 export function topContent(canEdit, handleEdit, item) {
     return <View style={styles.topContent}>
         {topBarPost(item)}
-        {editPostDots(canEdit, handleEdit, item)}
-    </View>;
+        
+            <TouchableOpacity onPress={() => (console.log("started"))}
+                style={styles.button}>
+                <Text style={{fontSize:18,fontWeight:"bold",color:"white"}}>
+                    Start
+                   
+                </Text>
+             </TouchableOpacity>
+
+            {viewPostStats(canEdit, handleEdit, item)}
+            {editPostDots(canEdit, handleEdit, item)}
+        </View>;
 }
 
 export function topBarPost(item) {
     return <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image source={require('../../../assets/images/profilepic.jpeg')}
-               style={styles.profileImage}/>
-        <Text style={styles.name}>{item.trainer.name + " " + item.trainer.lastname}</Text>
+        {/*<Image source={require('../../../assets/images/profilepic.jpeg')}
+               style={styles.profileImage}/>*/}
+        <Text style={styles.name}>{item.title}</Text>
     </View>;
 }
 
@@ -39,9 +48,10 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     name: {
-        fontSize: 16,
+        fontSize: 22,
         color: 'rgba(23,29,52,0.93)',
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        fontWeight:"bold"
     },
     item: {
         flexDirection: 'row',
@@ -56,5 +66,18 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginLeft:30,
         color : 'rgba(91,99,95,0.77)',
-    }
+    },
+    button:{
+        backgroundColor:"orange",
+        paddingHorizontal:5,
+        paddingVertical:2,
+        marginVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+        width:"20%",
+        alignSelf:"center",
+        justifyContent:"center",
+        marginRight:10,
+        marginLeft:90,
+    },
 });

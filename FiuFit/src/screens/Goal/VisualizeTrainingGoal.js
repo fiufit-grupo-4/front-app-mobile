@@ -3,11 +3,7 @@ import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 
 
-const TrainingGoal = ({item, onDelete}) => {
-   
-    const handleDelete = () => {
-        onDelete(item);
-    };
+const VisualizeTrainingGoal = ({item}) => {
 
     return (
         <View style={ styles.background}>
@@ -15,12 +11,7 @@ const TrainingGoal = ({item, onDelete}) => {
                 <View style={styles.postBackground}>
                     <View key = {item.id} style={newstyles.container}>
                         <View style={newstyles.header}> 
-                        <Text style={newstyles.titulo}>{item.title}</Text>                 
-                            <View style ={{marginLeft:30}}>
-                                <TouchableOpacity onPress={handleDelete}>
-                                    <Ionicons name={'close-outline'} size = {30} color = {"crimson"}/>
-                                </TouchableOpacity> 
-                            </View>    
+                        <Text style={newstyles.titulo}>{item.title}</Text>                    
                         </View>
                     </View>
                     
@@ -45,11 +36,10 @@ const TrainingGoal = ({item, onDelete}) => {
 
 const styles = StyleSheet.create({
     background: {
-        width:"90%",
+        backgroundColor:"#FAF9F6",
         paddingHorizontal:5,
         margin:10,
         borderRadius:15,
-        borderWidth:0.5,
         alignSelf:"center"
     },
 
@@ -116,4 +106,4 @@ const newstyles = {
 };
 
 
-export default TrainingGoal;
+export default VisualizeTrainingGoal;

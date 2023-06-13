@@ -67,19 +67,17 @@ export const GoalCreator = ({ goals, setGoals  }) => {
 
     return (
     <View>
-        
-        
+ 
         <ScrollView style = {{padding:5}} >
             {goals.map((goal, index) => (
                 <TrainingGoal key={index} item={goal} onDelete={deleteGoal} />
             ))}
         </ScrollView>
-        
-
 
         <TouchableOpacity style={styles.button} onPress={addGoal}>
             <Text style={styles.buttonText}>Add Goal</Text>
         </TouchableOpacity>
+
         <ModalGoal newGoal={newGoal} setNewGoal={setNewGoal} modalVisible={modalVisible} handleSave={handleSaveGoal} setModal={setModalVisible}></ModalGoal>
     </View>)
 }
