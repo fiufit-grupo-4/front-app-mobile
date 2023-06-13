@@ -8,6 +8,7 @@ import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER } from '../../utils/constants';
 import { getRole } from '../../utils/getters';
+import { Ionicons } from '@expo/vector-icons';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();

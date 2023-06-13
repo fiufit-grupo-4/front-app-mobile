@@ -12,15 +12,12 @@ const EditGoal = ({ route }) => {
     const [title, setTitle] = useState(goalPost.title);
     const [description, setDescription] = useState(goalPost.description);
     const [metric, setMetric] = useState(goalPost.metric);
-    const [difficulty, setDifficulty] = useState(goalPost.difficulty);
+    const [quantity, setQuanity] = useState(goalPost.quantity.toString());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedValue, setSelectedValue] = useState(" ");
 
-    const handleDifficulty = (value) => {
-        setDifficulty(value);
-    };
 
     const metricItems = [
         { label: " ", value: " " },
@@ -105,7 +102,7 @@ const EditGoal = ({ route }) => {
     }
 
     return (
-        <View style={{padding: 20, backgroundColor: 'white', flex:1}}>
+        <View style={{padding: 30, backgroundColor: 'white', flex:1,paddingTop:100}}>
 
             <ScrollView>
                 <View style={styles.inputContainer}>
@@ -126,10 +123,11 @@ const EditGoal = ({ route }) => {
                     <View style={{flexDirection: 'row'}}>
                         <Ionicons name="md-pencil-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
                         <TextInput
-                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}
+                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%'}}
                             placeholder="Enter the description"
                             value={description}
                             onChangeText={setDescription}
+                            multiline={true}
                         />
                     </View>
                 </View>
@@ -138,7 +136,7 @@ const EditGoal = ({ route }) => {
                     <View style={{padding:1, marginTop:10, paddingTop:10 }}>
                         <Text style={styles.text}>Training Type</Text>
                         <View style={{flexDirection:"row"}}>
-                            <Ionicons name="fitness-outline" size={24} color={"rgba(53,63,79,0.74)"} style={styles.icon}/>
+                            <Ionicons name="fitness-outline" size={24} color={"rgba(53,63,79,0.74)"} style={styles.iconType}/>
                             <Picker
                                 selectedValue={selectedValue}
                                 style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
@@ -155,19 +153,16 @@ const EditGoal = ({ route }) => {
                         </View>
                     </View>
                 </View>
-
                 <View style={styles.inputContainer}>
-                    <Text style={styles.text}> Difficulty </Text>
-                    <View style={{flexDirection: 'row', marginTop: 8}}>
-                        <Ionicons name="ios-stats-chart-outline" size={16} color="#A6A6A6" style={styles.icon}/>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                                </TouchableWithoutFeedback>
-                            ))}
-                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
-                        </View>
+                    <Text style={styles.text}>Quantity</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-pulse-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
+                        <TextInput
+                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}
+                            placeholder="Enter the quantity"
+                            value={quantity}
+                            onChangeText={setQuanity}
+                        />
                     </View>
                 </View>
 
@@ -212,13 +207,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        justifyContent:"center",
         backgroundColor: '#fff',
     },
     buttonContainer:{
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:50
+        marginBottom:100
     },
     inputContainer: {
         borderBottomWidth: 1,
@@ -229,6 +225,12 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         marginTop: 5,
+        fontSize: 16,
+        color: "#A6A6A6"
+    },
+    iconType: {
+        
+        marginTop: 19,
         fontSize: 16,
         color: "#A6A6A6"
     },

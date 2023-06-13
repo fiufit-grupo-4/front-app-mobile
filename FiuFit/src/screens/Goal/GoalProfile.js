@@ -11,15 +11,12 @@ function GoalProfile({ route }) {
         navigation.navigate('Edit Goal', { post: item, navigation: navigation });
     };
 
-    const renderDifficultyStars = (difficulty) => {
-        const filledStars = [];
-        for (let i = 0; i < difficulty; i++) {
-            filledStars.push(
-                <FontAwesome name="star" size={20} color="gold" key={i} style={styles.starIcon} />
-            );
-        }
-        return filledStars;
-    };
+    const getState = (state) => {
+        if (state ==1) return "Not Started"
+        else if (state == 2) return "Started"
+        else if (state == 3) return "Completed"
+        else return "Not Sure"
+    }
 
     return (
         <View style={styles.item}>
@@ -28,24 +25,26 @@ function GoalProfile({ route }) {
 
                 {/* EDIT BUTTON */}
                 <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
-                    <Ionicons name="md-settings-outline" size={15} color="#A6A6A6" style={styles.editIcon} />
+                    <Ionicons name="md-settings-outline" size={22} color="#A6A6A6" style={styles.editIcon} />
                 </TouchableOpacity>
 
 
 
                 <Text style={styles.title}>{item.title}</Text>
 
-                <Text style={styles.descriptionTitle}>Description Goal</Text>
+                <Text style={styles.descriptionTitle}>Description</Text>
                 <Text style={styles.description}>{item.description}</Text>
 
-                <Text style={styles.detailsTitle}>Metric Goal</Text>
-                <Text style={styles.details}>Metric: {item.metric}</Text>
+                <Text style={styles.descriptionTitle}>Metric</Text>
+                <Text style={styles.description}>{item.metric}</Text>
 
-                <Text style={styles.detailsTitle}>Difficulty Goal</Text>
-                <View style={styles.difficultyContainer}>
-                    <Text style={styles.details}>Difficulty: </Text>
-                    {renderDifficultyStars(item.difficulty)}
-                </View>
+                <Text style={styles.descriptionTitle}>Progress</Text>
+                <Text style={styles.description}>{item.progress + "/" + item.quantity}</Text>
+
+                <Text style={styles.descriptionTitle}>State</Text>
+                <Text style={styles.description}>{getState(item.state)}</Text>
+
+               
 
             </View>
         </View>
@@ -68,8 +67,8 @@ const styles = StyleSheet.create({
     },
     editButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: 14,
+        right: 9,
         backgroundColor: 'rgb(255,255,255)',
         padding: 8,
         borderRadius: 20,

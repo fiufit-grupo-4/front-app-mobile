@@ -107,7 +107,7 @@ const UserFilters = ({search}) => {
             ? <View style={{marginTop:200, transform: [{ scaleX: 2 }, { scaleY: 2 }]}}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            :  <View style={{height:"89.5%",marginTop:10}}>
+            :  <View style={{height:"86%",marginTop:10}}>
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}

@@ -14,7 +14,7 @@ import CreateTraining from "../screens/training/CreateTraining";
 import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
-
+import GoalsScreen from "../screens/Goal/GoalsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,8 +35,6 @@ function DrawerComponent() {
         getUser();
     }, [])
 
-
-    //console.log("USER EN EL DRAWER: ", userInfo);
 
     return (
         <Drawer.Navigator
@@ -69,12 +67,12 @@ function DrawerComponent() {
 
 
             <Drawer.Screen
-                name="         Home"
+                name="        Home"
                 color="#F0A500"
                 component={HomeScreen}
                 options={() => ({
                     drawerIcon: () => (
-                        <Ionicons name="md-tennisball-outline"
+                        <Ionicons name="barbell-outline"
                             style={{color:'#2C302E'}}
                         />
                     ),
@@ -97,7 +95,7 @@ function DrawerComponent() {
 
 
         <Drawer.Screen
-            name="         Favorites"
+            name="        Favorites"
             color="#F0A500"
             component={FavoriteTrainingScreen}
             options={() => ({
@@ -110,12 +108,13 @@ function DrawerComponent() {
             })}
         />
 
-        { userInfo.role != ATHLETE &&(
-            <>
-                <Drawer.Screen
-                name="         New Post"
+ 
+
+        {/*{ userInfo.role != TRAINER &&(
+            <Drawer.Screen
+                name="        New Goal"
                 color="#F0A500"
-                component={CreateTraining}
+                component={CreateGoal}
                 options={() => ({
                     drawerIcon: () => (
                         <AntDesign
@@ -124,28 +123,77 @@ function DrawerComponent() {
                     ),
                     headerShown: true,
                 })}
-                />
+            />
 
-                <Drawer.Screen
-                    name="         Verify"
-                    color="#F0A500"
-                    component={CertifyScreen}
-                    options={() => ({
-                        drawerIcon: () => (
-                            <AntDesign
-                                name="checkcircleo"
-                            />
-                            
-                        ),
-                        headerShown: true,
-                    })}
-                />    
-            </>
-        )}
+        )}*/}
 
 
             <Drawer.Screen
-                name="         Messages"
+                name="        Goals"
+                color="#F0A500"
+                component={GoalsScreen}
+                options={() => ({
+                    drawerIcon: () => (
+                        <Ionicons name="flash-outline"
+                            style={{color:'#2C302E'}}
+                        />
+                    ),
+                    headerShown: true,
+                })}
+            />
+
+            <Drawer.Screen
+                name="        New Goal"
+                color="#F0A500"
+                component={CreateGoal}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="plus"
+                        />
+                    ),
+                    headerShown: true,
+                })}
+            />
+
+            
+
+        { userInfo.role != ATHLETE &&(
+            
+            <Drawer.Screen
+            name="        New Post"
+            color="#F0A500"
+            component={CreateTraining}
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="plus"
+                    />
+                ),
+                headerShown: true,
+            })}
+            />
+        )}  
+
+
+<Drawer.Screen
+            name="        Notifications"
+            color="#F0A500"
+            component={FollowersScreen}
+            initialParams={ {user: userInfo} }
+            options={() => ({
+                drawerIcon: () => (
+                    <AntDesign
+                        name="bells"
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
+    
+
+        <Drawer.Screen
+                name="        Messages"
                 color="#F0A500"
                 component={MessagesScreen}
                 options={() => ({
@@ -159,46 +207,28 @@ function DrawerComponent() {
             />
 
 
+        { userInfo.role != ATHLETE &&(
+            <Drawer.Screen
+                name="        Verify"
+                color="#F0A500"
+                component={CertifyScreen}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="checkcircleo"
+                        />
+                        
+                    ),
+                    headerShown: true,
+                })}
+            />    
+            
+        )}
 
-            { userInfo.role != ATHLETE &&(
-                <>
-                    <Drawer.Screen
-                        name="         New Follower"
-                        color="#F0A500"
-                        component={FollowersScreen}
-                        initialParams={ {user: userInfo} }
-                        options={() => ({
-                            drawerIcon: () => (
-                                <AntDesign
-                                    name="bells"
-                                />
-                            ),
-                            headerShown: true,
-                        })}
-                    />
 
+            
 
-                </>
-            )}
-
-            { userInfo.role != TRAINER &&(
-                <>
-                    <Drawer.Screen
-                        name="         New Goal"
-                        color="#F0A500"
-                        component={CreateGoal}
-                        options={() => ({
-                            drawerIcon: () => (
-                                <AntDesign
-                                    name="plus"
-                                />
-                            ),
-                            headerShown: true,
-                        })}
-                    />
-
-                </>
-            )}
+            
 
 
 

@@ -20,17 +20,12 @@ import ListType from "../../components/trainings/ListType";
 export const CreateGoal = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [quantity, setQuanity] = useState('');
     const [metric, setMetric] = useState('');
-    const [challenge, setChallenge] = useState('');
-    const [difficulty, setDifficulty] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-
-    const handleDifficulty = (value) => {
-        setDifficulty(value);
-    };
 
     const metricItems = [
         { label: " ", value: " " },
@@ -41,11 +36,6 @@ export const CreateGoal = ({ navigation }) => {
         { label: "Tipo de actividad realizada", value: "Tipo de actividad realizada" },
     ];
     
-    const trainingItems = [
-        { label: " ", value: " " },
-        { label: "Caminata", value: "Caminata" },
-        { label: "Running", value: "Running" },
-    ];
 
 
     const resetStates =  ()=> {
@@ -60,11 +50,11 @@ export const CreateGoal = ({ navigation }) => {
 
     const createGoal = async () => {
         console.log(metric)
-        if (!title || !description  || !metric || !difficulty) {
+        if (!title || !description  || !metric || !quantity) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || metric.trim() === '' || metric.trim() === '') {
+        if (title.trim() === '' || description.trim() === '' || metric.trim() === '' || quantity.trim() === '') {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
@@ -72,8 +62,9 @@ export const CreateGoal = ({ navigation }) => {
 
         setLoading(true)
         setError(false)
-        let response = await Client.createNewPost(user.access_token,title,description,metric,difficulty,challenge)
+        //let response = await Client.createNewPost(user.access_token,title,description,metric,difficulty,challenge)
         setLoading(false)
+        /*
         if (!response.ok) {
             setError(true);
             setErrorMessage(getErrorMessage(response.status))
@@ -82,7 +73,7 @@ export const CreateGoal = ({ navigation }) => {
             console.log(JSON.stringify(data))
             ToastAndroid.show('Goal created succesfully!', ToastAndroid.SHORT)
             navigation.goBack();
-        }
+        }*/
         resetStates()
 
     };
@@ -102,6 +93,7 @@ export const CreateGoal = ({ navigation }) => {
                             placeholder="Title"
                             value={title}
                             onChangeText={setTitle}
+                            
                         />
                     </View>
 
@@ -116,24 +108,22 @@ export const CreateGoal = ({ navigation }) => {
                         />
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        <Text style={styles.difficultyInput}> Difficulty:  </Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                                </TouchableWithoutFeedback>
-                            ))}
-                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
-                        </View>
-                    </View>
+                    
 
                     {/* Tipo de metrica */}
                     <ListType setType={setMetric} listItem={metricItems} icon={"fitness-outline"} styles={styles}/>
 
                     
-                    {/* Fecha limite */}
+                    <View style={styles.inputContainer}>
+                        <Ionicons name="md-pulse-outline" size={24} color="#A6A6A6" style={styles.icon}/>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Quantity"
+                            value={quantity}
+                            onChangeText={setQuanity}
+                            keyboardType='numeric'
+                        />
+                    </View>
                     
                     
                 </View>
@@ -146,7 +136,7 @@ export const CreateGoal = ({ navigation }) => {
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                     : <TouchableOpacity style={styles.button} onPress={createGoal}>
-                        <Text style={styles.buttonText}>Post</Text>
+                        <Text style={styles.buttonText}>Create</Text>
                     </TouchableOpacity>
                 }
 

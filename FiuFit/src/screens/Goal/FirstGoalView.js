@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, {useState} from "react";
 import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
@@ -6,24 +5,34 @@ import {Ionicons} from "react-native-vector-icons";
 
 const FirstGoalView = ({item, user}) => {
 
+   
     return (
-        <View style={styles.background}>
+        <View style={item.state == 3 ? styles.backgroundCompleted : styles.background}>
             <View style={styles.postContainer}>
                 <View style={styles.postBackground}>
                     <View key = {item.id} style={newstyles.container}>
                         <View style={newstyles.header}>
-                            <Text style={newstyles.titulo}>{item.title}</Text>
+                            <Text style={item.state == 3 ? newstyles.tituloCompleted : newstyles.titulo}>{item.title}</Text>
 
+                            { item.state == 3 
+                             ? 
+                                <View style ={{marginLeft:30}}>
+                                    <Ionicons name={'checkmark-outline'} size = {30} color = {"#50C878"}/>
+                                    </View> 
+                             : <Text style={newstyles.dificultad}>{item.progress + "/" + item.quantity}</Text>
+                            }
+                            
                         </View>
                     </View>
                     <View style={styles.item}>
-                        <Ionicons name={'person-outline'} style={styles.icon}/>
-                        <Text style={styles.description}>{user.name + " " + user.lastname}</Text>
+                        <Ionicons name={'pulse-outline'} style={styles.icon}/>
+                        <Text style={item.state == 3 ? styles.descriptionCompleted : styles.description}>{item.metric}</Text>
                     </View>
                     <View style={styles.item}>
                         <Ionicons name={'md-pencil-outline'} style={styles.icon}/>
-                        <Text style={styles.description}>{item.description}</Text>
+                        <Text style={item.state == 3 ? styles.descriptionCompleted : styles.description}>{item.description}</Text>
                     </View>
+
                 </View>
             </View>
         </View>
@@ -37,11 +46,19 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight:5,
         borderRadius:10,
-
+    },
+    backgroundCompleted: {
+        backgroundColor: 'white',
+        paddingHorizontal:10,
+        marginLeft:5,
+        marginRight:5,
+        borderRadius:10,
+        //borderWidth:0.5,
+        borderColor:"#50C878"
     },
     postBackground: {
         marginBottom: 15,
-        backgroundColor: 'white'
+        
     },
     item: {
         flexDirection: 'row',
@@ -66,14 +83,24 @@ const styles = StyleSheet.create({
         padding: 6,
         color:'rgba(32,38,70,0.89)',
 
+    },
+
+    descriptionCompleted: {
+        marginLeft: 10,
+        marginRight: 10,
+        fontSize: 15,
+        padding: 6,
+        color:'grey',
+
     }
 });
 
 
 
+
+
 const newstyles = {
     container: {
-        backgroundColor: '#ffffff',
         padding: 15,
         borderRadius:10,
 
@@ -94,8 +121,17 @@ const newstyles = {
         borderBottomWidth:1,
         borderBottomColor: "rgba(255,164,92,0.74)"
     },
+    tituloCompleted: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color:'gray',
+        borderBottomWidth:1,
+        borderBottomColor: "#50C878"
+    },
+
     dificultad: {
-        flexDirection: 'row',
+        color:"gray",
+        fontSize:16,
     },
     tipo: {
         marginTop: 5,
