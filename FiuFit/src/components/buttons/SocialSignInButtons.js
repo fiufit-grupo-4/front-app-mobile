@@ -12,9 +12,9 @@ const SocialSignInButtons = () => {
     
     try {
       console.log('onSignInGoogle');
+      await GoogleSignin.signOut();
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
-
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const user_signin = await auth().signInWithCredential(googleCredential);
       console.log('Inicio de sesión exitoso:', user_signin);
