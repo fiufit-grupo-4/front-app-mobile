@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { FlatList,ActivityIndicator,View, SafeAreaView } from 'react-native';
+import { FlatList, View, SafeAreaView } from 'react-native';
 import FollowItem from './FollowItem';
 
 const FollowList = ({followers,allUsers,myId}) => {
@@ -34,7 +34,8 @@ const FollowList = ({followers,allUsers,myId}) => {
   );
 };
 
-export default FollowList
+export default FollowList;
+
 const styles = {
   buttonsContainer: {
     flexDirection: 'row',

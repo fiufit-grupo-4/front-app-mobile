@@ -179,7 +179,6 @@ button: {
     marginBottom:10,
     paddingVertical: 8,
     backgroundColor: '#DEE9F8FF',
-    borderRadius: 5,
     width:"100%",
     textAlign:"center"
   },

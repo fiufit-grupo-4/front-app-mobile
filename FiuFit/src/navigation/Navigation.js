@@ -4,7 +4,6 @@ import {HomeTab} from "../screens/home/HomeTab";
 import DrawerComponent from "./DrawerNavigation";
 import SignUpScreen from '../screens/login/SignUpScreen';
 import SignInScreen from '../screens/login/SignInScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
 import TrainingScreen from '../screens/training/TrainingScreen';
 import NewPasswordScreen from '../screens/login/NewPasswordScreen';
 import ConfirmCodeScreen from '../screens/login/ConfirmCodeScreen';
@@ -22,6 +21,10 @@ import Prueba from "../screens/login/Prueba";
 import FavoriteTrainingScreen from "../screens/training/FavoriteTrainingScreen";
 import FavoriteTrainingProfile from '../screens/search/FavoriteTrainingProfile';
 import GoogleRegister from '../screens/login/GoogleRegister';
+import ViewGoal from "../screens/Goal/ViewGoal";
+import GoalProfile from "../screens/Goal/GoalProfile";
+import EditGoal from "../screens/Goal/EditGoal";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -52,7 +55,11 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
-                    
+
+                    <Stack.Screen name="View Goals" component={ViewGoal}  />
+                    <Stack.Screen name="Goal Profile" component={GoalProfile}  />
+                    <Stack.Screen name="Edit Goal" component={EditGoal}  />
+
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
 
                 </Stack.Navigator>

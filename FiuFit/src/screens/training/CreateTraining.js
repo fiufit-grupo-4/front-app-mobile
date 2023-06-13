@@ -13,11 +13,12 @@ import {
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import TrainingType from "../../components/trainings/TrainingType";
+import TrainingType from "../../components/trainings/ListType";
 import {firebase} from '../../config/firebase'
 import MediaBox from '../../components/media/MediaBox';
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
+import ListType from "../../components/trainings/ListType";
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -38,11 +39,18 @@ export const CreateTraining = ({ navigation }) => {
     const [media4, setMedia4] = useState("");
     const [mediaType4, setMediaType4] = useState("");
 
+
+    const trainingItems = [
+        { label: " ", value: " " },
+        { label: "Caminata", value: "Caminata" },
+        { label: "Running", value: "Running" },
+    ];
+
+
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
 
-    
 
     const uploadMedia = async (video,user) => {
         setLoading(true);
@@ -199,7 +207,7 @@ export const CreateTraining = ({ navigation }) => {
                         </View>
                     </View>
 
-                <TrainingType setType={setType} styles={styles}/>
+                <ListType listItem = {trainingItems} icon={"fitness-outline"}  setType={setType} styles={styles}/>
 
                 </View>
 

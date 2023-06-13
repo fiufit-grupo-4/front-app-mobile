@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     },
     postBackground: {
         marginBottom: 15,
-        backgroundColor: 'rgba(217,227,240,0.75)',
+        //backgroundColor: 'rgba(217,227,240,0.75)',
         backgroundColor: 'white'
     },
     item: {
