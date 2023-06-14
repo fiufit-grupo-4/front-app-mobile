@@ -300,6 +300,47 @@ class ApiClient {
     }
 
 
+    async googleSignUp(data,role,location,user){
+      const url = API_GATEWAY + 'signup/google';
+      let password = (+new Date).toString(36)
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json'
+        },
+        body: JSON.stringify({
+            "mail": user.mail,
+            "password": password,
+            "phone_number": data.phone_number,
+            "role":role,
+            "name": data.name,
+            "lastname": data.lastname,
+            "age":data.age,
+            "location":location,
+            "image":user.picture
+        })
+
+        /*{
+  "mail": "username@mail.com",
+  "password": "secure",
+  "phone_number": "+543446570174",
+  "role": 3,
+  "name": "user",
+  "lastname": "name",
+  "age": "20",
+  "location": {
+    "latitude": 400,
+    "longitude": 350
+  },
+  "image": "string"
+}*/
+      })
+    
+      return response
+    }
+
+
     async sendEmailToResetPassword(data){
       var url = API_GATEWAY + 'login/forgot_password';
       let response = await fetch(url   , {

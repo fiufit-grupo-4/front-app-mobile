@@ -29,7 +29,7 @@ const SignInScreen = () => {
     const navigation = useNavigation();
     const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
         PasswordVisibility();
-
+    
     const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
 
     const toggleSwitch = () => {
@@ -133,7 +133,7 @@ const SignInScreen = () => {
                         onPress={onForgotPasswordPressed}
                         type="TERTIARY"
                     />
-                    <SocialSignInButtons />
+                    <SocialSignInButtons setError={setError} setLoading={setLoading} setErrorMessage={setErrorMessage} />
 
                     <CustomButton
                         text="Don't have an account? Create one"

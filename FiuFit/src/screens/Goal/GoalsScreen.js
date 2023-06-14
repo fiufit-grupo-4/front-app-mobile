@@ -122,9 +122,7 @@ const GoalsScreen = () => {
     return (
         <View>
             <View style={styles.container}>
-                <Text style={styles.title}> {"Goals "}
-                    
-                </Text>
+                {/*<Text style={styles.title}> {"Goals "}</Text>*/}
                     { loading 
                         ? <View style={{marginTop:250, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                             <ActivityIndicator size="large" color = "black"/>
@@ -137,7 +135,7 @@ const GoalsScreen = () => {
                                     <Text style = {{fontSize:18}}> You don´t have any Goals yet </Text>
                                  </View>
                                : 
-                                <View style={{padding:5,height:"93.2%"}}>
+                                <View style={{padding:5,}}>
                                     <FlatList
                                         data={goals}
                                         keyExtractor={(goalItem) => goalItem.id}
