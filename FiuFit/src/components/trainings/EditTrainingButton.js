@@ -28,6 +28,17 @@ export function viewPostStats(canEdit, handleStats, item) {
     </>;
 }
 
+export function viewProgress(canEdit, handleProgress, item) {
+    return <>
+        {canEdit && <TouchableOpacity onPress={() => handleProgress(item)}>
+            <View style={styles.stats}>
+                <Ionicons name={'md-analytics-outline'} size={26} color= {"#32CD32"}/>
+            </View>
+            </TouchableOpacity>
+        }
+    </>;
+}
+
 const styles = StyleSheet.create({
     placeIcon: {
         fontSize: 22,
@@ -41,6 +52,6 @@ const styles = StyleSheet.create({
 
     stats: {
         flexDirection: 'row',
-        marginLeft:0
+        marginLeft:170
     }
 });

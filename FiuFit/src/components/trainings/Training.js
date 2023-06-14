@@ -28,7 +28,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
     const [postLiked, setPostLiked] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+
 
     const navigation = useNavigation();
 
@@ -271,7 +271,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
             <View style={styles.postContainer}>
                 <View style={styles.postBackground}>
 
-                    {topContent(canEdit, handleEdit, item)}
+                    {topContent(canEdit, handleEdit, item,user.role)}
 
                     {/*{trainingPlace(item)}*/}
 
@@ -290,7 +290,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
                     )}
 
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             

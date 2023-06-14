@@ -68,7 +68,7 @@ export function trainingContent(item) {
         </View>
 
         <View style={styles.item}>
-            <Ionicons name={'ios-stats-chart-outline'} style={styles.icon}/>
+            <Ionicons name={'speedometer-outline'} style={styles.icon}/>
             <Text style={styles.itemText}>{'Difficulty: ' + item.difficulty}</Text>
         </View>
     </>;

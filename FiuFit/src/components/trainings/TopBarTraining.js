@@ -1,18 +1,30 @@
 import {Image, Text, View, TouchableOpacity, StyleSheet} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
+import { TRAINER } from "../../utils/constants";
 import {editPostDots,viewPostStats} from "./EditTrainingButton";
-export function topContent(canEdit, handleEdit, item) {
+export function topContent(canEdit, handleEdit, item,role) {
     return <View style={styles.topContent}>
         {topBarPost(item)}
         
-            <TouchableOpacity onPress={() => (console.log("started"))}
-                style={styles.button}>
-                <Text style={{fontSize:18,fontWeight:"bold",color:"white"}}>
-                    Start
-                   
-                </Text>
-             </TouchableOpacity>
+            {role != TRAINER && (
+                <>
+                    <TouchableOpacity onPress={() => (console.log("started"))}
+                    style={{marginLeft:130}}    >
+                        <Ionicons name = "stats-chart-outline"  style={{fontSize: 20, padding: 7, alignItems: 'center'}}></Ionicons>
+                    </TouchableOpacity>
+                <TouchableOpacity onPress={() => (console.log("started"))}
+                    style={styles.button}>
+                    <Text style={{fontSize:18,fontWeight:"bold",color:"white"}}>
+                        Start
+                    </Text>
+                    
+                </TouchableOpacity>
+                
+                
+                </>
+            )}
+            
 
             {viewPostStats(canEdit, handleEdit, item)}
             {editPostDots(canEdit, handleEdit, item)}
@@ -78,6 +90,6 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         justifyContent:"center",
         marginRight:10,
-        marginLeft:90,
+        
     },
 });

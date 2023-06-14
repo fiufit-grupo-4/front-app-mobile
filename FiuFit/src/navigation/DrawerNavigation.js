@@ -15,6 +15,8 @@ import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
 import GoalsScreen from "../screens/Goal/GoalsScreen";
+import TrainingsHome from "../screens/training/TrainingsHome";
+import { useIsFocused } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,9 +24,12 @@ function DrawerComponent() {
     const [userInfo,setUserInfo] = useState({})
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const isFocused = useIsFocused();
     useEffect(() => {
         async function getUser() {
+          
             AsyncStorage.getItem(USER).then( user => {
+                console.log(JSON.parse(user))
                 setUserInfo(JSON.parse(user))          
             }
             ).catch(error => {
@@ -74,6 +79,7 @@ function DrawerComponent() {
                     drawerIcon: () => (
                         <Ionicons name="barbell-outline"
                             style={{color:'#2C302E'}}
+                            size={14}
                         />
                     ),
                     headerShown: true,
@@ -87,7 +93,7 @@ function DrawerComponent() {
                     drawerIcon: () => (
                         <AntDesign
                             name="search1"
-                            style={{color:'#2C302E'}}
+                            size={14}
                         />
                     ),
                     headerShown: true,
@@ -102,6 +108,7 @@ function DrawerComponent() {
                 drawerIcon: () => (
                     <AntDesign
                         name="staro"
+                        size={14}
                     />
                 ),
                 headerShown: true,
@@ -110,36 +117,21 @@ function DrawerComponent() {
 
  
 
-        {/*{ userInfo.role != TRAINER &&(
+        { userInfo.role != TRAINER &&(
+            <>
             <Drawer.Screen
-                name="        New Goal"
-                color="#F0A500"
-                component={CreateGoal}
-                options={() => ({
-                    drawerIcon: () => (
-                        <AntDesign
-                            name="plus"
-                        />
-                    ),
-                    headerShown: true,
-                })}
-            />
-
-        )}*/}
-
-
-            <Drawer.Screen
-                name="        Goals"
-                color="#F0A500"
-                component={GoalsScreen}
-                options={() => ({
-                    drawerIcon: () => (
-                        <Ionicons name="flash-outline"
-                            style={{color:'#2C302E'}}
-                        />
-                    ),
-                    headerShown: true,
-                })}
+            name="        Goals"
+            color="#F0A500"
+            component={GoalsScreen}
+            options={() => ({
+                drawerIcon: () => (
+                    <Ionicons name="ribbon-outline"
+                        style={{color:'#2C302E'}}
+                        size={14}
+                    />
+                ),
+                headerShown: true,
+            })}
             />
 
             <Drawer.Screen
@@ -150,16 +142,37 @@ function DrawerComponent() {
                     drawerIcon: () => (
                         <AntDesign
                             name="plus"
+                            size={14}
                         />
                     ),
                     headerShown: true,
                 })}
             />
+        </>
+        )}
+
+
+            
 
             
 
         { userInfo.role != ATHLETE &&(
+            <>
             
+            <Drawer.Screen
+            name="        Trainings"
+            color="#F0A500"
+            component={TrainingsHome}
+            options={() => ({
+                drawerIcon: () => (
+                    <Ionicons name="flash-outline"
+                    size={14}
+                    />
+                ),
+                headerShown: true,
+            })}
+            />
+
             <Drawer.Screen
             name="        New Post"
             color="#F0A500"
@@ -168,23 +181,25 @@ function DrawerComponent() {
                 drawerIcon: () => (
                     <AntDesign
                         name="plus"
+                        size={14}
                     />
                 ),
                 headerShown: true,
             })}
             />
+            </>
         )}  
 
 
-<Drawer.Screen
+        <Drawer.Screen
             name="        Notifications"
             color="#F0A500"
             component={FollowersScreen}
             initialParams={ {user: userInfo} }
             options={() => ({
                 drawerIcon: () => (
-                    <AntDesign
-                        name="bells"
+                    <Ionicons name="notifications-outline"
+                    size={14}
                     />
                 ),
                 headerShown: true,
@@ -198,8 +213,8 @@ function DrawerComponent() {
                 component={MessagesScreen}
                 options={() => ({
                     drawerIcon: () => (
-                        <AntDesign
-                            name="mail"
+                        <Ionicons name="chatbubble-ellipses-outline"
+                        size={14}
                         />
                     ),
                     headerShown: true,
@@ -216,6 +231,7 @@ function DrawerComponent() {
                     drawerIcon: () => (
                         <AntDesign
                             name="checkcircleo"
+                            size={14}
                         />
                         
                     ),

@@ -1,63 +1,38 @@
 import {FlatList,ActivityIndicator,View,Text} from "react-native";
-import Training from "../../components/trainings/Training";
 import React,{useState,useEffect} from 'react';
-import {API_GATEWAY } from '../../utils/constants';
 import TrainingListItem from "../search/TrainingListItem";
 import Client from "../../client/Client";
 import { useIsFocused } from '@react-navigation/native';
 import { getUser } from "../../utils/getters";
 import Errors from "../../components/utils/Error";
 
-function ViewTrainings({ navigation,route }) {
-    const {user, myUser} = route.params
+function TrainingsHome({ navigation}) {
+    
     const [trainings,setTrainings] = useState([])
     const [loading, setLoading] = useState(false);
+    const [user,setUser]  = useState({})
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [notTrainigs, setNotTrainigs] = useState(false);
     const isFocused = useIsFocused();
 
 
-    const filterTrainings = (allTrainings) => {
-        let userTrainings = []
-        allTrainings.map(training =>{
-            if (training.trainer.id == user.id){
-                userTrainings.push(training)
-            }
-        })
-        setTrainings( userTrainings)
-    }
-
     useEffect(() => {
 
         async function getTrainings() {
             setLoading(true)
             let userInfo = await getUser()
-            if (userInfo.id == user.id){
-                console.log(user.id)
-                Client.getMyTrainings(user.access_token)
-                    .then((response) => {
-                        setTrainings(response)
-                        setLoading(false) 
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error.toString());
-                        setLoading(false)
-                    })
-            } else {
-               
-                console.log(user.id)
-                Client.getTrainings(userInfo.access_token)
+            setUser(userInfo)
+            Client.getMyTrainings(userInfo.access_token)
                 .then((response) => {
-                   
-                    filterTrainings(response)
+                    setTrainings(response)
                     setLoading(false) 
                 }).catch((error) => {
                     setError(true);
                     setErrorMessage(error.toString());
                     setLoading(false)
                 })
-            }
+            
             }
             getTrainings();
         }, [isFocused,])
@@ -78,7 +53,7 @@ function ViewTrainings({ navigation,route }) {
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
-                                        <TrainingListItem user={user} item={item} canEdit={myUser}></TrainingListItem>  
+                                        <TrainingListItem user={user} item={item} canEdit={true}></TrainingListItem>  
                                     </View>
                                 )}
                                 />
@@ -105,4 +80,4 @@ function ViewTrainings({ navigation,route }) {
     )
 }
 
-export default ViewTrainings;
+export default TrainingsHome;
