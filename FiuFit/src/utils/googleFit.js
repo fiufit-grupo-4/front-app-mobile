@@ -9,10 +9,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
-GoogleSignin.configure({
-  webClientId: "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
-});
-console.log("GoogleSignin.configured()")
+///////// GOOGLE FIT /////////////
+export const OPTIONS = {
+  scopes: [
+    Scopes.FITNESS_ACTIVITY_READ,
+    Scopes.FITNESS_ACTIVITY_WRITE,
+    Scopes.FITNESS_BODY_READ,
+    Scopes.FITNESS_BODY_WRITE,
+    Scopes.FITNESS_BLOOD_PRESSURE_READ,
+    Scopes.FITNESS_BLOOD_PRESSURE_WRITE,
+    Scopes.FITNESS_BLOOD_GLUCOSE_READ,
+    Scopes.FITNESS_BLOOD_GLUCOSE_WRITE,
+    Scopes.FITNESS_NUTRITION_WRITE,
+    Scopes.FITNESS_SLEEP_READ,
+  ],
+};
 
 //////////// SOLICITAR PERMISOS FIT //////////////
 
@@ -30,96 +41,155 @@ const requestActivityPermission = async () => {
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       console.log("You can use the activity recognition");
+      return true
     } else {
       console.log("Activity recognition permission denied");
+      return false
     }
   } catch (err) {
-    console.warn(err);
+    console.log(err);
+    return false
   }
 };
 
 
-///////// GOOGLE FIT /////////////
+export const isGoogleAuthorized = async () => {
+    await GoogleFit.checkIsAuthorized()
+    return GoogleFit.isAuthorized
+}
+
+export const disconnectGoogleFit = async () => {
+  GoogleFit.disconnect(); 
+}
+
+export const getPermissions = async () => {
+  try{
+    let permissions = await requestActivityPermission()
+    if (!permissions) return false
+    let authResult = await GoogleFit.authorize(OPTIONS)  
+    if (authResult.success) {
+      console.log("AUTH_SUCCESS");
+      startRecordingAndObserveSteps()
+      return true
+    } else {
+      console.log("AUTH_DENIED", authResult.message)
+      return false
+    }
+  } catch{
+    console.log(err);
+    return false
+  }
+}
+
+
+
+// Detener la suscripción a los datos de pasos o calorías
+export const stopTracking = async () => {
+  try {
+    GoogleFit.unsubscribeListeners();
+    console.log('Suscripción detenida');
+  } catch (error) {
+    console.log('Error al detener la suscripción:', error);
+  }
+};
+
+// Obtener los datos de pasos o calorías actualizados
+export const getUpdatedData = async () => {
+  try {
+    const data = await GoogleFit.getDailyStepCountSamples(); // Obtener los datos de pasos actualizados
+    // const data = await GoogleFit.getDailyCalorieSamples(); // Obtener los datos de calorías actualizados
+
+    console.log('Datos actualizados:', data);
+    // Aquí puedes enviar los datos al backend o realizar otras acciones con ellos
+  } catch (error) {
+    console.log('Error al obtener los datos actualizados:', error);
+  }
+};
 
 const options = {
-    scopes: [
-      Scopes.FITNESS_ACTIVITY_READ,
-      Scopes.FITNESS_ACTIVITY_WRITE,
-      Scopes.FITNESS_BODY_READ,
-      Scopes.FITNESS_BODY_WRITE,
-    ],
-  };
-  
+  scopes: [
+    Scopes.FITNESS_ACTIVITY_READ,
+    Scopes.FITNESS_ACTIVITY_WRITE,
+    Scopes.FITNESS_BODY_READ,
+    Scopes.FITNESS_BODY_WRITE,
+  ],
+};
 
-  const startRecordingAndObserveSteps = () => {
-  
-    console.log('----------- startRecordingAndObserveSteps() -----------')
-    requestActivityPermission().then(() => {
-      GoogleFit.authorize(options)
-        .then((res) => {
-          GoogleFit.startRecording(
-            async data => {
-              console.log('startRecording:data >>>', data)
-              const steps = await getSteps();
-              console.log("Recording Steps: ", steps.steps);
-              console.log("AsyncStorage Steps: ", (await AsyncStorage.getItem('steps')));
-              if (steps.steps != Number(await AsyncStorage.getItem('steps'))) {
-                await AsyncStorage.setItem('steps', String(steps.steps));
-                const url = "https://api-gateway-fiufit.herokuapp.com/xd/" + steps.steps
-  
-                let response = await fetch(url, {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                })
-                console.log("[FETCH-startRecording] response status: ", response.status);
-  
-              }
-            },
-            ["step"]
-          );
-          // esto se llama siempre, en cada reload de la app creo.. si ya tenia un Observer, no haria fallta llamarlo de nuevo??
-          GoogleFit.observeSteps(async result => {
-            console.log('observeSteps:result >>>', result)
+
+export const startRecordingAndObserveSteps = () => {
+
+  console.log('----------- startRecordingAndObserveSteps() -----------')
+  requestActivityPermission().then(() => {
+    GoogleFit.authorize(options)
+      .then((res) => {
+        GoogleFit.startRecording(
+          async data => {
+            console.log('startRecording:data >>>', data)
             const steps = await getSteps();
-            console.log("Observe Steps: ", steps);
-  
-            if (steps.steps !== Number(await AsyncStorage.getItem('steps'))) {
+            console.log("Recording Steps: ", steps.steps);
+            console.log("AsyncStorage Steps: ", (await AsyncStorage.getItem('steps')));
+            if (steps.steps != Number(await AsyncStorage.getItem('steps'))) {
               await AsyncStorage.setItem('steps', String(steps.steps));
               const url = "https://api-gateway-fiufit.herokuapp.com/xd/" + steps.steps
-  
+
               let response = await fetch(url, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
                 },
               })
-              console.log("[FETCH-observeSteps] response status: ", response.status);
-            }else{
-              console.log("No hay cambios en observeSteps");
+              console.log("[FETCH-startRecording] response status: ", response.status);
+
             }
-  
-          });
-        })
-        .catch((err) => {
-          console.log('android getDailyStepCountSamples error >>> ', err)
+          },
+          ["step"]
+        );
+        // esto se llama siempre, en cada reload de la app creo.. si ya tenia un Observer, no haria fallta llamarlo de nuevo??
+        GoogleFit.observeSteps(async result => {
+          console.log('observeSteps:result >>>', result)
+          const steps = await getSteps();
+          console.log("Observe Steps: ", steps);
+
+          if (steps.steps !== Number(await AsyncStorage.getItem('steps'))) {
+            await AsyncStorage.setItem('steps', String(steps.steps));
+            const url = "https://api-gateway-fiufit.herokuapp.com/xd/" + steps.steps
+
+            let response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+            console.log("[FETCH-observeSteps] response status: ", response.status);
+          }else{
+            console.log("No hay cambios en observeSteps");
+          }
+
         });
-    });
-  };
+      })
+      .catch((err) => {
+        console.log('android getDailyStepCountSamples error >>> ', err)
+      });
+  });
+};
   
-  async function getSteps() {
+  export async function getSteps() {
+    //const permission = await getPermissions()
+    //if (!permission) return 
     const start = new Date();
     start.setHours(0, 0, 0, 0);
     start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
+    console.log("start:",start)
     const end = new Date();
+    console.log("end:",end)
     const options = {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
       bucketUnit: BucketUnit.DAY, // NOSE QUE ES, JUGAR CON ESTO
-      bucketInterval: 15, // JUGAR CON ESOOO
+      //bucketInterval: 15, // JUGAR CON ESOOO
     };
     const result = await GoogleFit.getDailyStepCountSamples(options);
+    console.log(JSON.stringify(result))
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );
@@ -129,16 +199,38 @@ const options = {
     }
     return { steps: 0 };
   }
+
+
+  export async function getCalories() {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
+    console.log("start:",start)
+    const end = new Date();
+    console.log("end:",end)
+    const options = {
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+      bucketUnit: BucketUnit.DAY, // NOSE QUE ES, JUGAR CON ESTO
+      //bucketInterval: 15, // JUGAR CON ESOOO
+    };
+    const result = await GoogleFit.getDailyCalorieSamples(options);
+    console.log(JSON.stringify(result))
+    const data = result.find(
+      r => r.source === "com.google.android.gms:estimated_steps"
+    );
+    
+  }
   
-  // No se como usarlo o donde deberia usar esto:
-  // GoogleFit.disconnect(); 
   
-  
+/*
   console.log("GoogleFit.eventListeners.length >>> ", GoogleFit.eventListeners.length);
   GoogleFit.unsubscribeListeners();
   console.log("GoogleFit.eventListeners.length >>> ", GoogleFit.eventListeners.length);
   startRecordingAndObserveSteps();
-  
+ */
+
+  /*
   ///////////////// TEMA PARA BACKGROUND FETCH ///////////////////////
   
   const TIME_TASK_FETCH_SECS = 15; // in seconds
@@ -213,4 +305,38 @@ const options = {
   
   TaskManager.getRegisteredTasksAsync().then((res) => {
     console.log('[TAREAS TaskManager ACTIVAS] >>> ', res);
-  });
+  });*/
+
+
+//////////// PEDOMETER //////////////
+/*
+Pedometer.watchStepCount(result => {
+  console.log('[Pedometer].watchStepCount >>> ', result);
+});
+
+
+Pedometer.isAvailableAsync().then(
+  result => {
+    console.log('[Pedometer].isAvailableAsync >>> ', result);
+  },
+
+  error => {
+    console.log('[Pedometer].isAvailableAsync >>> ', error);
+  }
+);
+const start = new Date();
+start.setHours(0, 0, 0, 0);
+start.setDate(start.getDate() - 1); // DIA ANTERIOR
+const end = new Date();
+Pedometer.getStepCountAsync(start, end).then(
+  result => {
+    console.log('[Pedometer].getStepCountAsync >>> ', result);
+  },
+  error => {
+    console.log('[Pedometer].getStepCountAsync >>> ', error);
+  }
+).catch(error => {
+  console.log('[Pedometer].getStepCountAsync >>> ', error);
+});*/
+
+

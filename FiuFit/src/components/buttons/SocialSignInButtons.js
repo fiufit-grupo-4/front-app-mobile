@@ -5,7 +5,8 @@ import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {API_GATEWAY,USER} from "../../utils/constants"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import GoogleFit from 'react-native-google-fit';
+import {OPTIONS} from "../../utils/googleFit"
 
 const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
   const navigation = useNavigation();
@@ -19,14 +20,18 @@ const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
       await GoogleSignin.hasPlayServices();
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const { accessToken } = await GoogleSignin.getTokens();
+     
       const user_signin = await auth().signInWithCredential(googleCredential);
-      console.log('Inicio de sesión con Google exitoso:', user_signin);
+      await GoogleFit.authorize({OPTIONS,accessToken,});
+
       let user = {
         "picture" : user_signin.additionalUserInfo.profile.picture,
         "name":user_signin.additionalUserInfo.profile.given_name ,
         "lastname": user_signin.additionalUserInfo.profile.family_name,
         "mail": user_signin.additionalUserInfo.profile.email, 
       }
+      
       setLoading(true)
       let url = API_GATEWAY + "login/google"
       let response = await fetch(url, {

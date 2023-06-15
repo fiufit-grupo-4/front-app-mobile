@@ -25,7 +25,6 @@ import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
 
-
 const Stack = createNativeStackNavigator();
 
 class Navigation extends React.Component {
@@ -35,7 +34,7 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                    
+                <Stack.Screen name="Prueba" component={Prueba} options={{ headerShown: false }} />
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="GoogleSignUp" component={GoogleRegister} options={{ headerShown: false }} />  
