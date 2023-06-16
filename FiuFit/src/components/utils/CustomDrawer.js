@@ -7,17 +7,21 @@ import {StatusBar} from "expo-status-bar";
 import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER } from '../../utils/constants';
+import { getRole } from '../../utils/getters';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
 
     const handleTouchableOpacity = () => {
+        setReload(reload + 1)
         navigation.navigate("Profile",{reload : false})
     };
 
     const [userInfo,setUserInfo] = useState({})
+    const [reload,setReload] = useState(0)
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    
     useEffect(() => {
         async function getUser() {
             AsyncStorage.getItem(USER).then( user => {
@@ -30,7 +34,7 @@ const CustomDrawer = (props) => {
             })
         }
         getUser();
-    }, [])
+    }, [reload])
 
     const handleLogOut = () => {
         Alert.alert(
@@ -69,32 +73,35 @@ const CustomDrawer = (props) => {
                     <ImageBackground
 
                         source={require('../../../assets/images/background.png')}
-                        style={{padding: 50, flex:1}}
+                        style={{padding: 50, flex:1,alignItems:"center"}}
                         >
 
-                        <TouchableOpacity
-                            onPress={
-                                handleTouchableOpacity
-                            }>
-                            <Image
-                                source={require('../../../assets/images/profilepic.jpeg')}
-                                style={{
-                                    height: 80,
-                                    width: 80,
-                                    borderRadius: 40,
-                                    marginBottom: 10,
-                                }}
-                            />
+                        <TouchableOpacity onPress={handleTouchableOpacity }>
+                            <View style={styles.header}>
+                                
+                                
+                                <View style={styles.profileInfo}>
+                                { userInfo.image  
+                                    ? <Image source={{uri:userInfo.image}} 
+                                        style={{height: 60,width: 60,borderRadius: 30,marginBottom: 10,}}/>
+                                    : <Image source={require('../../../assets/images/profilepic.jpeg')}
+                                        style={{height: 60,width: 60,borderRadius: 30,marginBottom: 10,}}/>
+                                }  
+                            <View style={styles.nameContainer}>
+                                <Text style={styles.name}>{userInfo.name + " " +userInfo.lastname + " "} 
+                
+                                { userInfo.verification?.verified && (
+                                    <Ionicons name={"checkmark-done-outline"} size={20} color={"lightskyblue"} />
+                                )
+                                }
+                                </Text>
+                                <Text style={styles.role}>{getRole(userInfo.role)}</Text>
+                            </View>
+                        </View>
+                            
+                            </View>                        
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={
-                                handleTouchableOpacity
-                            }>
-                        <Text style={{color: 'black', fontSize: 20}}>{userInfo.name + " " + userInfo.lastname}</Text>
-                        </TouchableOpacity>
-
-                        <Text style={{color: 'black', fontSize: 13}}>{userInfo.age} Seguidores</Text>
                     </ImageBackground>
 
                 <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>
@@ -110,3 +117,39 @@ const CustomDrawer = (props) => {
 }
 
 export default CustomDrawer;
+
+
+
+const styles = {
+    
+    header: {
+      marginTop:5,
+      //flexDirection: 'row',
+      //alignItems: 'center',
+      width:"120%",
+    },
+
+    profileInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding:0
+    },
+
+    nameContainer: {
+      marginLeft: 10,
+      //alignItems:"center"
+    },
+    name: {
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    role: {
+      fontSize: 16,
+    },
+    profileImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+    },
+
+  };

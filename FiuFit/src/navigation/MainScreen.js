@@ -43,6 +43,7 @@ const MainScreen = () => {
 
             <Tab.Screen
                 name="Profile" component={MenuProfileScreen}
+                initialParams={{reload: true}}
                 options={{
                    //tabBarLabel: ({ focused, color }) => (<Text style={{ color: focused ? "#91AED4" : "grey" }}>Profile</Text>),
                     tabBarLabelStyle: { color: 'transparent' },

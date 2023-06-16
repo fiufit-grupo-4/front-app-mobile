@@ -3,7 +3,7 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Ionicons} from 'react-native-vector-icons'
 import {Controller} from 'react-hook-form';
 
-const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError,width}) => {
+const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, otherError,width,keyboardType,bgColor  }) => {
 
   return (
       <Controller
@@ -14,6 +14,7 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
               <View 
                 style={[
                   styles.container, 
+                  {backgroundColor: bgColor ? bgColor:'#AFC5E3'},
                   {borderColor: error || otherError ? "crimson":"powderblue"},
                   {borderWidth: error || otherError ? 1.5:0},
                   {width: width ? width : '80%'}
@@ -29,13 +30,14 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
                   value={value}
                   style={[
                     styles.input, 
-
+                    {backgroundColor: bgColor ? bgColor:'#AFC5E3'},
                   ]}
                   secureTextEntry={secureTextEntry}
+                  keyboardType = {keyboardType}
                 />
               </View>
               { error && (
-                <Text style = {{fontSize:14,color : "crimson",padding:5}}> {error.message}</Text>
+                <Text style = {{fontSize:14,color : "crimson",padding:2}}> {error.message}</Text>
               )
               }
             </>   
@@ -48,7 +50,6 @@ const CustomInput = ({control,name, placeholder, secureTextEntry,icon,rules={}, 
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#AFC5E3',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,

@@ -6,17 +6,18 @@ import {
     TouchableOpacity,
     Alert,
     StyleSheet,
-    Image,
+    ActivityIndicator,
     TouchableWithoutFeedback, ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
-import TrainingType from "./TrainingType";
-import {EditTrainingType} from "./EditTrainingType";
 import {useNavigation} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
+import MediaEditableBox from '../../components/media/MediaEditableBox';
+import {firebase} from '../../config/firebase'
+
 
 const EditTraining = ({ onPress , route }) => {
     const {post, reload} = route.params;
@@ -24,10 +25,18 @@ const EditTraining = ({ onPress , route }) => {
     const [description, setDescription] = useState(post.description);
     const [trainingType, setTrainingType] = useState(post.trainingType);
     const [difficulty, setDifficulty] = useState(post.difficulty);
-    const [place, setPlace] = useState(post.place);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [media1, setMedia1] = useState(post.media ? post.media[0] ? post.media[0].url : "" : "" );
+    const [mediaType1, setMediaType1] = useState(post.media ? post.media[0] ? post.media[0].media_type : "" : "" );
+    const [media2, setMedia2] = useState(post.media ? post.media[1] ? post.media[1].url : "" : "" );
+    const [mediaType2, setMediaType2] = useState(post.media ? post.media[1] ? post.media[1].media_type : "" : "");
+    const [media3, setMedia3] = useState(post.media ? post.media[2] ? post.media[2].url : "" : "" );
+    const [mediaType3, setMediaType3] = useState(post.media ? post.media[2] ? post.media[2].media_type : "" : "");
+    const [media4, setMedia4] = useState( );
+    const [mediaType4, setMediaType4] = useState(post.media ? post.media[3] ? post.media[3].media_type : "" : "");
 
     const navigation = useNavigation();
 
@@ -35,34 +44,58 @@ const EditTraining = ({ onPress , route }) => {
         setDifficulty(value);
     };
 
-    const handleSubmit = () => {
-        if (!title || !description || !difficulty || !place) {
-            Alert.alert('Error', 'Please fill all fields');
-            return;
-        }
-        if (title.trim() === '' || description.trim() === '' || difficulty.trim() === '' || place.trim() === '') {
-            Alert.alert('Error', 'Please fill all fields');
-            return;
-        }
-        const updatedPost = {
-            ...post,
-            title: title.trim(),
-            description: description.trim(),
-            difficulty: parseInt(difficulty),
-            place: place.trim(),
-        };
-        onPress = onPress();
-    };
+    const uploadMedia = async (video,user) => {
+        setLoading(true);
+        const response = await fetch(video);
+        const blob = await response.blob();
+        let date = new Date().getTime()
+        await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).getDownloadURL()   
+        setLoading(false) 
+        return uri   
+    }
 
 
-    const handleSaveChanges = () => {
+    const uploadElement = async (user,media,media_type,array,old)=>{
+        let old_url = old? old.url : ""
+        let old_type = old? old.media_type : ""
+        if (old_url == media && old_url != ""){
+            let element = {
+                "media_type": old_type,
+                "url" : old_url
+            }
+            array.push(element)
+        } else if (media){
+            let uri = await uploadMedia(media,user)
+            let element = {
+                "media_type": media_type,
+                "url" : uri
+            }
+            array.push(element)
+        }
+    }
+    const handleMedia = async (user)=> {
+        let array = []
+        await uploadElement(user,media1,mediaType1,array,post.media[0])
+        await uploadElement(user,media2,mediaType2,array,post.media[1])
+        await uploadElement(user,media3,mediaType3,array,post.media[2])
+        await uploadElement(user,media4,mediaType4,array,post.media[3])
+        return array
+
+    }
+
+
+    const handleSaveChanges = async () => {
         let url = API_GATEWAY + "trainers/me/trainings/" + post.id
         setLoading(true);
         setError(false)
-        //let image = profilePicture ? profilePicture : user.image
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-        fetch(url, {
+        
+        let item =  await AsyncStorage.getItem(USER)
+        let userInfo = JSON.parse(item)
+        let array = await handleMedia(userInfo)
+        console.log(array)
+
+        let response = await fetch(url, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,30 +106,66 @@ const EditTraining = ({ onPress , route }) => {
                 "description": description,
                 "type": trainingType,
                 "difficulty" : difficulty,
-                "place": place
+                "media":array
             })
-        }).then((response) => {
-            setLoading(false);
-            console.log(JSON.stringify(response))
-            if (!response.ok) {
-                setError(true);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
-            } else {
-                response.json().then((data) => {
-                    console.log(JSON.stringify(data))
-                    navigation.navigate("Profile",{reload:!reload})
-                }).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });
-            }})}).catch((error) => {
+        })
+
+       
+        
+        if (!response.ok) {
             setError(true);
-            setErrorMessage(error);
-        })}
+            setLoading(false);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))
+            setLoading(false);
+            navigation.navigate("Profile",{reload:!reload})
+        }
+        /*
+        AsyncStorage.getItem(USER).then(async (item) => {
+            let userInfo = JSON.parse(item)
+            let array = await uploadMedia(userInfo)
+            fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + userInfo.access_token,
+                },
+                body: JSON.stringify({
+                    "title": title,
+                    "description": description,
+                    "type": trainingType,
+                    "difficulty" : difficulty,
+                    "media":array
+                })
+            }).then((response) => {
+                setLoading(false);
+                console.log(JSON.stringify(response))
+                if (!response.ok) {
+                    setError(true);
+                    if (response.status === 401) {
+                        setErrorMessage('Unauthorized, not a valid access token');
+                    } else {
+                        setErrorMessage('Failed to connect with the server');
+                    }
+                } else {
+                    response.json().then((data) => {
+                        console.log(JSON.stringify(data))
+                        navigation.navigate("Profile",{reload:!reload})
+                    }).catch((error) => {
+                        setError(true);
+                        setErrorMessage(error);
+                    });
+                }})}).catch((error) => {
+                setError(true);
+                setErrorMessage(error);
+            })*/
+    }
 
 
 
@@ -137,7 +206,7 @@ const EditTraining = ({ onPress , route }) => {
     }
 
     return (
-        <View style={{padding: 10, backgroundColor: 'white', flex:1}}>
+        <View style={{padding: 20, backgroundColor: 'white', flex:1}}>
 
             <ScrollView>
                 <View style={styles.inputContainer}>
@@ -166,23 +235,6 @@ const EditTraining = ({ onPress , route }) => {
                     </View>
                 </View>
 
-    {/*
-                <View style={styles.inputContainer}>
-                    <Text style={styles.text}>Training Type</Text>
-                    <View style={{flexDirection: 'row'}}>
-                        <Ionicons name="fitness-outline" size={16} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            style={{fontSize: 16, color: '#333'}}
-                            placeholder="Enter the training type"
-                            value={trainingType}
-                            onChangeText={setTrainingType}
-                        />
-                    </View>
-                </View>
-    */}
-
-
-
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}> Difficulty </Text>
                     <View style={{flexDirection: 'row', marginTop: 8}}>
@@ -197,37 +249,6 @@ const EditTraining = ({ onPress , route }) => {
                         </View>
                     </View>
                 </View>
-
-
-{/*                <View style={styles.inputContainer}>
-                    <Text style={styles.text}>Difficulty</Text>
-                    <View style={{flexDirection: 'row'}}>
-                        <Ionicons name={'ios-stats-chart-outline'} size={16} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            maxLength={1}
-                            style={{fontSize: 16, color: '#333'}}
-                            placeholder="Difficulty (1-5)"
-                            value={difficulty}
-                            onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
-                            keyboardType="numeric"
-                        />
-                    </View>
-                </View>*/}
-
-
-                <View style={styles.inputContainer}>
-                    <Text style={styles.text}>Place</Text>
-                    <View style={{flexDirection: 'row'}}>
-                        <Ionicons name={'md-pin-outline'}  style={styles.icon}/>
-                        <TextInput
-                            style={{fontSize: 16, color: '#333',width: '99%'}}
-                            placeholder="Enter the training place"
-                            value={place}
-                            onChangeText={setPlace}
-                        />
-                    </View>
-                </View>
-
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
                     <View style={{padding:1, marginTop:10, paddingTop:10 }}>
@@ -250,14 +271,47 @@ const EditTraining = ({ onPress , route }) => {
 
             </ScrollView>
 
+            <ScrollView
+                    contentContainerStyle={styles.mediaContainer}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    >
+                    <MediaEditableBox setElement = {setMedia1} setMediaElement = {setMediaType1} oldMedia = {post.media[0]}/>
+                    <MediaEditableBox setElement = {setMedia2} setMediaElement = {setMediaType2} oldMedia = {post.media[1]}/>
+                    <MediaEditableBox setElement = {setMedia3} setMediaElement = {setMediaType3} oldMedia = {post.media[2]}/>
+                    <MediaEditableBox setElement = {setMedia4} setMediaElement = {setMediaType4} oldMedia = {post.media[3]}/>
+                    
+            </ScrollView>
 
-            <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-                <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                <Text style={styles.deleteButtonText}>Delete Post</Text>
-            </TouchableOpacity>
+
+            { loading 
+                ? <View style={{marginBottom:100, marginHorizontal: 40}}>
+                        <ActivityIndicator size="large" color = "black"/>
+                    </View>
+                : <>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                            <Text style={styles.deleteButtonText}>Delete Post</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
+                            <Text style={styles.buttonText}>Save</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
+
+
+                  </>
+            }
+
+            {error && (
+                    <View style = {{alignItems:"center",marginTop:15}}>
+                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                    </View>
+                )}
+            
+
+            
 
         </View>
     )
@@ -270,6 +324,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#fff',
+    },
+    buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:50
     },
     inputContainer: {
         borderBottomWidth: 1,
@@ -289,27 +349,33 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 18,
-        color: 'rgba(23,29,52,0.93)',
-        textAlign: 'center'
+        color: 'white',
+        textAlign: 'center',
+        fontWeight:"bold"
     },
     button: {
-        backgroundColor: '#DEE9F8FF',
-        borderRadius: 20,
-        paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        backgroundColor: 'black',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+       
     },
     deleteButtonText: {
         fontSize: 18,
-        color: 'rgb(255,255,255)',
-        textAlign: 'center'
+        color: 'white',
+        textAlign: 'center',
+        fontWeight:"bold"
     },
     deleteButton: {
-        backgroundColor: 'black',
-        borderRadius: 20,
-        paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        backgroundColor: 'crimson',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        
     },
     text: {
         fontSize: 16,

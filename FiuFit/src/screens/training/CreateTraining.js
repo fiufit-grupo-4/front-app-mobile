@@ -8,17 +8,17 @@ import {
     Alert,
     TouchableWithoutFeedback,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    ToastAndroid
 } from 'react-native';
-import {useForm} from "react-hook-form";
 import {Ionicons} from "@expo/vector-icons";
-import UploadImage from '../../components/utils/UploadImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import TrainingType from "./TrainingType";
-import { API_GATEWAY,USER } from '../../utils/constants';
+import TrainingType from "../../components/trainings/ListType";
 import {firebase} from '../../config/firebase'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import MediaBox from '../../components/media/MediaBox';
+import { getUser,getErrorMessage } from '../../utils/getters';
+import Client from '../../client/Client';
+import ListType from "../../components/trainings/ListType";
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -26,63 +26,115 @@ export const CreateTraining = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [difficulty, setDifficulty] = useState(0);
-    const [place, setPlace] = useState('');
     const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState({});
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
     
+    const [media1, setMedia1] = useState("");
+    const [mediaType1, setMediaType1] = useState("");
+    const [media2, setMedia2] = useState("");
+    const [mediaType2, setMediaType2] = useState("");
+    const [media3, setMedia3] = useState("");
+    const [mediaType3, setMediaType3] = useState("");
+    const [media4, setMedia4] = useState("");
+    const [mediaType4, setMediaType4] = useState("");
+
+
+    const trainingItems = [
+        { label: " ", value: " " },
+        { label: "Caminata", value: "Caminata" },
+        { label: "Running", value: "Running" },
+    ];
+
+
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
 
 
-    const { control} = useForm({
-        defaultValues: {
-            email: 'sofia@fi.uba.ar',
-            password: '123456e'
-        }
-    });
-/*
-    const uploadImage = async () => {
-        if (imageUri){
-            setLoading(true)
-            const response = await fetch(imageUri);
-            const blob = await response.blob();
-            const ref = firebase.storage().ref().child(`trainings/${user.id}/${new Date().getTime()}`).put(blob);    
-            try {
-                await ref
-            } catch(e){
-                console.log(e)
-            }
-            setLoading(false)
-            Alert.alert("Photo uploaded correctly!")  
-        } else {
-            setError(true)
-        }
-        
+    const uploadMedia = async (video,user) => {
+        setLoading(true);
+        const response = await fetch(video);
+        const blob = await response.blob();
+        let date = new Date().getTime()
+        await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).put(blob)
+        const uri = await firebase.storage().ref().child(`users/${user.mail}/training/${date}`).getDownloadURL()   
+        setLoading(false) 
+        return uri   
     }
-*/
+
+
+    const uploadElement = async (user,media,media_type,array)=>{
+         if (media){
+            let uri = await uploadMedia(media,user)
+            let element = {
+                "media_type": media_type,
+                "url" : uri
+            }
+            array.push(element)
+        }
+    }
+    const handleMedia = async (user)=> {
+        let array = []
+        await uploadElement(user,media1,mediaType1,array)
+        await uploadElement(user,media2,mediaType2,array)
+        await uploadElement(user,media3,mediaType3,array)
+        await uploadElement(user,media4,mediaType4,array)
+        return array
+
+    }
+
+    const resetStates =  ()=> {
+        setImageUri('');
+        setTitle('');
+        setDescription('');
+        setType('');
+        setDifficulty(0);
+        setLoading(false);
+        setError(false);
+        setErrorMessage("");
+        setMedia1("");
+        setMediaType1("")
+        setMedia2("");
+        setMediaType2("")
+        setMedia3("");
+        setMediaType3("")
+        setMedia4("");
+        setMediaType4("")
+    }
 
 
 
-    const createPost = () => {
+
+    const createPost = async () => {
         console.log(type)
-        if (!title || !description  || !place || !type || !difficulty) {
+        if (!title || !description  || !type || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        if (title.trim() === '' || description.trim() === '' || place.trim() === '' || type.trim() === '' || !difficulty) {
+        if (title.trim() === '' || description.trim() === '' || type.trim() === '' || !difficulty) {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
-        AsyncStorage.getItem(USER).then((item) => {
-        let user = JSON.parse(item)
-        let url = API_GATEWAY + "trainers/me/trainings"
+        let user = await getUser()
+        let array = await handleMedia(user)
         setLoading(true)
-        setError(false)
-        fetch(url, {
+        setError(false)  
+        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array)
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))
+            ToastAndroid.show('Post created succesfully!', ToastAndroid.SHORT)
+            resetStates()                
+            navigation.goBack();
+        }
+
+        /*
+        let response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,52 +145,24 @@ export const CreateTraining = ({ navigation }) => {
                 "description": description,
                 "type": type,
                 "difficulty": difficulty,
-                "media": [
-                    {
-                        "media_type": "image",
-                        "url": imageUri
-                    }
-                ],
-                "place": place
+                "media": array
             })
-        }).then((response) => {
-            setLoading(false);
-            console.log(JSON.stringify(response))
-            if (!response.ok) {
-                setError(true);
-                if (response.status === 401) {
-                    setErrorMessage('Unauthorized, not a valid access token');
-                } else {
-                    setErrorMessage('Failed to connect with the server');
-                }
-            } else {
-                response.json().then((data) => {
-                        console.log(JSON.stringify(data))                
-                        navigation.goBack();
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }}).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                }) 
-        
-            }).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
         })
-        //TODO: a mejorar
-        setImageUri('');
-        setTitle('');
-        setDescription('');
-        setType('');
-        setDifficulty(0);
-        setPlace('');
-        setLoading(false);
-        setUser({});
-        setError(false);
-        setErrorMessage("");
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            if (response.status === 401) {
+                setErrorMessage('Unauthorized, not a valid access token');
+            } else {
+                setErrorMessage('Failed to connect with the server');
+            }
+        } else {
+            let data = await response.json()
+            console.log(JSON.stringify(data))                
+            navigation.goBack();
+        }*/
+        
+        
     };
 
     return (
@@ -170,54 +194,35 @@ export const CreateTraining = ({ navigation }) => {
                         />
                     </View>
 
-            {/*        <View style={styles.inputContainer}>
-                        <Ionicons name="fitness-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Training Type"
-                            value={trainingType}
-                            onChangeText={setTrainingType}
-                            multiline={true}
-                        />
-                    </View>*/}
-
                     <View style={styles.inputContainer}>
                         <Ionicons name="ios-stats-chart-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        {/*
-                        <TextInput
-                            style={styles.input}
-                            maxLength={1}
-                            placeholder="Difficulty (1-5)"
-                            value={difficulty}
-                            onChangeText={(value) => setDifficulty(value.replace(/[^1-5]/g, ''))}
-                            keyboardType="numeric"
-                        />*/}
                         <Text style={styles.difficultyInput}> Difficulty:  </Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                                </TouchableWithoutFeedback>
-                            ))}
-                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                    <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
+                                        <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
+                                    </TouchableWithoutFeedback>
+                                ))}
+                        <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
                         </View>
                     </View>
 
-
-                    <View style={styles.inputContainer}>
-                        <Ionicons name="md-pin-outline" size={24} color="#A6A6A6" style={styles.icon}/>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Place"
-                            value={place}
-                            onChangeText={setPlace}
-                        />
-                    </View>
-                <TrainingType setType={setType} styles={styles}/>
+                <ListType listItem = {trainingItems} icon={"fitness-outline"}  setType={setType} styles={styles}/>
 
                 </View>
 
-                <UploadImage setImage={setImageUri}></UploadImage>
+                <ScrollView
+                    contentContainerStyle={styles.mediaContainer}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    >
+                    <MediaBox setElement = {setMedia1} setMediaElement = {setMediaType1}/>
+                    <MediaBox setElement = {setMedia2} setMediaElement = {setMediaType2} />
+                    <MediaBox setElement = {setMedia3} setMediaElement = {setMediaType3} />
+                    <MediaBox setElement = {setMedia4} setMediaElement = {setMediaType4}/>
+                    
+                </ScrollView>
+
 
                 { loading 
                 ? <View style={{marginTop:50, marginHorizontal: 40}}>
@@ -246,7 +251,7 @@ const styles = StyleSheet.create({
         padding: 10,
         color: 'rgba(32,38,70,0.63)',
         fontSize: 20,
-        marginTop:15,
+        marginTop:35,
         alignContent: 'center',
         textAlign: 'center'
     },
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
         minHeight:40,
         backgroundColor: 'rgba(163,205,255,0.42)',
         paddingHorizontal: 5,
-        borderRadius: 18,
+        borderRadius: 10,
 
     },
     input: {
@@ -297,7 +302,7 @@ const styles = StyleSheet.create({
     nextButton: {
         backgroundColor: '#DEE9F8FF',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: 10,
         padding: 10,
         marginHorizontal: 5,
         marginBottom:1,
@@ -312,10 +317,12 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#F0A500',
-        borderRadius: 20,
+        borderRadius: 10,
         paddingVertical: 10,
-        marginTop:30,
-        marginHorizontal: 40
+        marginTop:50,
+        marginHorizontal: 40,
+        width:"80%",
+        
     },
     trainingType: {
         height: 50,
@@ -331,64 +338,34 @@ const styles = StyleSheet.create({
     typeIcon: {
         size: 24,
         color: "#A6A6A6"
-    }
+    },
+    mediaContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+      }
 });
 
 export default CreateTraining;
 
 /*
-import React, { useState } from 'react';
-import { View, Button, Text } from 'react-native';
-import MultiSelect from 'react-native-multi-select';
+import { ScrollView } from 'react-native';
+import MediaBox from './MediaBox';
 
-const MyComponent = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  const items = [
-    { id: '1', name: 'Item 1' },
-    { id: '2', name: 'Item 2' },
-    { id: '3', name: 'Item 3' },
-    { id: '4', name: 'Item 4' },
-  ];
-
-  const onSelectedItemChange = (selectedItem) => {
-    setSelectedItem(selectedItem);
-  };
-
-  const onConfirmSelection = () => {
-    // Aquí puedes realizar acciones con el elemento seleccionado
-    console.log(selectedItem);
-  };
-
+const YourScreen = () => {
   return (
-    <View>
-      <MultiSelect
-        items={items}
-        uniqueKey="id"
-        onSelectedItemsChange={onSelectedItemChange}
-        selectedItems={[selectedItem]}
-        selectText="Seleccionar"
-        searchInputPlaceholderText="Buscar..."
-        onChangeInput={(text) => console.log(text)}
-        tagRemoveIconColor="#CCC"
-        tagBorderColor="#CCC"
-        tagTextColor="#CCC"
-        selectedItemTextColor="#CCC"
-        selectedItemIconColor="#CCC"
-        itemTextColor="#000"
-        displayKey="name"
-        searchInputStyle={{ color: '#CCC' }}
-        submitButtonColor="#CCC"
-        submitButtonText="Confirmar"
-        fixedHeight={false}
-        hideTags
-        onConfirm={onConfirmSelection}
-        single
-      />
-    </View>
+    
   );
 };
 
-export default MyComponent;
+const styles = {
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+};
+
+export default YourScreen;
 
 */

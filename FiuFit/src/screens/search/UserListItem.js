@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import { distance} from '../../utils/locations';
+import {Ionicons} from 'react-native-vector-icons'
 
-const UserListItem = ({ user, myDistance }) => {
+const UserListItem = ({ user, myDistance,myId }) => {
   const navigation = useNavigation();
   function handleOnPress() {
-    navigation.navigate("User Profile", {user:user})
+    navigation.navigate("User Profile", {user:user,id:myId})
   }
 
   function distancia (){
@@ -24,11 +25,19 @@ const UserListItem = ({ user, myDistance }) => {
     <TouchableOpacity onPress={handleOnPress}>
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        {/* <Image source={{ uri: user.image }} style={styles.avatar} />*/}
-        <Image source={ require('../../../assets/images/profilepic.jpeg') } style={styles.avatar} />
+         { user.image  
+            ? <Image source={{uri:user.image}} style={styles.avatar}/>
+            : <Image source={ require('../../../assets/images/profilepic.jpeg') } style={styles.avatar} />
+          }  
+        
       </View>
       <View style={styles.userInfo}>
-        <Text style={styles.name}>{user.name + " " + user.lastname}</Text>
+        <Text style={styles.name}>{user.name + " " + user.lastname + " "}
+          { user.verification?.verified && (
+                <Ionicons name={"checkmark-done-outline"} size={18} color={"lightblue"} />
+            )
+          }
+        </Text>
         <Text style={styles.role}>{user.mail}</Text>
       </View>
       {showDistance() && (
@@ -46,7 +55,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
+    backgroundColor:"white",
+    padding:9,
+    borderRadius:30,
+    //borderWidth:0.5
   },
   avatarContainer: {
     width: 50,
@@ -65,10 +78,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginLeft:2
   },
   role: {
     fontSize: 14,
     color: 'gray',
+    marginLeft:2
   },
   distanceInfo: {
     justifyContent:"flex-end",

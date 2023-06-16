@@ -5,6 +5,8 @@ import { API_GATEWAY, USER, ADMIN, ATHLETE, TRAINER } from '../../utils/constant
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserListItem from './UserListItem';
 import { distance} from '../../utils/locations';
+import { getRole,getUser } from '../../utils/getters';
+import Client from '../../client/Client';
 
 const UserFilters = ({search}) => {
   const [type,setType] = useState('');
@@ -27,85 +29,53 @@ const UserFilters = ({search}) => {
   };
 
   const calculateDistance = (myDistance,userDistance) =>{
+    console.log("--------")
     if (userDistance == null || myDistance == null){
       return false
     } else if (maxDistance == "") {
       return true
     } else {
        let dist = distance(myDistance,userDistance)
-       console.log(dist)
-       console.log(maxDistance)
        return dist <= parseInt(maxDistance)
     }
       
   }
   useEffect(() => {
-    const url = API_GATEWAY + 'users/'
+    const url = API_GATEWAY + 'users'
     async function getUsers() {
         setLoading(true)
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-            setMyUser(userInfo)
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        setUsers(data)
-                }).catch((error) => {
-                    setError(true);
-                    setErrorMessage(error);
-                });
-            }}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-        })}).catch((error) => {
-            setError(true);
-            setErrorMessage(error);
-        });
+        setError(false)
+        let userInfo = await getUser()
+        setMyUser(userInfo)
+        Client.getUsers(userInfo.access_token).then((data) => {
+          setUsers(data)
+          setLoading(false)
+        }).catch((error) => {
+          setError(true);
+          setErrorMessage(error.toString());
+          setLoading(false)
+        })
         }
         getUsers();
     }, [])
 
 
-    function getRole(role){
-        if (role == ADMIN){
-            return "Admin"
-        } else if (role == TRAINER){
-            return "Trainer"
-        } else if (role == ATHLETE){
-            return "Athlete"
-        } else {
-            return "Undefined"
-        }
-        }
 
     function getFilteredUsers() {
       if (!maxDistance) {
         return users.filter((user) => {
+          const notMyUser = myUser.mail != user.mail
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches  ;
+          return nameMatches && roleMatches && notMyUser ;
           });
       } else {
         return users.filter((user) => {
+          const notMyUser = myUser.mail != user.mail
           const distanceMatches = calculateDistance(myUser.location,user.location)
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches && distanceMatches ;
+          return nameMatches && roleMatches && distanceMatches && notMyUser;
       });
       }
     }
@@ -127,26 +97,25 @@ const UserFilters = ({search}) => {
             )}
           <TypeSelector setType={setType} types={types}></TypeSelector>
         </View> 
-       
+        {error && (
+            <View style = {{alignItems:"center",marginTop:15}}>
+                <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+            </View>
+        )}
         <View>
           { loading 
-            ? <View style={{marginTop:10}}>
+            ? <View style={{marginTop:200, transform: [{ scaleX: 2 }, { scaleY: 2 }]}}>
                 <ActivityIndicator size="large" color = "black"/>
               </View>
-            :  <View style={{marginTop:10 }}>
+            :  <View style={{height:"89.5%",marginTop:10}}>
                 <FlatList
                         data={getFilteredUsers()}
                         keyExtractor={(item) => item.id.toString()}
-                        contentContainerStyle={{ paddingBottom: 30 }}
+                        ListFooterComponent={<View/>}
                         renderItem={({ item }) => (
-                            <UserListItem user = {item} myDistance = {myUser.location}/>
+                            <UserListItem user = {item} myDistance = {myUser.location} myId = {myUser.id}/>
                         )}
                     />
-                {error && (
-                    <View style = {{alignItems:"center",marginTop:15}}>
-                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                    </View>
-                    )}
                </View>              
           }  
         
@@ -217,6 +186,5 @@ const styles = {
         marginRight: 10,
         fontSize: 16,
         fontWeight: 'bold',
-        marginLeft:5,
     }
 };

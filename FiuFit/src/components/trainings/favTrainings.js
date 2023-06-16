@@ -2,10 +2,9 @@ import React, {useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {getComments} from "../../screens/training/CommentTraining";
-import {topContent, trainingPlace} from "../../screens/training/TopBarTraining";
-import {trainingContent, trainingPrincipalContent} from "../../screens/training/ContentTraining";
-import {favouriteTraining} from "../../screens/training/FavouriteTraining";
-import {getCalification} from "../../screens/training/RateTraining";
+import {topContent, trainingPlace} from "./TopBarTraining";
+import {trainingContent, trainingPrincipalContent} from "./ContentTraining";
+import {getCalification} from "./RateTraining";
 import axios from "axios";
 
 const FavTraining = ({item, canEdit}) => {
