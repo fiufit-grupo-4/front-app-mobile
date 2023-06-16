@@ -25,7 +25,7 @@ const VisualizeTrainingGoal = ({item}) => {
                     </View>
                     <View style={styles.item}>
                         <Ionicons name={'md-pulse-outline'} style={styles.icon}/>
-                        <Text style={styles.description}>{item.quantity}</Text>
+                        <Text style={styles.description}>{item.quantity_steps}</Text>
                     </View>
 
                 </View>
@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
         paddingHorizontal:5,
         margin:10,
         borderRadius:15,
-        alignSelf:"center"
+        alignSelf:"center",
+        width:"90%"
     },
 
     postBackground: {

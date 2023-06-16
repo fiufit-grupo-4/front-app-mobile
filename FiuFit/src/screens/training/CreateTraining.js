@@ -49,7 +49,7 @@ export const CreateTraining = ({ navigation }) => {
 
 
     const trainingItems = [
-        { label: " ", value: " " },
+        { label: "", value: "" },
         { label: "Caminata", value: "Caminata" },
         { label: "Running", value: "Running" },
     ];
@@ -109,6 +109,7 @@ export const CreateTraining = ({ navigation }) => {
         setMediaType3("")
         setMedia4("");
         setMediaType4("")
+        setGoals([])
     }
 
 
@@ -123,11 +124,16 @@ export const CreateTraining = ({ navigation }) => {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
+        if (goals.length == 0) {
+            Alert.alert('Error', 'Please add a Goal');
+            return;
+        }
+       
         let user = await getUser()
         let array = await handleMedia(user)
         setLoading(true)
         setError(false)  
-        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array)
+        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array,goals)
         setLoading(false)
         if (!response.ok) {
             setError(true);

@@ -19,7 +19,7 @@ const FirstGoalView = ({item, user}) => {
                                 <View style ={{marginLeft:30}}>
                                     <Ionicons name={'checkmark-outline'} size = {30} color = {"#50C878"}/>
                                     </View> 
-                             : <Text style={newstyles.dificultad}>{item.progress + "/" + item.quantity}</Text>
+                             : <Text style={newstyles.dificultad}>{item.progress_steps + "/" + item.quantity_steps}</Text>
                             }
                             
                         </View>

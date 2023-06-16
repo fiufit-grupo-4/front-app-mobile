@@ -16,13 +16,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
 import ListType from "../../components/trainings/ListType";
+import DatePicker from 'react-native-date-picker';
 
 export const CreateGoal = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [quantity, setQuanity] = useState('');
     const [metric, setMetric] = useState('');
-    const [limit, setLimit] = useState('');
+    let limit_default = new Date()
+    limit_default.setMonth(limit_default.getMonth()+12)
+    const [limit, setLimit] = useState(limit_default);
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -44,13 +49,14 @@ export const CreateGoal = ({ navigation }) => {
         setDescription('');
         setMetric('');
         setQuanity('');
-        setLimit('');
+        setLimit(limit_default)
         setLoading(false);
         setError(false);
         setErrorMessage("");
     }
 
     const createGoal = async () => {
+
         if (!title || !description  || !metric || !quantity) {
             Alert.alert('Error', 'Please fill all fields');
             return;
@@ -62,8 +68,8 @@ export const CreateGoal = ({ navigation }) => {
         let user = await getUser()
         setLoading(true)
         setError(false)
-        let response = await Client.createNewGoal(user.access_token,title,description,metric,parseInt(quantity),limit)
-
+        let response = await Client.createNewGoal(user.access_token,title,description,metric,parseInt(quantity),limit.toISOString())
+        console.log(limit)
         if (!response.ok) {
             console.log(response.status)
             setLoading(false)
@@ -77,24 +83,10 @@ export const CreateGoal = ({ navigation }) => {
             resetStates()
             navigation.goBack();
         }
-        
+
     };
 
 
-    const selectDate = async () => {
-        try {
-          const { action, year, month, day } = await DatePickerAndroid.open({
-            date: new Date(),
-            mode: 'default',
-          });
-          if (action !== DatePickerAndroid.dismissedAction) {  
-            const fecha = new Date(year, month, day);
-            setLimit(fecha.toISOString())
-          }
-        } catch ({ code, message }) {
-          console.log('Error al abrir el selector de fecha:', message);
-        }
-      };
 
     return (
         <View style={styles.container}>
@@ -144,14 +136,30 @@ export const CreateGoal = ({ navigation }) => {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ async () => {await selectDate()}}>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ () => {setOpen(true)}}>
                             <Ionicons name="md-calendar-outline" size={24} color="#A6A6A6" style={styles.icon}/> 
-                            { limit 
-                              ? <Text style={styles.input}> {limit} </Text>
-                              : <Text style={styles.input}> Select Limit Date </Text>
-                            }
+                            {/* limit == limit_default || !limit 
+                              ? <Text style={styles.input}> Select Limit Date (Optional)</Text>
+                              : <Text style={styles.input}> {limit.toISOString().slice(0,10)} </Text>
+                                */}
+                            <Text style={styles.input}> {"Limit time: " + limit.toISOString().slice(0,10)} </Text>
                         </TouchableOpacity>
                     </View>
+
+
+                    <DatePicker
+                        modal
+                        open={open}
+                        date={date}
+                        minimumDate={date}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setLimit(date)
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
+                    />
                     
                     
                 </View>

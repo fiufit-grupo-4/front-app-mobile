@@ -5,7 +5,7 @@ import {Ionicons} from "@expo/vector-icons";
 
 
 const ListType = ({setType, listItem, icon}) => {
-    const [selectedValue, setSelectedValue] = useState(" ");
+    const [selectedValue, setSelectedValue] = useState(listItem[0]);
 
     return (
         <View style={styles.container}>

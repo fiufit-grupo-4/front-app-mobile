@@ -2,19 +2,20 @@ import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from "react-native
 import React, {useState} from "react";
 import {FontAwesome, Ionicons} from "@expo/vector-icons";
 
-function GoalProfile({ route }) {
-    const {item, user, navigation} = route.params;
+function GoalProfile({ route,  navigation }) {
+    const {item, user} = route.params;
     const [selectedPost, setSelectedPost] = useState(null);
 
     const handleEditPress = () => {
         setSelectedPost(item);
-        navigation.navigate('Edit Goal', { post: item, navigation: navigation });
+        navigation.navigate('Edit Goal', { goal: item});
     };
 
     const getState = (state) => {
         if (state ==1) return "Not Started"
         else if (state == 2) return "Started"
         else if (state == 3) return "Completed"
+        else if (state == 4) return "Stoped"
         else return "Not Sure"
     }
 
@@ -39,7 +40,7 @@ function GoalProfile({ route }) {
                 <Text style={styles.description}>{item.metric}</Text>
 
                 <Text style={styles.descriptionTitle}>Progress</Text>
-                <Text style={styles.description}>{item.progress + "/" + item.quantity}</Text>
+                <Text style={styles.description}>{item.progress_steps + "/" + item.quantity_steps}</Text>
 
                 <Text style={styles.descriptionTitle}>State</Text>
                 <Text style={styles.description}>{getState(item.state)}</Text>

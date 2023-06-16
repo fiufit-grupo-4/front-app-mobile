@@ -5,19 +5,26 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
+import Client from '../../client/Client';
+import { getErrorMessage, getUser } from '../../utils/getters';
+import DatePicker from 'react-native-date-picker';
 
 
-const EditGoal = ({ route }) => {
-    const {post: goalPost, navigation} = route.params;
-    const [title, setTitle] = useState(goalPost.title);
-    const [description, setDescription] = useState(goalPost.description);
-    const [metric, setMetric] = useState(goalPost.metric);
-    const [quantity, setQuanity] = useState(goalPost.quantity.toString());
+
+const EditGoal = ({ route, navigation }) => {
+    const {goal} = route.params;
+    console.log(goal.limit_time)
+    const [title, setTitle] = useState(goal.title);
+    const [description, setDescription] = useState(goal.description);
+    const [metric, setMetric] = useState(goal.metric);
+    const [quantity, setQuanity] = useState(goal.quantity_steps.toString());
+    const [limit, setLimit] = useState(new Date(goal.limit_time));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedValue, setSelectedValue] = useState(" ");
-
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false)
 
     const metricItems = [
         { label: " ", value: " " },
@@ -29,82 +36,46 @@ const EditGoal = ({ route }) => {
     ];
 
     const handleSaveChanges = async () => {
-        let url = API_GATEWAY + "trainers/me/trainings/" + goalPost.id
+        console.log(goal)
         setLoading(true);
         setError(false)
-
-        let item =  await AsyncStorage.getItem(USER)
-        let userInfo = JSON.parse(item)
-
-        let response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userInfo.access_token,
-            },
-            body: JSON.stringify({
-                "title": title,
-                "description": description,
-                "metric": metric,
-                "difficulty" : difficulty,
-            })
-        })
+        let userInfo = await getUser()
+        let response = await Client.editGoals(userInfo.access_token,title,description,metric,parseInt(quantity),limit.toISOString(),goal.id)
+        setLoading(false);
+        console.log(JSON.stringify(response))
         if (!response.ok) {
+            
             setError(true);
-            setLoading(false);
-            if (response.status === 401) {
-                setErrorMessage('Unauthorized, not a valid access token');
-            } else {
-                setErrorMessage('Failed to connect with the server');
-            }
+            setErrorMessage(getErrorMessage(response.status))
         } else {
-            let data = await response.json()
-            console.log(JSON.stringify(data))
-            setLoading(false);
-            navigation.navigate("View Challenges",{reload:!reload})
+            navigation.goBack();  
+            navigation.goBack();    
         }
+
     }
 
-    function handleDelete() {
-        let url = API_GATEWAY + "trainers/me/goal/" + goalPost.id
+    async function handleDelete() {
+        console.log(goal)
         setLoading(true);
         setError(false)
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        navigation.navigate("View Challenges",{reload:!reload})
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }})}).catch((error) => {
+        let userInfo = await getUser()
+        console.log(userInfo.access_token)
+        let response = await Client.deleteGoal(userInfo.access_token,goal.id)
+        setLoading(false);
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
             setError(true);
-            setErrorMessage(error);
-        })
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            navigation.goBack();
+            navigation.goBack();   
+        }     
     }
 
     return (
-        <View style={{padding: 30, backgroundColor: 'white', flex:1,paddingTop:100}}>
+        <View style={{padding: 30, backgroundColor: 'white', flex:1,paddingTop:50}}>
 
-            <ScrollView>
+            
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}>Title</Text>
                     <View style={{flexDirection: 'row'}}>
@@ -153,6 +124,7 @@ const EditGoal = ({ route }) => {
                         </View>
                     </View>
                 </View>
+
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}>Quantity</Text>
                     <View style={{flexDirection: 'row'}}>
@@ -166,14 +138,42 @@ const EditGoal = ({ route }) => {
                     </View>
                 </View>
 
-            </ScrollView>
+
+                <View style={styles.inputContainer}>
+                    <Text style={styles.text}>Limit Time</Text>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ () => {setOpen(true)}}>
+                            <Ionicons name="md-calendar-outline" size={24} color="#A6A6A6" style={styles.icon}/> 
+                            {/* limit == limit_default || !limit 
+                              ? <Text style={styles.input}> Select Limit Date (Optional)</Text>
+                              : <Text style={styles.input}> {limit.toISOString().slice(0,10)} </Text>
+                                */}
+                            <Text style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}> { limit.toISOString().slice(0,10)} </Text>
+                        </TouchableOpacity>
+                    </View>
+
+            
+
+            <DatePicker
+                        modal
+                        open={open}
+                        date={date}
+                        minimumDate={date}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setLimit(date)
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
+                    />
 
 
             { loading
-                ? <View style={{marginBottom:100, marginHorizontal: 40}}>
+                ? <View style={{marginBottom:100, marginHorizontal: 40,marginTop:20}}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
                 : <>
+                    <View style = {{marginBottom:60}}>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                             <Text style={styles.deleteButtonText}>Delete Goal</Text>
@@ -183,16 +183,17 @@ const EditGoal = ({ route }) => {
                         </TouchableOpacity>
 
                     </View>
-
+                    {error && (
+                        <View style = {{alignItems:"center"}}>
+                            <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                        </View>
+                    )}
+                    </View>
 
                 </>
             }
 
-            {error && (
-                <View style = {{alignItems:"center",marginTop:15}}>
-                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                </View>
-            )}
+            
 
 
 
@@ -214,13 +215,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:100
+        marginBottom:20,
+        marginTop:20
     },
     inputContainer: {
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
         marginVertical: 10,
-        marginTop:20
+        marginTop:20,
+        padding:5
     },
     icon: {
         marginRight: 10,
@@ -237,6 +240,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         fontSize: 18,
+        padding:5
     },
     buttonText: {
         fontSize: 18,
@@ -271,7 +275,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: '#333',
-        marginBottom: 10
+        marginBottom: 10,
     },
     trainingType: {
         height:5,

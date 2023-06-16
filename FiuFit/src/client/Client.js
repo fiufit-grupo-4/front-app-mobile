@@ -196,30 +196,40 @@ class ApiClient {
       return json
     }
 
-    async editGoals(user,title,description,metric,quantity,limit_time){
-      let limit_date = new Date()
-      limit_date.setMonth(limit_date.getMonth()+12)
-      let limit = limit_time ? limit_time : limit_date.toISOString()
-      const url = API_GATEWAY + 'athletes/me/goals'
+    async editGoals(access_token,title,description,metric,quantity,limit_time,id){
+   
+      const url = API_GATEWAY + 'athletes/me/goals/' + id
       let response = await fetch(url, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + user.access_token,
+            'Authorization': 'Bearer ' + access_token,
         },
         body: JSON.stringify({
-          "title": title,
+          "title":title,
           "description": description,
           "metric": metric,
-          "quantity": quantity,
-          "limit_time": limit,
+          "limit_time": limit_time,
+          "quantity_steps": quantity
       })
       })
       return response
     }
 
+    async deleteGoal(access_token,goal_id){
+      const url = API_GATEWAY + 'athletes/me/goals/' + goal_id
+      let response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
 
-    async createNewPost(access_token,title,description,type,difficulty,array){
+
+    async createNewPost(access_token,title,description,type,difficulty,media,goals){
       let url = API_GATEWAY + "trainers/me/trainings"
       let response = await fetch(url, {
         method: 'POST',
@@ -232,7 +242,8 @@ class ApiClient {
             "description": description,
             "type": type,
             "difficulty": difficulty,
-            "media": array
+            "media": media,
+            "goals": goals
         })
       })
       return response
@@ -241,9 +252,7 @@ class ApiClient {
     async createNewGoal(access_token,title,description,metric,quantity,limit_time){
       let url = API_GATEWAY + "athletes/me/goals"
       let date = new Date().toISOString()
-      let limit_date = new Date()
-      limit_date.setMonth(limit_date.getMonth()+12)
-      let limit = limit_time ? limit_time : limit_date.toISOString()
+    
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -255,8 +264,8 @@ class ApiClient {
             "title": title,
             "description": description,
             "metric": metric,
-            "quantity": quantity,
-            "limit_time": limit,
+            "quantity_steps": quantity,
+            "limit_time": limit_time,
             "date_init": date,
             "state": 1
         })

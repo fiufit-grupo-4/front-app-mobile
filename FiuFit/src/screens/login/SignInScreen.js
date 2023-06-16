@@ -38,7 +38,7 @@ const SignInScreen = () => {
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: 'ti@fi.uba.ar',
+            email: 'dante@trainer.com',
             password: '1234'
         }
     });
@@ -54,6 +54,7 @@ const SignInScreen = () => {
         ApiClient.signIn(data,getRole())
             .then(async  response => {
                 const user_info = JSON.stringify(response)
+                console.log(user_info)
                 await AsyncStorage.setItem(USER,user_info)
                 setLoading(false)
                 navigation.navigate("Inicio")

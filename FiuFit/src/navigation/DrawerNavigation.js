@@ -30,7 +30,7 @@ function DrawerComponent() {
         async function getUser() {
           
             AsyncStorage.getItem(USER).then( user => {
-                console.log(JSON.parse(user))
+
                 setUserInfo(JSON.parse(user))          
             }
             ).catch(error => {
@@ -39,7 +39,7 @@ function DrawerComponent() {
             })
         }
         getUser();
-    }, [])
+    }, [isFocused])
 
 
     return (

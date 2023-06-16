@@ -8,7 +8,7 @@ function GoalsListItem({item, user}) {
     const navigation = useNavigation();
 
     function handleOnPress() {
-        navigation.navigate("Goal Profile", { item, user, navigation });
+        navigation.navigate("Goal Profile", { item, user });
     }
 
     return (

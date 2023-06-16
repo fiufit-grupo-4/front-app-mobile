@@ -20,7 +20,7 @@ import ListType from "../../components/trainings/ListType";
 export const ModalGoal = ({ newGoal,setNewGoal,modalVisible,handleSave,setModal }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [quantity, setQuanity] = useState('');
+    const [quantity_steps, setQuanity] = useState('');
     const [metric, setMetric] = useState('');
 
 
@@ -114,8 +114,8 @@ export const ModalGoal = ({ newGoal,setNewGoal,modalVisible,handleSave,setModal 
                         <TextInput
                             style={styles.input}
                             placeholder="Quantity"
-                            value={newGoal.quantity}
-                            onChangeText={(text) => setNewGoal({ ...newGoal, quantity: text })}
+                            value={newGoal.quantity_steps}
+                            onChangeText={(text) => setNewGoal({ ...newGoal, quantity_steps: text })}
                             keyboardType='numeric'
                         />
                     </View>      

@@ -39,18 +39,20 @@ function TrainingsHome({ navigation}) {
 
     return (
         <>
+            <Text style={{ fontSize: 24,fontWeight: 'bold', marginBottom:10,paddingTop:10,paddingHorizontal:10}}> {"Trainings "}</Text>
             {loading 
                 ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <>
-
+                   
                     {trainings.length == 0  
                         ? <Errors message={"This trainer dont have any posts yet"} icon={"image-outline"}></Errors>
-                        : <View style={{padding:10 }}>
+                        : <View style={{padding:10 ,height:"94%"}}>
                                 <FlatList
                                 data={trainings}
                                 keyExtractor={(item) => item.id.toString()}
+                                ListFooterComponent={<View/>}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
                                         <TrainingListItem user={user} item={item} canEdit={true}></TrainingListItem>  

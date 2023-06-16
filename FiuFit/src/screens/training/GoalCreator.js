@@ -22,7 +22,7 @@ export const GoalCreator = ({ goals, setGoals  }) => {
         metric: '',
         title: '',
         description: '',
-        quantity: ''
+        quantity_steps: ''
     });
 
     const addGoal = () => {
@@ -30,10 +30,11 @@ export const GoalCreator = ({ goals, setGoals  }) => {
     };
 
     const handleSaveGoal = () => {
+        console.log(newGoal)
         
         if (
           newGoal.metric === '' ||
-          newGoal.quantity === '' ||
+          newGoal.quantity_steps === '' ||
           newGoal.title === '' ||
           newGoal.description === ''
         ) {
@@ -45,16 +46,16 @@ export const GoalCreator = ({ goals, setGoals  }) => {
           metric:  newGoal.metric,
           title: newGoal.title,
           description: newGoal.description,
-          quantity: newGoal.quantity
+          quantity_steps: newGoal.quantity_steps
         };
     
         setGoals([...goals, newFullGoal]);
 
         setNewGoal({
-          tipo: '',
-          titulo: '',
-          descripcion: '',
-          cantidad: ''
+          metric: '',
+          title: '',
+          description: '',
+          quantity_steps: ''
         });
     
         setModalVisible(false);

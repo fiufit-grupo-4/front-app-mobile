@@ -275,13 +275,15 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
 
                     {/*{trainingPlace(item)}*/}
 
+                    <View style={{padding: 5}}>
+                        <Text style={{borderTopWidth: 1,borderTopColor: 'orange',color: 'rgba(23,29,52,0.76)'}}></Text>
+                    </View>
                     {trainingPrincipalContent(item, toggleModal)}
-
-                    {goals && (
+                    {item.goals && (
                     <>
                         {/*<Text style = {styles.goalsTitle}>Goals</Text>*/}
-                        <ScrollView style = {{padding:5}} horizontal= {true} >
-                            {goals.map((goal, index) => (
+                        <ScrollView style = {{padding:5}}  >
+                            {item.goals.map((goal, index) => (
                                 <VisualizeTrainingGoal key={index} item={goal} />
                             ))}
                         </ScrollView>
@@ -289,6 +291,10 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
                     </>
 
                     )}
+
+                    
+
+                    
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
 

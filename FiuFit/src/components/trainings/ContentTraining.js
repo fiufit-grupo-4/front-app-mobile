@@ -6,9 +6,9 @@ import { DEFAULT_IMAGE } from "../../utils/constants";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>
-        <View style={{padding: 5}}>
-            <Text style={styles.title}></Text>
-        </View>
+        
+
+        
     
         <ScrollView
             contentContainerStyle={styles.mediaContainer}
@@ -68,7 +68,7 @@ export function trainingContent(item) {
         </View>
 
         <View style={styles.item}>
-            <Ionicons name={'speedometer-outline'} style={styles.icon}/>
+            <Ionicons name={'cellular-outline'} style={styles.icon}/>
             <Text style={styles.itemText}>{'Difficulty: ' + item.difficulty}</Text>
         </View>
     </>;
