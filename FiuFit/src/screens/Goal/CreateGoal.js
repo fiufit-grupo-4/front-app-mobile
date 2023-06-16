@@ -6,7 +6,7 @@ import {
     TextInput,
     TouchableOpacity,
     Alert,
-    TouchableWithoutFeedback,
+    DatePickerAndroid,
     ScrollView,
     ActivityIndicator,
     ToastAndroid
@@ -22,6 +22,7 @@ export const CreateGoal = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [quantity, setQuanity] = useState('');
     const [metric, setMetric] = useState('');
+    const [limit, setLimit] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -42,14 +43,14 @@ export const CreateGoal = ({ navigation }) => {
         setTitle('');
         setDescription('');
         setMetric('');
-        setDifficulty(0);
+        setQuanity('');
+        setLimit('');
         setLoading(false);
         setError(false);
         setErrorMessage("");
     }
 
     const createGoal = async () => {
-        console.log(metric)
         if (!title || !description  || !metric || !quantity) {
             Alert.alert('Error', 'Please fill all fields');
             return;
@@ -59,24 +60,41 @@ export const CreateGoal = ({ navigation }) => {
             return;
         }
         let user = await getUser()
-
         setLoading(true)
         setError(false)
-        //let response = await Client.createNewPost(user.access_token,title,description,metric,difficulty,challenge)
-        setLoading(false)
-        /*
+        let response = await Client.createNewGoal(user.access_token,title,description,metric,parseInt(quantity),limit)
+
         if (!response.ok) {
+            console.log(response.status)
+            setLoading(false)
             setError(true);
             setErrorMessage(getErrorMessage(response.status))
         } else {
             let data = await response.json()
             console.log(JSON.stringify(data))
+            setLoading(false)
             ToastAndroid.show('Goal created succesfully!', ToastAndroid.SHORT)
+            resetStates()
             navigation.goBack();
-        }*/
-        resetStates()
-
+        }
+        
     };
+
+
+    const selectDate = async () => {
+        try {
+          const { action, year, month, day } = await DatePickerAndroid.open({
+            date: new Date(),
+            mode: 'default',
+          });
+          if (action !== DatePickerAndroid.dismissedAction) {  
+            const fecha = new Date(year, month, day);
+            setLimit(fecha.toISOString())
+          }
+        } catch ({ code, message }) {
+          console.log('Error al abrir el selector de fecha:', message);
+        }
+      };
 
     return (
         <View style={styles.container}>
@@ -123,6 +141,16 @@ export const CreateGoal = ({ navigation }) => {
                             onChangeText={setQuanity}
                             keyboardType='numeric'
                         />
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ async () => {await selectDate()}}>
+                            <Ionicons name="md-calendar-outline" size={24} color="#A6A6A6" style={styles.icon}/> 
+                            { limit 
+                              ? <Text style={styles.input}> {limit} </Text>
+                              : <Text style={styles.input}> Select Limit Date </Text>
+                            }
+                        </TouchableOpacity>
                     </View>
                     
                     

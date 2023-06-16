@@ -234,18 +234,19 @@ export const startRecordingAndObserveSteps = () => {
     //const permission = await getPermissions()
     //if (!permission) return 
     const start = new Date();
-    start.setDate(start.getDate() - 1); // DIA ANTERIOR
+    start.setHours(start.getHours() - 24); // DIA ANTERIOR
     const end = new Date();
-    let steps = await getStepsByTime(start,end,BucketUnit.HOURS,1)
+    let steps = await getStepsByTime(start,end,BucketUnit.HOUR,1)
+    
     return steps
   }
 
-  export function stepsToCalories(steps){
+  export function stepsToCalories(steps ){
     const calories = steps.map(step => stepToCalorie(step));
     return calories
   }
 
-  export function stepsToKilometers(steps){
+  export function stepsToKilometers(steps ){
     const kilometers = steps.map(step => stepToKilometer(step));
     return kilometers
   }
@@ -258,9 +259,11 @@ export const startRecordingAndObserveSteps = () => {
       bucketInterval: interval,
     }
     const result = await GoogleFit.getDailyStepCountSamples(options); 
+    
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );
+    
     return data.steps
   }
 

@@ -177,6 +177,25 @@ class ApiClient {
       return json
     }
 
+    async getGoals(access_token){
+      //if (MOCK) return Mocked.getTrainings()
+      const url = API_GATEWAY + 'athletes/me/goals'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+      })
+      if (!response.ok) {
+        console.log(response.status)
+        let errorMessage = getErrorMessage(response.status)     
+        throw new Error(errorMessage)
+      }
+      let json = await response.json()
+      return json
+    }
+
 
     async createNewPost(access_token,title,description,type,difficulty,array){
       let url = API_GATEWAY + "trainers/me/trainings"
@@ -192,6 +211,29 @@ class ApiClient {
             "type": type,
             "difficulty": difficulty,
             "media": array
+        })
+      })
+      return response
+    }
+
+    async createNewGoal(access_token,title,description,metric,quantity,limit_time){
+      let url = API_GATEWAY + "athletes/me/goals"
+      let date = new Date().toISOString()
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({
+            "traning_id": "",       
+            "title": title,
+            "description": description,
+            "metric": metric,
+            "quantity": quantity,
+            "limit_time": limit_time,
+            "date_init": date,
+            "state": 1
         })
       })
       return response

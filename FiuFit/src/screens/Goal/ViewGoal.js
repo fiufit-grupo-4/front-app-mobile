@@ -1,68 +1,92 @@
-import axios from "axios";
 import React, {useEffect, useState} from "react";
 import {StyleSheet, View, Text, ActivityIndicator, FlatList} from "react-native";
 import Errors from "../../components/utils/Error";
 import GoalsListItem from "./GoalsListItem";
-
-
+import { useIsFocused } from '@react-navigation/native';
+import { getUser } from "../../utils/getters";
+import Client from "../../client/Client";
+const GOALS = [
+    {
+        "id": "1",
+        "title": "Caminata",
+        "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
+        "metric": "Distancia recorrida",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 0,
+        "progress": 0,
+        "difficulty": 2,
+    },
+    {
+        "id":"2",
+        "title": "Caminata",
+        "description": "Caminar por palermo 5 hora",
+        "metric": "Distancia recorrida",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 0,
+        "progress": 0,
+        "difficulty": 3,
+    },
+    {
+        "id":"3",
+        "title": "Abdominales",
+        "description": "1.30 de abs.",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 0,
+        "progress": 0,
+        "difficulty": 4,
+    },
+    {
+        "id":"4",
+        "title": "GAP",
+        "description": "abs ggggggg oppp ",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 0,
+        "progress": 0,
+        "difficulty": 4,
+    },
+    {
+        "id":"5",
+        "title": "GAPX2",
+        "description": "abs ggggggg oppp ",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 0,
+        "progress": 0,
+        "difficulty": 5,
+    },
+]
 const ViewGoal = ({route}) => {
     const {user} = route.params
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [goals,setGoals] = useState({})
+    const isFocused = useIsFocused();
 
-    const goals = [
-        {
-            "id": "1",
-            "title": "Caminata",
-            "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
-            "metric": "Distancia recorrida",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 0,
-            "progress": 0,
-            "difficulty": 2,
-        },
-        {
-            "id":"2",
-            "title": "Caminata",
-            "description": "Caminar por palermo 5 hora",
-            "metric": "Distancia recorrida",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 0,
-            "progress": 0,
-            "difficulty": 3,
-        },
-        {
-            "id":"3",
-            "title": "Abdominales",
-            "description": "1.30 de abs.",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 0,
-            "progress": 0,
-            "difficulty": 4,
-        },
-        {
-            "id":"4",
-            "title": "GAP",
-            "description": "abs ggggggg oppp ",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 0,
-            "progress": 0,
-            "difficulty": 4,
-        },
-        {
-            "id":"5",
-            "title": "GAPX2",
-            "description": "abs ggggggg oppp ",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 0,
-            "progress": 0,
-            "difficulty": 5,
-        },
-    ]
+    useEffect(() => {
+        async function getGoals() {
+            setLoading(true)
+            setError(false)
+            let userInfo = await getUser()
+            Client.getGoals(userInfo.access_token).then((data) => {
+                setGoals(data)
+                console.log(data)
+                setLoading(false)
+            }).catch((error) => {
+                setError(true);
+                setErrorMessage(error.toString());
+                setLoading(false)
+            })
+        }
+
+        
+        getGoals();
+
+        }, [isFocused])
+    
+        
 
     return (
         <>
@@ -73,7 +97,7 @@ const ViewGoal = ({route}) => {
 
                 : <>
                     {goals.length === 0
-                        ? <Errors message={"This athlete dont have any goal yet"} icon={"image-outline"}></Errors>
+                        ? <Errors message={"This athlete don´t have any goals yet"} icon={"fitness-outline"}></Errors>
                         : <View style={{padding:10 }}>
                             <FlatList
                                 data={goals}

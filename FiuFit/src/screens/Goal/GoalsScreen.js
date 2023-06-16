@@ -2,127 +2,116 @@ import {FlatList, View, StyleSheet, Text,ActivityIndicator,ScrollView,TouchableO
 import {useEffect, useState} from "react";
 import {useNavigation} from '@react-navigation/native';
 import {API_GATEWAY, USER} from "../../utils/constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoalsListItem from "./GoalsListItem";
 import { useIsFocused } from '@react-navigation/native';
-import FavoriteListItem from "../search/FavoriteListItem";
-import { getErrorMessage,getUser, updateUser } from "../../utils/getters";
+import { getUser} from "../../utils/getters";
+import Client from "../../client/Client";
+
+
+const GOALS = [
+    {
+        "id": "1",
+        "title": "Caminata",
+        "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
+        "metric": "Distancia recorrida",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 10,
+        "progress": 2,
+        "state":2,
+        "difficulty": 2,
+    },
+    {
+        "id":"2",
+        "title": "Caminata",
+        "description": "Caminar por palermo 5 hora",
+        "metric": "Distancia recorrida",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 5,
+        "progress": 2,
+        "state":2,
+        "difficulty": 3,
+    },
+    {
+        "id":"3",
+        "title": "Abdominales",
+        "description": "1.30 de abs.",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 2,
+        "progress": 2,
+        "state":3,
+        "difficulty": 4,
+    },
+    {
+        "id":"4",
+        "title": "GAP",
+        "description": "abs ggggggg oppp ",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 1,
+        "progress": 1,
+        "state":3,
+        "difficulty": 4,
+    },
+    {
+        "id":"5",
+        "title": "GAPX2",
+        "description": "abs ggggggg oppp ",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 100,
+        "progress": 80,
+        "state":2,
+        "difficulty": 5,
+    },
+    {
+        "id":"42",
+        "title": "GAPX2",
+        "description": "abs ggggggg oppp ",
+        "metric": "Calorias utilizadas",
+        "limit_time": "2023-07-08T15:26:20.558Z",
+        "quantity": 100,
+        "progress": 80,
+        "state":2,
+        "difficulty": 5,
+    },
+]
 
 const GoalsScreen = () => {
     const isFocused = useIsFocused();
     const [user, setUser] = useState();
-    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const navigation = useNavigation();
-
-    const goals = [
-        {
-            "id": "1",
-            "title": "Caminata",
-            "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
-            "metric": "Distancia recorrida",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 10,
-            "progress": 2,
-            "state":2,
-            "difficulty": 2,
-        },
-        {
-            "id":"2",
-            "title": "Caminata",
-            "description": "Caminar por palermo 5 hora",
-            "metric": "Distancia recorrida",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 5,
-            "progress": 2,
-            "state":2,
-            "difficulty": 3,
-        },
-        {
-            "id":"3",
-            "title": "Abdominales",
-            "description": "1.30 de abs.",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 2,
-            "progress": 2,
-            "state":3,
-            "difficulty": 4,
-        },
-        {
-            "id":"4",
-            "title": "GAP",
-            "description": "abs ggggggg oppp ",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 1,
-            "progress": 1,
-            "state":3,
-            "difficulty": 4,
-        },
-        {
-            "id":"5",
-            "title": "GAPX2",
-            "description": "abs ggggggg oppp ",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 100,
-            "progress": 80,
-            "state":2,
-            "difficulty": 5,
-        },
-        {
-            "id":"42",
-            "title": "GAPX2",
-            "description": "abs ggggggg oppp ",
-            "metric": "Calorias utilizadas",
-            "limit_time": "2023-07-08T15:26:20.558Z",
-            "quantity": 100,
-            "progress": 80,
-            "state":2,
-            "difficulty": 5,
-        },
-    ]
+    const [goals,setGoals] = useState({})
+    
       
     useEffect(() => {
-        const url = API_GATEWAY + 'users/me'
-        async function getUsers() {
-            //setLoading(true);
+        async function getGoals() {
+            setLoading(true)
             setError(false)
             let userInfo = await getUser()
-            setUser(userInfo)
-
-            /*
-            let response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-            })
-            if (!response.ok) {
+            Client.getGoals(userInfo.access_token).then((data) => {
+                setGoals(data)
+                console.log(data)
+                setLoading(false)
+            }).catch((error) => {
                 setError(true);
-                console.log("RESPONSE: ", response.status);
-                setErrorMessage(getErrorMessage(response.status))
-                setLoading(false);
-            } else {
-                let data = await response.json()
-                setPosts(data.trainings);
-                let updatedUser = await updateUser(data,userInfo)
-                setUser(updatedUser)
-                setLoading(false);
-            }*/
+                setErrorMessage(error.toString());
+                setLoading(false)
+            })
         }
-        getUsers();
-    }, [isFocused])
+
+        
+        getGoals();
+
+        }, [isFocused])
 
 
     return (
         <View>
             <View style={styles.container}>
-                {/*<Text style={styles.title}> {"Goals "}</Text>*/}
+                <Text style={styles.title}> {"Goals "}</Text>
                     { loading 
                         ? <View style={{marginTop:250, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                             <ActivityIndicator size="large" color = "black"/>
