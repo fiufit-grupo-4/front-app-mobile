@@ -196,6 +196,28 @@ class ApiClient {
       return json
     }
 
+    async editGoals(user,title,description,metric,quantity,limit_time){
+      let limit_date = new Date()
+      limit_date.setMonth(limit_date.getMonth()+12)
+      let limit = limit_time ? limit_time : limit_date.toISOString()
+      const url = API_GATEWAY + 'athletes/me/goals'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + user.access_token,
+        },
+        body: JSON.stringify({
+          "title": title,
+          "description": description,
+          "metric": metric,
+          "quantity": quantity,
+          "limit_time": limit,
+      })
+      })
+      return response
+    }
+
 
     async createNewPost(access_token,title,description,type,difficulty,array){
       let url = API_GATEWAY + "trainers/me/trainings"
@@ -219,6 +241,9 @@ class ApiClient {
     async createNewGoal(access_token,title,description,metric,quantity,limit_time){
       let url = API_GATEWAY + "athletes/me/goals"
       let date = new Date().toISOString()
+      let limit_date = new Date()
+      limit_date.setMonth(limit_date.getMonth()+12)
+      let limit = limit_time ? limit_time : limit_date.toISOString()
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -231,7 +256,7 @@ class ApiClient {
             "description": description,
             "metric": metric,
             "quantity": quantity,
-            "limit_time": limit_time,
+            "limit_time": limit,
             "date_init": date,
             "state": 1
         })
