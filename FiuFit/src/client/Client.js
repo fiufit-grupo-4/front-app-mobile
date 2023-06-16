@@ -75,7 +75,6 @@ class ApiClient {
 
   async getTrainingsById(access_token,id){
     if (MOCK) return Mocked.getTrainings()
-    console.log(id)
     const url = API_GATEWAY + 'trainings/' + id.toString()
     let response = await fetch(url, {
       method: 'GET',
@@ -85,7 +84,7 @@ class ApiClient {
       },
     })
     if (!response.ok) {
-      console.log(response.status)
+     
       if (response.status == 404) return []
       let errorMessage = getErrorMessage(response.status)     
       throw new Error(errorMessage)
@@ -148,7 +147,6 @@ class ApiClient {
         },
       })
       if (!response.ok) {
-        console.log(response.status)
         let errorMessage = getErrorMessage(response.status)     
         throw new Error(errorMessage)
       }
@@ -169,7 +167,7 @@ class ApiClient {
         },
       })
       if (!response.ok) {
-        console.log(response.status)
+      
         let errorMessage = getErrorMessage(response.status)     
         throw new Error(errorMessage)
       }
@@ -188,7 +186,7 @@ class ApiClient {
         },
       })
       if (!response.ok) {
-        console.log(response.status)
+
         let errorMessage = getErrorMessage(response.status)     
         throw new Error(errorMessage)
       }

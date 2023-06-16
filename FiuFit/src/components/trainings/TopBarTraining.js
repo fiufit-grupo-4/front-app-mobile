@@ -9,16 +9,16 @@ export function topContent(canEdit, handleEdit, item,role) {
         
             {role != TRAINER && (
                 <>
+                {/* 
                     <TouchableOpacity onPress={() => (console.log("started"))}
                     style={{marginLeft:130}}    >
                         <Ionicons name = "stats-chart-outline"  style={{fontSize: 20, padding: 7, alignItems: 'center'}}></Ionicons>
-                    </TouchableOpacity>
+                    </TouchableOpacity>*/}
                 <TouchableOpacity onPress={() => (console.log("started"))}
                     style={styles.button}>
                     <Text style={{fontSize:18,fontWeight:"bold",color:"white"}}>
                         Start
-                    </Text>
-                    
+                    </Text> 
                 </TouchableOpacity>
                 
                 
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'center',
         borderRadius: 5,
-        width:"20%",
+        width:"25%",
         alignSelf:"center",
         justifyContent:"center",
         marginRight:10,

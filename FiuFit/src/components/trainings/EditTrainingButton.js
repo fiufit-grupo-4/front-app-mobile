@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
     },
 
     stats: {
-        flexDirection: 'row',
-        marginLeft:170
+        position: 'absolute',
+        top: -13,
+        right: -60,
     }
 });
