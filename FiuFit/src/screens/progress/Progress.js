@@ -1,22 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export const Progress = () => {
-    const [searchText, setSearchText] = useState('');
+    
     const [filter, setFilter] = useState('month');
 
-    const handleSearch = () => {
-        // Handle search logic here
-        console.log('Searching for:', searchText, 'with filter:', filter);
-    };
-
-    const handleClear = () => {
-        // Clear search text and filter
-        setSearchText('');
-        setFilter(null);
-    };
+    
 
     const handleFilter = (filterValue) => {
         // Set the selected filter
@@ -59,15 +50,18 @@ export const Progress = () => {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 5,
-        marginHorizontal: 5,
+        borderRadius: 15,
+        marginTop:10,
+        marginHorizontal: 15,
         backgroundColor:"white",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        flex: 1,
+        marginBottom:10
+        
     },
     searchContainer: {
-        paddingHorizontal: 5,
+        marginHorizontal: 15,
         flexDirection: 'row',
         alignItems: 'center',
         borderTopLeftRadius:5,
@@ -75,6 +69,8 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         height:50,
         justifyContent:"center",
+        borderBottomWidth:1,
+        borderColor:"orange",
 
     },
     
