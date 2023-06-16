@@ -17,6 +17,7 @@ import CreateGoal from "../screens/Goal/CreateGoal";
 import GoalsScreen from "../screens/Goal/GoalsScreen";
 import TrainingsHome from "../screens/training/TrainingsHome";
 import { useIsFocused } from "@react-navigation/native";
+import Progress from "../screens/progress/Progress";
 
 const Drawer = createDrawerNavigator();
 
@@ -119,35 +120,50 @@ function DrawerComponent() {
 
         { userInfo.role != TRAINER &&(
             <>
-            <Drawer.Screen
-            name="        Goals"
-            color="#F0A500"
-            component={GoalsScreen}
-            options={() => ({
-                drawerIcon: () => (
-                    <Ionicons name="ribbon-outline"
-                        style={{color:'#2C302E'}}
-                        size={14}
-                    />
-                ),
-                headerShown: true,
-            })}
-            />
 
-            <Drawer.Screen
-                name="        New Goal"
+                <Drawer.Screen
+                    name="        Progress"
+                    color="#F0A500"
+                    component={Progress}
+                    options={() => ({
+                        drawerIcon: () => (
+                            <Ionicons name="fitness-outline"
+                                style={{color:'#2C302E'}}
+                                size={14}
+                            />
+                        ),
+                        headerShown: true,
+                    })}
+                />
+                <Drawer.Screen
+                name="        Goals"
                 color="#F0A500"
-                component={CreateGoal}
+                component={GoalsScreen}
                 options={() => ({
                     drawerIcon: () => (
-                        <AntDesign
-                            name="plus"
+                        <Ionicons name="ribbon-outline"
+                            style={{color:'#2C302E'}}
                             size={14}
                         />
                     ),
                     headerShown: true,
                 })}
-            />
+                />
+
+                <Drawer.Screen
+                    name="        New Goal"
+                    color="#F0A500"
+                    component={CreateGoal}
+                    options={() => ({
+                        drawerIcon: () => (
+                            <AntDesign
+                                name="plus"
+                                size={14}
+                            />
+                        ),
+                        headerShown: true,
+                    })}
+                />
         </>
         )}
 

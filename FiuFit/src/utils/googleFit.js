@@ -69,7 +69,7 @@ export const getPermissions = async () => {
     let authResult = await GoogleFit.authorize(OPTIONS)  
     if (authResult.success) {
       console.log("AUTH_SUCCESS");
-      startRecordingAndObserveSteps()
+      //startRecordingAndObserveSteps()
       return true
     } else {
       console.log("AUTH_DENIED", authResult.message)
@@ -82,46 +82,23 @@ export const getPermissions = async () => {
 }
 
 
+function stepToCalorie(step) {
+  const calories = step * 0.04;
+  return calories;
+}
 
-// Detener la suscripción a los datos de pasos o calorías
-export const stopTracking = async () => {
-  try {
-    GoogleFit.unsubscribeListeners();
-    console.log('Suscripción detenida');
-  } catch (error) {
-    console.log('Error al detener la suscripción:', error);
-  }
-};
-
-// Obtener los datos de pasos o calorías actualizados
-export const getUpdatedData = async () => {
-  try {
-    const data = await GoogleFit.getDailyStepCountSamples(); // Obtener los datos de pasos actualizados
-    // const data = await GoogleFit.getDailyCalorieSamples(); // Obtener los datos de calorías actualizados
-
-    console.log('Datos actualizados:', data);
-    // Aquí puedes enviar los datos al backend o realizar otras acciones con ellos
-  } catch (error) {
-    console.log('Error al obtener los datos actualizados:', error);
-  }
-};
-
-const options = {
-  scopes: [
-    Scopes.FITNESS_ACTIVITY_READ,
-    Scopes.FITNESS_ACTIVITY_WRITE,
-    Scopes.FITNESS_BODY_READ,
-    Scopes.FITNESS_BODY_WRITE,
-  ],
-};
-
+function stepToKilometer(step) {
+  const meters = step * 0.76;
+  const kilometers = meters / 1000;
+  return kilometers;
+}
 
 export const startRecordingAndObserveSteps = () => {
 
   console.log('----------- startRecordingAndObserveSteps() -----------')
-  requestActivityPermission().then(() => {
-    GoogleFit.authorize(options)
-      .then((res) => {
+  //requestActivityPermission().then(() => {
+    //GoogleFit.authorize(options)
+      //.then((res) => {
         GoogleFit.startRecording(
           async data => {
             console.log('startRecording:data >>>', data)
@@ -166,11 +143,11 @@ export const startRecordingAndObserveSteps = () => {
           }
 
         });
-      })
-      .catch((err) => {
-        console.log('android getDailyStepCountSamples error >>> ', err)
-      });
-  });
+      //})
+      //.catch((err) => {
+      //  console.log('android getDailyStepCountSamples error >>> ', err)
+      //});
+  //});
 };
   
   export async function getSteps() {
@@ -201,26 +178,95 @@ export const startRecordingAndObserveSteps = () => {
   }
 
 
-  export async function getCalories() {
+
+  export async function getData() {
+    //const permission = await getPermissions()
+    //if (!permission) return 
     const start = new Date();
-    start.setHours(0, 0, 0, 0);
-    start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
+    //start.setHours(start.getHours() - 1 );
+    start.setMinutes(start.getMinutes() - 1 );
+    //start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
     console.log("start:",start)
     const end = new Date();
     console.log("end:",end)
     const options = {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
-      bucketUnit: BucketUnit.DAY, // NOSE QUE ES, JUGAR CON ESTO
+      bucketUnit: BucketUnit.SECOND, // NOSE QUE ES, JUGAR CON ESTO
       //bucketInterval: 15, // JUGAR CON ESOOO
     };
-    const result = await GoogleFit.getDailyCalorieSamples(options);
+    const result = await GoogleFit.getDailyStepCountSamples(options);
     console.log(JSON.stringify(result))
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );
-    
+    const steps = data.steps[0] && data.steps[0].value;
+    if (steps) {
+      return { steps };
+    }
+    return { steps: 0 };
   }
+
+
+  export async function getLastMonthSteps() {
+    //const permission = await getPermissions()
+    //if (!permission) return 
+    const start = new Date();
+    start.setDate(start.getDate() - 30); // Ultimo Mes
+    const end = new Date();
+    let steps = await getStepsByTime(start,end,BucketUnit.DAY,1)
+    return steps
+  }
+
+
+
+  export async function getLastWeekSteps() {
+    //const permission = await getPermissions()
+    //if (!permission) return 
+    const start = new Date();
+    start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
+    const end = new Date();
+    let steps = await getStepsByTime(start,end,BucketUnit.DAY,1)
+    return steps
+  }
+
+  export async function getLastDaySteps() {
+    //const permission = await getPermissions()
+    //if (!permission) return 
+    const start = new Date();
+    start.setDate(start.getDate() - 1); // DIA ANTERIOR
+    const end = new Date();
+    let steps = await getStepsByTime(start,end,BucketUnit.HOURS,1)
+    return steps
+  }
+
+  export function stepsToCalories(steps){
+    const calories = steps.map(step => stepToCalorie(step));
+    return calories
+  }
+
+  export function stepsToKilometers(steps){
+    const kilometers = steps.map(step => stepToKilometer(step));
+    return kilometers
+  }
+
+  async function getStepsByTime(start,end,unit,interval) {
+    const options = {
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+      bucketUnit:unit,
+      bucketInterval: interval,
+    }
+    const result = await GoogleFit.getDailyStepCountSamples(options); 
+    const data = result.find(
+      r => r.source === "com.google.android.gms:estimated_steps"
+    );
+    return data.steps
+  }
+
+
+
+
   
   
 /*

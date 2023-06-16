@@ -3,7 +3,7 @@ import { View, Button,Image,Dimensions,Platform,Text } from 'react-native';
 import CustomIconButton from '../../components/buttons/CustomIconButton';;
 import styles from '../../styles/styles';
 import FiuFitLogo from '../../../assets/images/fiticon.png';
-import { startTrackingSteps,startRecordingAndObserveSteps, getSteps ,  getCalories,stopTracking,getUpdatedData,getPermissions,disconnectGoogleFit,isGoogleAuthorized} from '../../utils/googleFit';
+import { getLastMonthSteps,  getSteps ,  getCalories,getData,getPermissions,disconnectGoogleFit,isGoogleAuthorized} from '../../utils/googleFit';
 import { WEB_CLIENT,ANDROID_ID,EXPO_CLIENT_ID} from '../../utils/constants';
 const {height} = Dimensions.get("window")
 
@@ -95,8 +95,7 @@ export default function App() {
         <CustomIconButton
             text="Get Data "
             onPress={async () => {
-              await getSteps()
-              await getCalories()
+              await getLastMonthSteps()
             }}
             bgColor="purple"
             fgColor="white"
