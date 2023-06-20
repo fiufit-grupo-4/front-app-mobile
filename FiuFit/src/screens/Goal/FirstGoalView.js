@@ -13,7 +13,6 @@ const FirstGoalView = ({item, user}) => {
                     <View key = {item.id} style={newstyles.container}>
                         <View style={newstyles.header}>
                             <Text style={newstyles.titulo}>{item.title}</Text>
-
                         </View>
                     </View>
                     <View style={styles.item}>
