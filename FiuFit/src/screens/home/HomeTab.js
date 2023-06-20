@@ -1,8 +1,7 @@
-import {View, Text,StyleSheet} from 'react-native';
-import Logo from '../../components/utils/Logo';
 import React, { useState,useEffect } from 'react';
-import { FlatList,ActivityIndicator,View,ScrollView, Text, StyleSheet,SafeAreaView, TextInput, Button } from 'react-native';
+import { FlatList,ActivityIndicator,View,ScrollView, Text, StyleSheet,SafeAreaView, TextInput, Button, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 import ListRecommended from './ListRecommended';
 import { getUser} from '../../utils/getters';
 import Client from '../../client/Client';
@@ -15,22 +14,6 @@ export const HomeTab = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const isFocused = useIsFocused();
-
-  const getDeviceToken = () => {
-    await requestUserPermission();
-    const token = await messaging().getToken();
-    fetch(url, {
-      method: 'PATCH',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + user.access_token,
-      },
-      body: JSON.stringify({
-          "devicetoken" : token
-      })
-    }).then((response) => {})
-    .catch((error) => {console.log(error)})
-  }
 
   useEffect(() => {
     async function getTrainings() {
@@ -48,9 +31,35 @@ export const HomeTab = () => {
             setError(true);
             setErrorMessage(error.toString());
         })
-        }
-        getDeviceToken();
-        getTrainings();
+      }
+    
+    getTrainings();
+    
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+      }
+    }
+
+    if (requestUserPermission()) {
+      messaging().getToken().then(token => { 
+        console.log(token);
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + user.access_token,
+          },
+          body: JSON.stringify({ "devicetoken" : token })
+        }).then((response) => {}).catch((error) => {console.log(error)})
+      })
+    };
+
+    return messaging().onMessage(async remoteMessage => { Alert.alert('New foreground message arrived', JSON.stringify(remoteMessage)) })
+
     }, [isFocused])
 
     return (
