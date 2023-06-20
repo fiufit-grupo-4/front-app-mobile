@@ -24,7 +24,7 @@ import GoogleRegister from '../screens/login/GoogleRegister';
 import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
-
+import TrainingStats from '../screens/training/TrainingStats';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +55,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
-
+                    <Stack.Screen name="Training Stats" component={TrainingStats}  />
                     <Stack.Screen name="View Goals" component={ViewGoal}  />
                     <Stack.Screen name="Goal Profile" component={GoalProfile}  />
                     <Stack.Screen name="Edit Goal" component={EditGoal}  />

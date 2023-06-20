@@ -1,14 +1,65 @@
-import {ScrollView, StyleSheet, TouchableOpacity, View, Text} from "react-native";
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View, Text,Share} from "react-native";
 import React, {useState} from "react";
 import {FontAwesome, Ionicons} from "@expo/vector-icons";
+import Client from "../../client/Client";
+import { getUser,getErrorMessage } from "../../utils/getters";
+import * as Sharing from 'expo-sharing';
+
 
 function GoalProfile({ route,  navigation }) {
     const {item, user} = route.params;
-    const [selectedPost, setSelectedPost] = useState(null);
+    const [state, setState] = useState(item.state);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
 
     const handleEditPress = () => {
         setSelectedPost(item);
         navigation.navigate('Edit Goal', { goal: item});
+    };
+
+    const handleStartPress = async () => {
+        setLoading(true)
+        setError(false)
+        let user = await getUser()
+        let response = await Client.startGoal(user.access_token,item.id)
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            setState(2)
+        }
+        
+    };
+
+    const handleStopPress = async () => {
+        setLoading(true)
+        setError(false)
+        let user = await getUser()
+        let response = await Client.stopGoal(user.access_token,item.id)
+        setLoading(false)
+        if (!response.ok) {
+            setError(true);
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            setState(4)
+        }
+        
+    };
+
+    const handleShare = async () => {
+        let message = `Congratulations! You have succesfully completed your goal ${item.title} `
+        try {
+            await Share.share({
+              message: message
+            });
+          } catch (error) {
+            setError(true);
+            setErrorMessage(error.message.toString())
+          }
+        
     };
 
     const getState = (state) => {
@@ -43,10 +94,47 @@ function GoalProfile({ route,  navigation }) {
                 <Text style={styles.description}>{item.progress_steps + "/" + item.quantity_steps}</Text>
 
                 <Text style={styles.descriptionTitle}>State</Text>
-                <Text style={styles.description}>{getState(item.state)}</Text>
+                <Text style={styles.description}>{getState(state)}</Text>
 
+                { item.training_id 
+                 ? <></>
+                 :loading 
+                    ?<View style={{marginTop:35, marginHorizontal: 40,marginBottom:32}}>
+                        <ActivityIndicator size="large" color = "black"/>
+                    </View>
+                    : 
+                    <View style={styles.buttonContainer}>
+                        { state == 1 && (
+                            <TouchableOpacity style={styles.buttonStart} onPress={handleStartPress}>
+                                <Text style={styles.buttonText}>Start</Text>
+                            </TouchableOpacity>
+                        )}
+                        { state == 2 && (
+                            <TouchableOpacity style={styles.buttonStop} onPress={handleStopPress}>
+                                <Text style={styles.buttonText}>Stop</Text>
+                            </TouchableOpacity>
+                        )}
+                        { state == 3 && (
+                            <TouchableOpacity style={styles.buttonShare} onPress={handleShare}>
+                                <Text style={styles.buttonText}>Share</Text>
+                            </TouchableOpacity>
+                        )} 
+
+                        { state == 4 && (
+                            <TouchableOpacity style={styles.buttonStart} onPress={handleStartPress}>
+                                <Text style={styles.buttonText}>Resume</Text>
+                            </TouchableOpacity>
+                        )}                
+                    </View>
+                }
+
+                
                
-
+                {error && (
+                    <View style = {{alignItems:"center",marginTop:15}}>
+                        <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                    </View>
+                )}
             </View>
         </View>
     );
@@ -124,6 +212,45 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginLeft:10,
         marginRight:20
+    },
+    buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:20,
+        marginTop:20,
+        width:"90%",
+        alignSelf:"center"
+    },
+    buttonText: {
+        fontSize: 18,
+        color: 'white',
+        textAlign: 'center',
+        fontWeight:"bold"
+    },
+    buttonStart: {
+        backgroundColor: 'orange',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    buttonStop: {
+        backgroundColor: 'crimson',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    buttonShare: {
+        backgroundColor: 'black',
+        flex: 1,
+        margin: 10,
+        padding: 10,
+        borderRadius: 10,
+        alignItems: 'center',
     },
 });
 

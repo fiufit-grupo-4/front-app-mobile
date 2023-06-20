@@ -1,32 +1,87 @@
-import {Image, Text, View, TouchableOpacity, StyleSheet} from "react-native";
+import {Image, Text, View, TouchableOpacity, StyleSheet,ActivityIndicator} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
-import React from "react";
+import React, {useState} from "react";
 import { TRAINER } from "../../utils/constants";
 import {editPostDots,viewPostStats} from "./EditTrainingButton";
-export function topContent(canEdit, handleEdit, item,role) {
+import Client from "../../client/Client";
+import { getUser } from "../../utils/getters";
+
+
+export function topContent(canEdit, handleEdit, item,user) {
+    const [state, setState] = useState(item.state);
+    const [loading, setLoading] = useState(false);
+
+    const handleStartPress = async () => {
+        setLoading(true)
+        let user = await getUser()
+        let response = await Client.startTraining(user.access_token,item.id)
+        setLoading(false)
+        if (!response.ok) {
+            console.log(response.status)
+        } else {
+            setState("INIT")
+        }
+        
+    };
+
+    const handleStopPress = async () => {
+        setLoading(true)
+        let user = await getUser()
+        let response = await Client.stopTraining(user.access_token,item.id)
+        setLoading(false)
+        if (!response.ok) {
+            console.log(response.status)
+        } else {
+            setState("STOP")
+        }
+        
+    };
+
+
     return <View style={styles.topContent}>
         {topBarPost(item)}
         
-            {role != TRAINER && (
-                <>
-                {/* 
-                    <TouchableOpacity onPress={() => (console.log("started"))}
-                    style={{marginLeft:130}}    >
-                        <Ionicons name = "stats-chart-outline"  style={{fontSize: 20, padding: 7, alignItems: 'center'}}></Ionicons>
-                    </TouchableOpacity>*/}
-                <TouchableOpacity onPress={() => (console.log("started"))}
-                    style={styles.button}>
-                    <Text style={{fontSize:18,fontWeight:"bold",color:"white"}}>
-                        Start
-                    </Text> 
-                </TouchableOpacity>
+            {user.role != TRAINER && (
+                <> 
+                { loading 
+                  ? <View style = {styles.buttonStart}> 
+                        <ActivityIndicator size = "small" color = "white"></ActivityIndicator>
+                    </View>
+                  : <>
+                  { state == "NOT_INIT" && (
+                    <TouchableOpacity style={styles.buttonStart} onPress={handleStartPress}>
+                        <Text style={styles.buttonText}>Start</Text>
+                    </TouchableOpacity>
+                    )}
+                    { state == "INIT" && (
+                        <TouchableOpacity style={styles.buttonStop} onPress={handleStopPress}>
+                            <Text style={styles.buttonText}>Stop</Text>
+                        </TouchableOpacity>
+                    )}
+
+                    { state == "STOP" && (
+                        <TouchableOpacity style={styles.buttonStart} onPress={handleStartPress}>
+                            <Text style={styles.buttonText}>Resume</Text>
+                        </TouchableOpacity>
+                    )}
+
+                    { state == "COMPLETE" && (
+                        <View style={styles.stats}>
+                            <Ionicons name={'checkbox-outline'} style={styles.icon}/>
+                        </View>
+                    )}
+                  </>
+                }
+
+
+                
                 
                 
                 </>
             )}
             
 
-            {viewPostStats(canEdit, handleEdit, item)}
+            {viewPostStats(canEdit, item)}
             {editPostDots(canEdit, handleEdit, item)}
         </View>;
 }
@@ -69,17 +124,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    place: {
-        flex:1,
-        fontSize: 13,
-        color: 'rgba(32,38,70,0.63)'
-    },
-    placeIcon: {
-        fontSize: 12,
-        marginLeft:30,
-        color : 'rgba(91,99,95,0.77)',
-    },
-    button:{
+
+    buttonStart:{
         backgroundColor:"orange",
         paddingHorizontal:5,
         paddingVertical:2,
@@ -89,7 +135,35 @@ const styles = StyleSheet.create({
         width:"25%",
         alignSelf:"center",
         justifyContent:"center",
-        marginRight:10,
-        
+        marginRight:10,   
     },
+
+    buttonStop:{
+        backgroundColor:"crimson",
+        paddingHorizontal:5,
+        paddingVertical:2,
+        marginVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+        width:"25%",
+        alignSelf:"center",
+        justifyContent:"center",
+        marginRight:10,   
+    },
+    buttonText: {fontSize:18,fontWeight:"bold",color:"white"},
+    icon: {
+        fontSize: 28, 
+        color : 'green',
+    },
+    edit: {
+        flexDirection: 'row',
+        padding: 5,
+    },
+    stats: {
+        position: 'absolute',
+        top: -5,
+        right: 0,
+        padding:5
+    }
+
 });

@@ -227,6 +227,68 @@ class ApiClient {
     }
 
 
+    async startGoal(access_token,goal_id){
+      const url = API_GATEWAY + 'athletes/me/goals/' + goal_id + '/start'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
+    async stopGoal(access_token,goal_id){
+      const url = API_GATEWAY + 'athletes/me/goals/' + goal_id + '/stop'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
+
+    async startTraining(access_token,id){
+      const url = API_GATEWAY + 'athletes/me/trainings/' + id + '/start'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
+    async stopTraining(access_token,id){
+      const url = API_GATEWAY + 'athletes/me/trainings/' + id + '/stop'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
+    async getTrainingStats(access_token,id){
+      const url = API_GATEWAY + 'trainings/' + id + '/statistics'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
+
     async createNewPost(access_token,title,description,type,difficulty,media,goals){
       let url = API_GATEWAY + "trainers/me/trainings"
       let response = await fetch(url, {

@@ -7,76 +7,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { getUser} from "../../utils/getters";
 import Client from "../../client/Client";
 
-
-const GOALS = [
-    {
-        "id": "1",
-        "title": "Caminata",
-        "description": "Caminar por palermo 1 hora, haciendo dos breves pausas de 5 minutos. ",
-        "metric": "Distancia recorrida",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 10,
-        "progress": 2,
-        "state":2,
-        "difficulty": 2,
-    },
-    {
-        "id":"2",
-        "title": "Caminata",
-        "description": "Caminar por palermo 5 hora",
-        "metric": "Distancia recorrida",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 5,
-        "progress": 2,
-        "state":2,
-        "difficulty": 3,
-    },
-    {
-        "id":"3",
-        "title": "Abdominales",
-        "description": "1.30 de abs.",
-        "metric": "Calorias utilizadas",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 2,
-        "progress": 2,
-        "state":3,
-        "difficulty": 4,
-    },
-    {
-        "id":"4",
-        "title": "GAP",
-        "description": "abs ggggggg oppp ",
-        "metric": "Calorias utilizadas",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 1,
-        "progress": 1,
-        "state":3,
-        "difficulty": 4,
-    },
-    {
-        "id":"5",
-        "title": "GAPX2",
-        "description": "abs ggggggg oppp ",
-        "metric": "Calorias utilizadas",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 100,
-        "progress": 80,
-        "state":2,
-        "difficulty": 5,
-    },
-    {
-        "id":"42",
-        "title": "GAPX2",
-        "description": "abs ggggggg oppp ",
-        "metric": "Calorias utilizadas",
-        "limit_time": "2023-07-08T15:26:20.558Z",
-        "quantity": 100,
-        "progress": 80,
-        "state":2,
-        "difficulty": 5,
-    },
-]
-
 const GoalsScreen = () => {
     const isFocused = useIsFocused();
     const [user, setUser] = useState();
@@ -112,6 +42,7 @@ const GoalsScreen = () => {
         <View>
             <View style={styles.container}>
                 <Text style={styles.title}> {"Goals "}</Text>
+               
                     { loading 
                         ? <View style={{marginTop:250, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                             <ActivityIndicator size="large" color = "black"/>
@@ -124,7 +55,7 @@ const GoalsScreen = () => {
                                     <Text style = {{fontSize:18}}> You don´t have any Goals yet </Text>
                                  </View>
                                : 
-                                <View style={{padding:5,}}>
+                                <View style={{padding:5,maxHeight:"93%"}}>
                                     <FlatList
                                         data={goals}
                                         keyExtractor={(goalItem) => goalItem.id}
@@ -144,6 +75,7 @@ const GoalsScreen = () => {
                             )}
                         </>
                     }
+                   
             </View>
         </View>
     )

@@ -26,6 +26,7 @@ export const CreateGoal = ({ navigation }) => {
     let limit_default = new Date()
     limit_default.setMonth(limit_default.getMonth()+12)
     const [limit, setLimit] = useState(limit_default);
+    const [select, setSelect] = useState(false);
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ export const CreateGoal = ({ navigation }) => {
         setLoading(false);
         setError(false);
         setErrorMessage("");
+        setSelect(false)
     }
 
     const createGoal = async () => {
@@ -136,13 +138,14 @@ export const CreateGoal = ({ navigation }) => {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ () => {setOpen(true)}}>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ () => {
+                            setOpen(true)
+                            setSelect(true)
+                            }}>
                             <Ionicons name="md-calendar-outline" size={24} color="#A6A6A6" style={styles.icon}/> 
-                            {/* limit == limit_default || !limit 
+                            { !select
                               ? <Text style={styles.input}> Select Limit Date (Optional)</Text>
-                              : <Text style={styles.input}> {limit.toISOString().slice(0,10)} </Text>
-                                */}
-                            <Text style={styles.input}> {"Limit time: " + limit.toISOString().slice(0,10)} </Text>
+                              : <Text style={styles.input}> {"Limit time: " + limit.toISOString().slice(0,10)} </Text>}
                         </TouchableOpacity>
                     </View>
 

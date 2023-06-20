@@ -271,9 +271,7 @@ const Training = ({user, item, canEdit, reload, fav = false}) => {
             <View style={styles.postContainer}>
                 <View style={styles.postBackground}>
 
-                    {topContent(canEdit, handleEdit, item,user.role)}
-
-                    {/*{trainingPlace(item)}*/}
+                    {topContent(canEdit, handleEdit, item,user)}
 
                     <View style={{padding: 5}}>
                         <Text style={{borderTopWidth: 1,borderTopColor: 'orange',color: 'rgba(23,29,52,0.76)'}}></Text>

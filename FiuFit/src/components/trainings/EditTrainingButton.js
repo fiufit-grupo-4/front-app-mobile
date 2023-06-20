@@ -1,7 +1,8 @@
 import {StyleSheet, Text, View,TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
 import React from "react";
-import CustomIconButton from "../buttons/CustomIconButton";
+import {useNavigation} from "@react-navigation/native";
+
 
 export function editPostDots(canEdit, handleEdit, item) {
     return <>
@@ -17,9 +18,10 @@ export function editPostDots(canEdit, handleEdit, item) {
     </>;
 }
 
-export function viewPostStats(canEdit, handleStats, item) {
+export function viewPostStats(canEdit, item) {
+    const navigation = useNavigation();
     return <>
-        {canEdit && <TouchableOpacity onPress={() => handleStats(item)}>
+        {canEdit && <TouchableOpacity onPress={() =>  navigation.navigate('Training Stats', {item: item})}>
             <View style={styles.stats}>
                 <Ionicons name={'md-analytics-outline'} size={26} color= {"#32CD32"}/>
             </View>
