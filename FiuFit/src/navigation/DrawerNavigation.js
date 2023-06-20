@@ -14,6 +14,7 @@ import CreateTraining from "../screens/training/CreateTraining";
 import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
+import NotificationScreen from "../screens/Notificaciones/NotificationScreen";
 
 
 const Drawer = createDrawerNavigator();
@@ -142,6 +143,21 @@ function DrawerComponent() {
                 />    
             </>
         )}
+
+
+            <Drawer.Screen
+                name="         Notifications"
+                color="#F0A500"
+                component={NotificationScreen}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="bells"
+                        />
+                    ),
+                    headerShown: true,
+                })}
+            />
 
 
             <Drawer.Screen
