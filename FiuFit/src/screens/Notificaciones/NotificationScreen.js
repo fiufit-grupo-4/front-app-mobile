@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
     },
     title:{
         fontSize:20,
-        color: 'rgba(32,38,70,0.91)'
+        color: 'rgba(32,38,70,0.91)',
+        marginBottom:10,
     },
     notificationItem: {
         padding: 10,
