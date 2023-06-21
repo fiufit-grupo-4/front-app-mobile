@@ -26,6 +26,7 @@ import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
 import TrainingStats from '../screens/training/TrainingStats';
 import InterestsScreen from '../screens/profile/InterestScreen';
+import StartedTraining from '../screens/training/StartedTraining';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Edit Training" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
+                    <Stack.Screen name="Training Goal Profile" component={StartedTraining}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
                     <Stack.Screen name="Training Stats" component={TrainingStats}  />

@@ -14,8 +14,13 @@ function GoalProfile({ route,  navigation }) {
 
 
     const handleEditPress = () => {
-        setSelectedPost(item);
+        
         navigation.navigate('Edit Goal', { goal: item});
+    };
+
+    const handleViewTraining = () => {
+        
+        navigation.navigate('Training Goal Profile', { id: item.training_id });
     };
 
     const handleStartPress = async () => {
@@ -96,7 +101,11 @@ function GoalProfile({ route,  navigation }) {
                 <Text style={styles.description}>{getState(state)}</Text>
 
                 { item.training_id 
-                 ? <></>
+                 ? <View style={styles.buttonContainer}>                 
+                    <TouchableOpacity style={styles.buttonShare} onPress={handleViewTraining}>
+                        <Text style={styles.buttonText}>View Training</Text>
+                    </TouchableOpacity>
+                  </View>
                  :loading 
                     ?<View style={{marginTop:35, marginHorizontal: 40,marginBottom:32}}>
                         <ActivityIndicator size="large" color = "black"/>
