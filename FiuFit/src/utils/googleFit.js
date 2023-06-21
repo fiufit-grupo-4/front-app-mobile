@@ -151,8 +151,8 @@ export const startRecordingAndObserveSteps = () => {
 };
   
   export async function getSteps() {
-    //const permission = await getPermissions()
-    //if (!permission) return 
+    const permission = await getPermissions()
+    if (!permission) return 
     const start = new Date();
     start.setHours(0, 0, 0, 0);
     start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
@@ -180,8 +180,8 @@ export const startRecordingAndObserveSteps = () => {
 
 
   export async function getData() {
-    //const permission = await getPermissions()
-    //if (!permission) return 
+    const permission = await getPermissions()
+    if (!permission) return 
     const start = new Date();
     //start.setHours(start.getHours() - 1 );
     start.setMinutes(start.getMinutes() - 1 );
@@ -209,8 +209,8 @@ export const startRecordingAndObserveSteps = () => {
 
 
   export async function getLastMonthSteps() {
-    //const permission = await getPermissions()
-    //if (!permission) return 
+    const permission = await getPermissions()
+    if (!permission) return 
     const start = new Date();
     start.setDate(start.getDate() - 30); // Ultimo Mes
     const end = new Date();
@@ -221,8 +221,8 @@ export const startRecordingAndObserveSteps = () => {
 
 
   export async function getLastWeekSteps() {
-    //const permission = await getPermissions()
-    //if (!permission) return 
+    const permission = await getPermissions()
+    if (!permission) return 
     const start = new Date();
     start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
     const end = new Date();
@@ -231,8 +231,8 @@ export const startRecordingAndObserveSteps = () => {
   }
 
   export async function getLastDaySteps() {
-    //const permission = await getPermissions()
-    //if (!permission) return 
+    const permission = await getPermissions()
+    if (!permission) return 
     const start = new Date();
     start.setHours(start.getHours() - 24); // DIA ANTERIOR
     const end = new Date();
@@ -259,7 +259,7 @@ export const startRecordingAndObserveSteps = () => {
       bucketInterval: interval,
     }
     const result = await GoogleFit.getDailyStepCountSamples(options); 
-    
+    //console.log(JSON.stringify(result))
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );

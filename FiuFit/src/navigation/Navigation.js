@@ -25,6 +25,7 @@ import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
 import TrainingStats from '../screens/training/TrainingStats';
+import InterestsScreen from '../screens/profile/InterestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +36,7 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                
+                    
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="GoogleSignUp" component={GoogleRegister} options={{ headerShown: false }} />  
@@ -43,7 +44,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
-                
+                    <Stack.Screen name="Interests" component={InterestsScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
                     <Stack.Screen name="Profile" component={MenuProfileScreen} />

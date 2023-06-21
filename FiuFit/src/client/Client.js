@@ -288,6 +288,33 @@ class ApiClient {
       return response
     }
 
+    async setInterests(access_token,interests){
+      const url = API_GATEWAY + 'users/me/interest'
+      let response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        },
+        body: JSON.stringify({       
+          "interest": interests,
+      })
+      })
+      return response
+    }
+
+    async getInterests(access_token){
+      const url = API_GATEWAY + 'users/me/interest'
+      let response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + access_token,
+        }
+      })
+      return response
+    }
+
 
     async createNewPost(access_token,title,description,type,difficulty,media,goals){
       let url = API_GATEWAY + "trainers/me/trainings"

@@ -57,7 +57,8 @@ const SignInScreen = () => {
                 console.log(user_info)
                 await AsyncStorage.setItem(USER,user_info)
                 setLoading(false)
-                navigation.navigate("Inicio")
+                if (!user_info.first_login) navigation.navigate("Inicio")
+                else navigation.navigate("Interests",{ user: response})
             })
             .catch(error => {
                 setLoading(false)

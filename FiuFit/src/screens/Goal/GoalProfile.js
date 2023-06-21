@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import {FontAwesome, Ionicons} from "@expo/vector-icons";
 import Client from "../../client/Client";
 import { getUser,getErrorMessage } from "../../utils/getters";
-import * as Sharing from 'expo-sharing';
 
 
 function GoalProfile({ route,  navigation }) {

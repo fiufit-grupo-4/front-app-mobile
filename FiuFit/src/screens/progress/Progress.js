@@ -58,7 +58,6 @@ export const Progress = () => {
             let userInfo = await getUser()
             Client.getGoals(userInfo.access_token).then((data) => {
                 setGoals(data)
-                console.log(data)
                 setLoading(false)
             }).catch((error) => {
                 setError(true);

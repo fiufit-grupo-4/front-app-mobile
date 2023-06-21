@@ -18,6 +18,7 @@ import GoalsScreen from "../screens/Goal/GoalsScreen";
 import TrainingsHome from "../screens/training/TrainingsHome";
 import { useIsFocused } from "@react-navigation/native";
 import Progress from "../screens/progress/Progress";
+import InterestHome from "../screens/profile/InterestHome";
 
 const Drawer = createDrawerNavigator();
 
@@ -205,6 +206,21 @@ function DrawerComponent() {
             />
             </>
         )}  
+
+        <Drawer.Screen
+            name="        Interests"
+            color="#F0A500"
+            component={InterestHome}
+            initialParams={ {user: userInfo} }
+            options={() => ({
+                drawerIcon: () => (
+                    <Ionicons name="basketball-outline"
+                    size={14}
+                    />
+                ),
+                headerShown: true,
+            })}
+        />
 
 
         <Drawer.Screen
