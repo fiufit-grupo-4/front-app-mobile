@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {FontAwesome, Ionicons} from "@expo/vector-icons";
 
 function GoalProfile({ route }) {
-    const {item, user, navigation} = route.params;
+    const {item, navigation} = route.params;
     const [selectedPost, setSelectedPost] = useState(null);
 
     const handleEditPress = () => {

@@ -11,7 +11,7 @@ const MessageScreen = () => {
 
     const participants = [
         {
-            "id": "1",
+            "id": 1,
             "name": "John Doe"
         },
         {
@@ -23,22 +23,22 @@ const MessageScreen = () => {
     const messages = [
         {
             "id": 1,
-            "sender": 1,
-            "receiver": 2,
+            "senderId": 1,
+            "receiverId": 2,
             "content": "Hey Jane, how are you?",
             "timestamp": "2023-06-19T12:30:45Z"
         },
         {
             "id": 2,
-            "sender": 2,
-            "receiver": 1,
+            "senderId": 2,
+            "receiverId": 1,
             "content": "Hi John! I'm doing well, thanks. How about you?",
             "timestamp": "2023-06-19T12:35:20Z"
         },
         {
             "id": 3,
-            "sender": 1,
-            "receiver": 2,
+            "senderId": 1,
+            "receiverId": 2,
             "content": "I'm good too! Just working on a project.",
             "timestamp": "2023-06-19T12:38:10Z"
         }

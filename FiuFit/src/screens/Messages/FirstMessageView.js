@@ -2,6 +2,7 @@ import axios from "axios";
 import React, {useState} from "react";
 import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
+import {FontAwesome} from "@expo/vector-icons";
 
 
 const FirstMessageView = ({item}) => {
@@ -13,6 +14,7 @@ const FirstMessageView = ({item}) => {
                     <View key = {item.id} style={styles.container}>
                         <View style={styles.header}>
                             <Text style={styles.titulo}>{item.name}</Text>
+                            <Ionicons name="mail" size={20} style={styles.icon} />
                         </View>
                     </View>
 
@@ -36,8 +38,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     icon: {
-        fontSize: 12,
-        color: 'rgba(32,38,70,0.63)',
+        color: "rgb(255,164,92)"
     },
     container: {
         backgroundColor: '#ffffff',
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     titulo: {

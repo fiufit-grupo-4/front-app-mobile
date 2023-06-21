@@ -6,6 +6,7 @@ import FirstMessageView from "./FirstMessageView";
 function MessageListItem({item, messages}) {
     const navigation = useNavigation();
 
+    //TODO PASAR LOS MSJ CON ESA PERSONA
     function handleOnPress() {
         navigation.navigate("Message Chat", { item, messages });
     }

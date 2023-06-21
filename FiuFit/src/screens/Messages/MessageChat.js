@@ -1,27 +1,60 @@
-import {ScrollView, StyleSheet, TouchableOpacity, View, Text, FlatList} from "react-native";
+import {
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+    Text,
+    FlatList,
+    TextInput,
+    TouchableWithoutFeedback, Modal
+} from "react-native";
 import React, {useState} from "react";
+import {Ionicons} from "react-native-vector-icons";
+
+function handleAddMessage() {
+
+}
 
 function MessageChat({ route }) {
     const {item, messages} = route.params;
+    const senderId = item.id;
 
     const renderMessage = ({ item }) => {
-        const sender = item.find((participant) => participant.id === item.sender);
+        const messageSenderId = item.senderId;
+
         return (
-            <View style={styles.messageContainer}>
-                <Text style={styles.sender}>{sender.name}</Text>
-                <Text style={styles.messageContent}>{item.content}</Text>
+            <View style={(senderId === messageSenderId) ? styles.messageContainerSender : styles.messageContainerReceiver}>
+
+                <Text style={(senderId === messageSenderId) ? styles.messageContentSender : styles.messageContentReceiver}>{item.content}</Text>
             </View>
         );
     };
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={messages}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderMessage}
-            />
-        </View>
+        <Modal>
+            <ScrollView>
+                <View style={styles.container}>
+                    <FlatList
+                        data={messages}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderMessage}
+                    />
+                </View>
+            </ScrollView>
+
+            {/* NUEVO COMENTARIO */}
+            <View style={styles.newComment}>
+                <TextInput
+                    style={styles.commentInput}
+                    placeholder="New message..."
+                    //onChangeText={(text) => setCommentText(text)}
+                    //value={commentText}
+                />
+                <TouchableWithoutFeedback onPress={handleAddMessage}>
+                    <Ionicons name={'send-outline'} style={styles.sendCommentIcon}/>
+                </TouchableWithoutFeedback>
+            </View>
+        </Modal>
     );
 };
 
@@ -30,14 +63,58 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
-    messageContainer: {
+    messageContainerSender: {
         marginBottom: 10,
+        marginRight:70,
+        marginVertical:5,
+        backgroundColor: 'rgba(109,190,255,0.4)',
+        borderRadius:20,
+    },
+    messageContainerReceiver: {
+        marginBottom: 10,
+        marginLeft:70,
+        marginVertical:5,
+        backgroundColor: 'rgba(0,0,0,0.11)',
+        borderRadius:20,
     },
     sender: {
         fontWeight: 'bold',
     },
-    messageContent: {
-        marginLeft: 10,
+    messageContentReceiver:{
+        marginLeft: 7,
+        marginRight: 20,
+        minHeight:20,
+        marginVertical:3
     },
+    messageContentSender: {
+        marginLeft: 7,
+        marginRight: 20,
+        minHeight:20,
+        marginVertical:3
+    },
+    newComment: {
+        flexDirection: 'row',
+        padding:1,
+        borderRadius: 20,
+        backgroundColor: '#ffffff',
+    },
+    commentInput: {
+        minHeight: 20,
+        flex: 1,
+        marginRight: 10,
+        marginLeft:10,
+        padding:10,
+        marginTop:20,
+    },
+    sendCommentIcon:{
+        fontSize:20,
+        marginVertical:40,
+        marginRight: 18,
+        alignSelf: 'flex-end',
+    },
+    commentButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    }
 });
 export default MessageChat;
