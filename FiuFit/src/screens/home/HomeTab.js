@@ -1,12 +1,11 @@
-
-import Logo from '../../components/utils/Logo';
 import React, { useState,useEffect } from 'react';
-import { FlatList,ActivityIndicator,View,ScrollView, Text, StyleSheet,SafeAreaView, TextInput, Button } from 'react-native';
+import { API_GATEWAY } from '../../utils/constants';
+import { FlatList,ActivityIndicator,View,ScrollView, Text, StyleSheet,SafeAreaView, TextInput, Button, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 import ListRecommended from './ListRecommended';
 import { getUser} from '../../utils/getters';
 import Client from '../../client/Client';
-
 
 export const HomeTab = () => {
   const [recommendedTrainings,setRecommendedTrainings] =  useState([]);
@@ -33,10 +32,41 @@ export const HomeTab = () => {
             setError(true);
             setErrorMessage(error.toString());
         })
-        }
-        getTrainings();
-    }, [isFocused])
+      }
+    
+    getTrainings();
+    
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+      }
+    }
 
+    if (requestUserPermission()) {
+      messaging().getToken().then(async token => { 
+        let userInfo = await getUser();
+        let url = API_GATEWAY + 'users/' + userInfo.id;
+        console.log(token);
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + userInfo.access_token,
+          },
+          body: JSON.stringify({ "device_token" : token })
+        }).then((response) => {}).catch((error) => {console.log(error)})
+      })
+    };
+
+    return messaging().onMessage(async remoteMessage => { 
+      console.log(JSON.stringify(remoteMessage));
+      //Alert.alert('New foreground message arrived', JSON.stringify(remoteMessage)) 
+    })
+
+    }, [isFocused])
 
     return (
         <View style ={styles.root}>
