@@ -7,7 +7,8 @@ import 'expo-dev-client';
 import { PermissionsAndroid } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import {API_GATEWAY} from "./constants"
 
 ///////// GOOGLE FIT /////////////
 export const OPTIONS = {
@@ -69,7 +70,25 @@ export const getPermissions = async () => {
     let authResult = await GoogleFit.authorize(OPTIONS)  
     if (authResult.success) {
       console.log("AUTH_SUCCESS");
-      //startRecordingAndObserveSteps()
+      return true
+    } else {
+      console.log("AUTH_DENIED", authResult.message)
+      return false
+    }
+  } catch{
+    console.log(err);
+    return false
+  }
+}
+
+export const getPermissionsAndObserve = async () => {
+  try{
+    let permissions = await requestActivityPermission()
+    if (!permissions) return false
+    let authResult = await GoogleFit.authorize(OPTIONS)  
+    if (authResult.success) {
+      console.log("AUTH_SUCCESS");
+      startRecordingAndObserveSteps()
       return true
     } else {
       console.log("AUTH_DENIED", authResult.message)
@@ -104,38 +123,25 @@ export const startRecordingAndObserveSteps = () => {
             console.log('startRecording:data >>>', data)
             const steps = await getSteps();
             console.log("Recording Steps: ", steps.steps);
-            console.log("AsyncStorage Steps: ", (await AsyncStorage.getItem('steps')));
-            if (steps.steps != Number(await AsyncStorage.getItem('steps'))) {
-              await AsyncStorage.setItem('steps', String(steps.steps));
-              const url = "https://api-gateway-fiufit.herokuapp.com/xd/" + steps.steps
-
-              let response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-              console.log("[FETCH-startRecording] response status: ", response.status);
-
-            }
           },
           ["step"]
         );
-        // esto se llama siempre, en cada reload de la app creo.. si ya tenia un Observer, no haria fallta llamarlo de nuevo??
+        
         GoogleFit.observeSteps(async result => {
           console.log('observeSteps:result >>>', result)
           const steps = await getSteps();
-          console.log("Observe Steps: ", steps);
-
-          if (steps.steps !== Number(await AsyncStorage.getItem('steps'))) {
-            await AsyncStorage.setItem('steps', String(steps.steps));
-            const url = "https://api-gateway-fiufit.herokuapp.com/xd/" + steps.steps
-
+          console.log("Observe Steps: ", steps.steps);
+          if (steps.steps !== 0) {
+            const url = API + "athletes/me/goals/progress_steps"
             let response = await fetch(url, {
-              method: 'GET',
+              method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
+              body: JSON.stringify({
+                "progress_steps": steps.steps
+              })
+
             })
             console.log("[FETCH-observeSteps] response status: ", response.status);
           }else{
@@ -154,46 +160,15 @@ export const startRecordingAndObserveSteps = () => {
     const permission = await getPermissions()
     if (!permission) return 
     const start = new Date();
-    start.setHours(0, 0, 0, 0);
-    start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
+    start.setSeconds(start.getSeconds()- 2)
     console.log("start:",start)
     const end = new Date();
     console.log("end:",end)
     const options = {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
-      bucketUnit: BucketUnit.DAY, // NOSE QUE ES, JUGAR CON ESTO
-      //bucketInterval: 15, // JUGAR CON ESOOO
-    };
-    const result = await GoogleFit.getDailyStepCountSamples(options);
-    console.log(JSON.stringify(result))
-    const data = result.find(
-      r => r.source === "com.google.android.gms:estimated_steps"
-    );
-    const steps = data.steps[0] && data.steps[0].value;
-    if (steps) {
-      return { steps };
-    }
-    return { steps: 0 };
-  }
-
-
-
-  export async function getData() {
-    const permission = await getPermissions()
-    if (!permission) return 
-    const start = new Date();
-    //start.setHours(start.getHours() - 1 );
-    start.setMinutes(start.getMinutes() - 1 );
-    //start.setDate(start.getDate() - 7); // SEMANA ANTERIOR
-    console.log("start:",start)
-    const end = new Date();
-    console.log("end:",end)
-    const options = {
-      startDate: start.toISOString(),
-      endDate: end.toISOString(),
-      bucketUnit: BucketUnit.SECOND, // NOSE QUE ES, JUGAR CON ESTO
-      //bucketInterval: 15, // JUGAR CON ESOOO
+      bucketUnit: BucketUnit.SECOND, 
+      bucketInterval: 1,
     };
     const result = await GoogleFit.getDailyStepCountSamples(options);
     console.log(JSON.stringify(result))
@@ -214,7 +189,7 @@ export const startRecordingAndObserveSteps = () => {
     const start = new Date();
     start.setDate(start.getDate() - 30); // Ultimo Mes
     const end = new Date();
-    let steps = await getStepsByTime(start,end,BucketUnit.DAY,1)
+    let steps = await getStepsByTime(start,end,BucketUnit.DAY,7)
     return steps
   }
 
@@ -230,15 +205,42 @@ export const startRecordingAndObserveSteps = () => {
     return steps
   }
 
+  export async function getLastHourSteps() {
+    const permission = await getPermissions()
+    if (!permission) return 
+    const start = new Date();
+    start.setHours(start.getHours() - 1); // SEMANA ANTERIOR
+    const end = new Date();
+    let steps = await getInfoByTime(start,end,BucketUnit.MINUTE,1)
+    const data = steps.find(
+      r => r.source === "com.google.android.gms:estimated_steps"
+    );
+
+    let info =  data.rawSteps.map(obj => ({
+      steps: obj.steps,
+      time: new Date(obj.startDate).toISOString()
+    }));
+    console.log(info)
+    return data.steps
+  }
+
   export async function getLastDaySteps() {
     const permission = await getPermissions()
     if (!permission) return 
     const start = new Date();
     start.setHours(start.getHours() - 24); // DIA ANTERIOR
     const end = new Date();
-    let steps = await getStepsByTime(start,end,BucketUnit.HOUR,1)
-    
-    return steps
+    let steps = await getInfoByTime(start,end,BucketUnit.HOUR,1)
+    const data = steps.find(
+      r => r.source === "com.google.android.gms:estimated_steps"
+    );
+    let info =  data.rawSteps.map(obj => ({
+      steps: obj.steps,
+      time: new Date(obj.startDate).toISOString()
+    }));
+    console.log(info)
+    return data.steps
+
   }
 
   export function stepsToCalories(steps ){
@@ -252,6 +254,8 @@ export const startRecordingAndObserveSteps = () => {
   }
 
   async function getStepsByTime(start,end,unit,interval) {
+    console.log("start:",start)
+    console.log("end:",end)
     const options = {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
@@ -259,12 +263,25 @@ export const startRecordingAndObserveSteps = () => {
       bucketInterval: interval,
     }
     const result = await GoogleFit.getDailyStepCountSamples(options); 
-    //console.log(JSON.stringify(result))
+    console.log(JSON.stringify(result))
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );
     
     return data.steps
+  }
+
+  async function getInfoByTime(start,end,unit,interval) {
+    console.log("start:",start)
+    console.log("end:",end)
+    const options = {
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+      bucketUnit:unit,
+      bucketInterval: interval,
+    }
+    const result = await GoogleFit.getDailyStepCountSamples(options);  
+    return result
   }
 
 

@@ -3,8 +3,7 @@ import { View, Button,Image,Dimensions,Platform,Text } from 'react-native';
 import CustomIconButton from '../../components/buttons/CustomIconButton';;
 import styles from '../../styles/styles';
 import FiuFitLogo from '../../../assets/images/fiticon.png';
-import { getLastMonthSteps,  getSteps ,  getCalories,getData,getPermissions,disconnectGoogleFit,isGoogleAuthorized} from '../../utils/googleFit';
-import { WEB_CLIENT,ANDROID_ID,EXPO_CLIENT_ID} from '../../utils/constants';
+import {  getPermissionsAndObserve , getLastHourSteps, getLastDaySteps,getLastWeekSteps,getLastMonthSteps,disconnectGoogleFit,isGoogleAuthorized} from '../../utils/googleFit';
 const {height} = Dimensions.get("window")
 
 export default function App() { 
@@ -34,7 +33,7 @@ export default function App() {
         <CustomIconButton
             text="Authorize Google Fit "
             onPress={async () => {
-              let result = await getPermissions()
+              let result = await getPermissionsAndObserve()
               console.log(result)
             }}
             bgColor="crimson"
@@ -43,19 +42,26 @@ export default function App() {
             iconColor="white"
         />
 
-         {/* 
+          
 
         <CustomIconButton
-            text="Start tracking "
+            text="Get Steps "
             onPress={async () => {
-              await startTrackingSteps()
+              console.log("----- Last Day -----")
+              await getLastDaySteps()
+              console.log("----- Last Month -----")
+              await getLastMonthSteps()
+              console.log("----- Last Week -----")
+              await getLastWeekSteps()
+              console.log("----- Last Hour -----")
+              await getLastHourSteps()
             }}
             bgColor="orange"
             fgColor="white"
             icon= "logo-google"
             iconColor="white"
         />
-
+{/*
         <CustomIconButton
             text="Start observe tracking "
             onPress={async () => {
