@@ -54,7 +54,6 @@ const InterestsScreen = ( {route}) => {
       <Text style={styles.interestText}>{interest}</Text>
     </TouchableOpacity>
   );
-
   return (
     <View style={styles.container}>
       <Logo/>
@@ -63,14 +62,17 @@ const InterestsScreen = ( {route}) => {
                 ? <LoadingIndicator/>
                 : <>
                 <View style={styles.row}>
-                  <View style={styles.column}>
-                    {renderInterest("Running")}
-                    {renderInterest("Caminata")}
+                <View style={styles.column}>
+                    {renderInterest("Balance")}
+                    {renderInterest("Fitness")}
+                    {renderInterest("Resistance")}
                     {renderInterest("Yoga")}
                   </View>
                   <View style={styles.column}>
-                    {renderInterest("Cardio")}
-                    {renderInterest("Boxing")}
+                    {renderInterest("Calisthenics")}
+                    {renderInterest("Flexibility")}
+                    {renderInterest("Running")}
+                    {renderInterest("Walking")}
                   </View>
 
                 </View>
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     flexBasis: '33%',
     alignItems: 'center',
     marginBottom: 10,
-    marginHorizontal:5
+    marginHorizontal:10
   },
 
   interest: {
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 15,
     backgroundColor:"white",
-    width:"95%",
+    width:"105%",
     alignItems:"center",
     marginHorizontal:15
   },

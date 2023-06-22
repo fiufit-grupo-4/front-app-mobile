@@ -20,6 +20,19 @@ const Charts = ({date, value}) => {
       //legend: ["CALORIES"]
     };
 
+    const steps = {
+      // Aquí debes proporcionar los datos para tus gráficos de línea
+      labels: date,
+      datasets: [
+            {
+            data: value,
+            color: (opacity = 1) => `rgba(255, 172, 28, ${opacity})`, // optional
+            strokeWidth: 2 // optional
+            }
+        ],
+      //legend: ["STEPS"]
+    };
+
     const kilometers = {
         // Aquí debes proporcionar los datos para tus gráficos de línea
         labels: date,
@@ -64,8 +77,22 @@ const Charts = ({date, value}) => {
                 />
                 
                 </View>
- 
-        </View>
+            </View>
+            {/* 
+            <View style={{marginTop:20}}>
+                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:10}}> STEPS </Text>
+            </View>
+            <View style={styles.container}>
+                <View style={styles.chartContainer}>
+                <LineChart
+                    data={steps}
+                    width={320}
+                    height={200}
+                    chartConfig={chartConfig}
+                />
+                
+                </View>
+            </View>*/}
       </View>
     );
 

@@ -44,16 +44,17 @@ export const CreateTraining = ({ navigation }) => {
     const [media4, setMedia4] = useState("");
     const [mediaType4, setMediaType4] = useState("");
 
-
-    
-
-
     const trainingItems = [
         { label: "", value: "" },
-        { label: "Caminata", value: "Caminata" },
+        { label: "Walking", value: "Walking" },
         { label: "Running", value: "Running" },
+        { label: "Resistance", value: "Resistance" },
+        { label: "Flexibility", value: "Flexibility" },
+        { label: "Fitness", value: "Fitness" },
+        { label: "Calisthenics", value: "Calisthenics" },
+        { label: "Balance", value: "Balance" },
+        { label: "Yoga", value: "Yoga" },
     ];
-
 
     const handleDifficulty = (value) => {
         setDifficulty(value);

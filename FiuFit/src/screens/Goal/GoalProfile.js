@@ -74,6 +74,10 @@ function GoalProfile({ route,  navigation }) {
         else return "Not Sure"
     }
 
+    const getProgress = () => {
+        return item.progress_steps > item.quantity_steps ? item.quantity_steps : item.progress_steps
+    }
+
     return (
         <View style={styles.item}>
 
@@ -95,7 +99,7 @@ function GoalProfile({ route,  navigation }) {
                 <Text style={styles.description}>{item.metric}</Text>
 
                 <Text style={styles.descriptionTitle}>Progress</Text>
-                <Text style={styles.description}>{item.progress_steps + "/" + item.quantity_steps}</Text>
+                <Text style={styles.description}>{getProgress() + "/" + item.quantity_steps}</Text>
 
                 <Text style={styles.descriptionTitle}>State</Text>
                 <Text style={styles.description}>{getState(state)}</Text>

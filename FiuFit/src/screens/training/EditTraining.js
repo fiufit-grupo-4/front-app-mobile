@@ -25,7 +25,7 @@ const EditTraining = ({ onPress , route }) => {
     const [description, setDescription] = useState(post.description);
     const [trainingType, setTrainingType] = useState(post.trainingType);
     const [difficulty, setDifficulty] = useState(post.difficulty);
-    const [goals, setGoals] = useState([]); //post.goals
+    const [goals, setGoals] = useState(post.goals); //post.goals
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -44,6 +44,18 @@ const EditTraining = ({ onPress , route }) => {
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
+
+    const trainingItems = [
+        { label: "", value: "" },
+        { label: "Walking", value: "Walking" },
+        { label: "Running", value: "Running" },
+        { label: "Resistance", value: "Resistance" },
+        { label: "Flexibility", value: "Flexibility" },
+        { label: "Fitness", value: "Fitness" },
+        { label: "Calisthenics", value: "Calisthenics" },
+        { label: "Balance", value: "Balance" },
+        { label: "Yoga", value: "Yoga" },
+    ];
 
     const uploadMedia = async (video,user) => {
         setLoading(true);
@@ -86,6 +98,7 @@ const EditTraining = ({ onPress , route }) => {
     }
 
 
+
     const handleSaveChanges = async () => {
         let url = API_GATEWAY + "trainers/me/trainings/" + post.id
         setLoading(true);
@@ -125,7 +138,7 @@ const EditTraining = ({ onPress , route }) => {
             let data = await response.json()
             console.log(JSON.stringify(data))
             setLoading(false);
-            navigation.navigate("Profile",{reload:!reload})
+            navigation.goBack()
         }
       
     }
@@ -224,12 +237,15 @@ const EditTraining = ({ onPress , route }) => {
                                 onValueChange={(itemValue) =>
                                 {setTrainingType(itemValue)}}
                             >
-                                <Picker.Item label="Caminata" value="Caminata" />
-                                <Picker.Item label="Running" value="Running" />
+                                {trainingItems.map((item, index) => (
+                                    <Picker.Item key={index} label={item.label} value={item.value} />
+                                ))}
                             </Picker>
                         </View>
                     </View>
                 </View>
+
+
 
 
             <View style = {{marginTop:10,marginBottom:10}}>

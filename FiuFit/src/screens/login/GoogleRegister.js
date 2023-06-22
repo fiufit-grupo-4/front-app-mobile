@@ -13,6 +13,7 @@ import ApiClient from "../../client/Client"
 import { getLocation } from '../../utils/locations';
 import {GoogleSignin,} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { startRecordingAndObserveSteps } from '../../utils/googleFit';
 
 const {height} = Dimensions.get("window")
 const validator = require('validator');
@@ -50,6 +51,7 @@ const GoogleRegister = ({ route }) => {
             else setErrorMessage("Failed to connect with server")  
         } else {
             let json = await response.json()
+            startRecordingAndObserveSteps(json.access_token)
             const user_info = JSON.stringify(json)
             await AsyncStorage.setItem(USER,user_info)
             setLoading(false)

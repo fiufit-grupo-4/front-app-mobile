@@ -10,6 +10,7 @@ import { USER } from '../../utils/constants';
 import { getRole } from '../../utils/getters';
 import { Ionicons } from '@expo/vector-icons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import GoogleFit from 'react-native-google-fit';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
@@ -55,6 +56,7 @@ const CustomDrawer = (props) => {
                         try{
                             await AsyncStorage.removeItem(USER)
                             await GoogleSignin.signOut();
+                            GoogleFit.disconnect();
                             ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
                             navigation.navigate("SignIn")
                         }

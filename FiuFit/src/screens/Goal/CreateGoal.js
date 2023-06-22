@@ -36,11 +36,11 @@ export const CreateGoal = ({ navigation }) => {
 
     const metricItems = [
         { label: " ", value: " " },
-        { label: "Distancia recorrida", value: "Distancia recorrida" },
-        { label: "Tiempo utilizado", value: "Tiempo utilizado" },
-        { label: "Calorias utilizadas", value: "Calorias utilizadas" },
-        { label: "Cantidad de hitos realizados", value: "Cantidad de hitos realizados" },
-        { label: "Tipo de actividad realizada", value: "Tipo de actividad realizada" },
+       
+        { label: "Calories Burned", value: "Calories" },
+        { label: "Number of Steps", value: "Steps" },
+        { label: "Distance traveled (Km)", value: "Kilometers" },
+        
     ];
     
 

@@ -34,7 +34,14 @@ const FollowersContainer = ({followers,following}) => {
     const handleFilter = (filterValue) => {
         setFilter(filterValue);
     };
-
+    
+    const notBlocked = (data) =>{
+      const filteredData = data?.filter(obj => !obj.blocked);
+      return filteredData?.length;
+  
+    }
+  
+  
 
     return (
         <View>
@@ -42,13 +49,13 @@ const FollowersContainer = ({followers,following}) => {
             <View style={styles.filterButtons}>
                 <TouchableOpacity onPress={() => handleFilter(filter === 'followers' ? '' : 'followers')}>
                     <View style={styles.itemContainer}>
-                        <Text style={filter === 'followers' ? styles.activeCount : styles.count}>{followers?.length}</Text>
+                        <Text style={filter === 'followers' ? styles.activeCount : styles.count}>{notBlocked(followers)}</Text>
                         <Text style={filter === 'followers' ? styles.activeLabel : styles.label}>Followers</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleFilter(filter === 'following' ? '' : 'following')}>
                     <View style={styles.itemContainer}>
-                        <Text style={filter === 'following' ? styles.activeCount : styles.count}>{following?.length}</Text>
+                        <Text style={filter === 'following' ? styles.activeCount : styles.count}>{notBlocked(following)}</Text>
                         <Text style={filter === 'following' ? styles.activeLabel : styles.label}>Following</Text>
                     </View>
                 </TouchableOpacity>

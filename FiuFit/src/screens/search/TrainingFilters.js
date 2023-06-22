@@ -5,12 +5,13 @@ import TrainingListItem from './TrainingListItem';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { getUser} from '../../utils/getters';
 import Client from '../../client/Client';
+import { TRAINING_TYPES } from '../../utils/constants';
 
 const TrainingFilters = ({search}) => {
   const [minDifficulty, setMinDifficulty] = useState('');
   const [maxDifficulty, setMaxDifficulty] = useState('');
   const [type,setType] = useState('');
-  const types = ['Running', 'Caminata','Boxeo','Yoga','Cardio'];
+  const types = TRAINING_TYPES 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -67,7 +68,7 @@ const TrainingFilters = ({search}) => {
           const difficultyMatches = training.difficulty <= difficulty
           //const minDifficultyMatches = minDifficulty <= training.difficulty.toString()
           //const maxDifficultyMatches = maxDifficulty >= training.difficulty.toString()
-          return nameMatches && difficultyMatches && typeMatches ;
+          return nameMatches && difficultyMatches && typeMatches && !training.blocked;
       });
   }
 

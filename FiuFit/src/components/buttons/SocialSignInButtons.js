@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {API_GATEWAY,USER} from "../../utils/constants"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GoogleFit from 'react-native-google-fit';
-import {OPTIONS} from "../../utils/googleFit"
+import {OPTIONS,requestActivityPermission,startRecordingAndObserveSteps} from "../../utils/googleFit"
 
 const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
   const navigation = useNavigation();
@@ -14,7 +14,6 @@ const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
   const onSignInGoogle = async () => {
     
     try {
-      console.log('onSignInGoogle');
       await GoogleSignin.signOut();
       
       await GoogleSignin.hasPlayServices();
@@ -23,6 +22,7 @@ const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
       const { accessToken } = await GoogleSignin.getTokens();
      
       const user_signin = await auth().signInWithCredential(googleCredential);
+      await requestActivityPermission()
       await GoogleFit.authorize({OPTIONS,accessToken,});
 
       let user = {
@@ -55,6 +55,7 @@ const SocialSignInButtons = ({setLoading,setError,setErrorMessage}) => {
           navigation.navigate('GoogleSignUp',{user : user})
         } else {
           let json = await response.json()
+          startRecordingAndObserveSteps(json.access_token)
           const user_info = JSON.stringify(json)
           await AsyncStorage.setItem(USER,user_info)
           setLoading(false)

@@ -5,7 +5,7 @@ import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import 'expo-dev-client';
 import { PermissionsAndroid } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {getUser } from "./getters"
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import {API_GATEWAY} from "./constants"
@@ -28,7 +28,7 @@ export const OPTIONS = {
 
 //////////// SOLICITAR PERMISOS FIT //////////////
 
-const requestActivityPermission = async () => {
+export const requestActivityPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION,
@@ -88,7 +88,8 @@ export const getPermissionsAndObserve = async () => {
     let authResult = await GoogleFit.authorize(OPTIONS)  
     if (authResult.success) {
       console.log("AUTH_SUCCESS");
-      startRecordingAndObserveSteps()
+      let user = await getUser()
+      startRecordingAndObserveSteps(user.access_token)
       return true
     } else {
       console.log("AUTH_DENIED", authResult.message)
@@ -99,6 +100,9 @@ export const getPermissionsAndObserve = async () => {
     return false
   }
 }
+
+
+
 
 
 function stepToCalorie(step) {
@@ -112,15 +116,18 @@ function stepToKilometer(step) {
   return kilometers;
 }
 
-export const startRecordingAndObserveSteps = () => {
+function sleep(delay) {
+  var start = new Date().getTime();
+  while (new Date().getTime() < start + delay);
+}
 
-  console.log('----------- startRecordingAndObserveSteps() -----------')
+export const startRecordingAndObserveSteps = (access_token) => {
+
   //requestActivityPermission().then(() => {
     //GoogleFit.authorize(options)
       //.then((res) => {
         GoogleFit.startRecording(
           async data => {
-            console.log('startRecording:data >>>', data)
             const steps = await getSteps();
             console.log("Recording Steps: ", steps.steps);
           },
@@ -128,15 +135,15 @@ export const startRecordingAndObserveSteps = () => {
         );
         
         GoogleFit.observeSteps(async result => {
-          console.log('observeSteps:result >>>', result)
           const steps = await getSteps();
           console.log("Observe Steps: ", steps.steps);
           if (steps.steps !== 0) {
-            const url = API + "athletes/me/goals/progress_steps"
+            const url = API_GATEWAY + "athletes/me/goals/progress_steps"
             let response = await fetch(url, {
-              method: 'POST',
+              method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token,
               },
               body: JSON.stringify({
                 "progress_steps": steps.steps
@@ -189,7 +196,7 @@ export const startRecordingAndObserveSteps = () => {
     const start = new Date();
     start.setDate(start.getDate() - 30); // Ultimo Mes
     const end = new Date();
-    let steps = await getStepsByTime(start,end,BucketUnit.DAY,7)
+    let steps = await getStepsByTime(start,end,BucketUnit.DAY,1)
     return steps
   }
 
@@ -218,10 +225,10 @@ export const startRecordingAndObserveSteps = () => {
 
     let info =  data.rawSteps.map(obj => ({
       steps: obj.steps,
-      time: new Date(obj.startDate).toISOString()
+      date: new Date(obj.startDate).toISOString()
     }));
-    console.log(info)
-    return data.steps
+
+    return info
   }
 
   export async function getLastDaySteps() {
@@ -236,10 +243,10 @@ export const startRecordingAndObserveSteps = () => {
     );
     let info =  data.rawSteps.map(obj => ({
       steps: obj.steps,
-      time: new Date(obj.startDate).toISOString()
+      date: new Date(obj.startDate).toISOString()
     }));
-    console.log(info)
-    return data.steps
+  
+    return info
 
   }
 
@@ -254,8 +261,6 @@ export const startRecordingAndObserveSteps = () => {
   }
 
   async function getStepsByTime(start,end,unit,interval) {
-    console.log("start:",start)
-    console.log("end:",end)
     const options = {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
@@ -263,7 +268,6 @@ export const startRecordingAndObserveSteps = () => {
       bucketInterval: interval,
     }
     const result = await GoogleFit.getDailyStepCountSamples(options); 
-    console.log(JSON.stringify(result))
     const data = result.find(
       r => r.source === "com.google.android.gms:estimated_steps"
     );

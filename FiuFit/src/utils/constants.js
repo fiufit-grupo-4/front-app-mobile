@@ -10,3 +10,6 @@ export const WEB_CLIENT = "294589327367-u83651aovrbcf3num1vm4cbot8cetje4.apps.go
 export const ANDROID_ID = "294589327367-aeon2tuhnm69qttud2o34588qbuure7n.apps.googleusercontent.com"
 export const EXPO_CLIENT_ID = "294589327367-ijhbpgp76o4ejk9ciluefgc9actb55nl.apps.googleusercontent.com"
 export const MOCK = false
+
+export const TRAINING_TYPES = ["Walking","Running","Resistance","Flexibility","Fitness","Calisthenics","Balance","Yoga"]
+export const GOAL_TYPES = ["Steps","Calories","Kilometers"]

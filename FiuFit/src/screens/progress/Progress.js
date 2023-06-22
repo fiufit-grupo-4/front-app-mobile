@@ -3,7 +3,7 @@ import { View, ActivityIndicator, TouchableOpacity, Text, StyleSheet,ScrollView 
 import { getUser } from '../../utils/getters';
 import Client from '../../client/Client';
 import { useIsFocused } from '@react-navigation/native';
-import {getLastDaySteps,getLastMonthSteps, getLastWeekSteps,getSteps,stepsToCalories,stepsToKilometers} from '../../utils/googleFit';
+import {getLastDaySteps,getLastMonthSteps, getLastWeekSteps,getLastHourSteps} from '../../utils/googleFit';
 import Charts from './Charts';
 
 export const Progress = () => {
@@ -20,6 +20,12 @@ export const Progress = () => {
     const handleFilter = (filterValue) => {
         // Set the selected filter
         setFilter(filterValue);
+    };
+
+    const getCompleteGoals = async(date) => {
+        let cont = 0
+
+
     };
 
     const lastMonthSteps = async() => {
@@ -43,12 +49,22 @@ export const Progress = () => {
 
     const lastDaySteps = async() => {
         setFilter("day");
-        console.log("---------- LAST DAY ---------")
+        console.log("---------- LAST Day ---------")
        
         let data = await getLastDaySteps()
         console.log(data)
-        setSteps(data.map(item => item.value))
-        setTime(data.map(item =>  item.date.slice(5)))
+        setSteps(data.map(item => item.steps))
+        setTime(data.map(item =>  item.date.slice(12,16)))
+    };
+
+    const lastHourSteps = async() => {
+        setFilter("hour");
+        console.log("---------- LAST HOUR ---------")
+       
+        let data = await getLastHourSteps()
+        console.log(data)
+        setSteps(data.map(item => item.steps))
+        setTime(data.map(item =>  item.date.slice(13,16)))
     };
 
     useEffect(() => {
@@ -58,6 +74,7 @@ export const Progress = () => {
             let userInfo = await getUser()
             Client.getGoals(userInfo.access_token).then((data) => {
                 setGoals(data)
+                console.log(data)
                 setLoading(false)
             }).catch((error) => {
                 setError(true);
@@ -91,18 +108,26 @@ export const Progress = () => {
                             Last Month
                         </Text>
                     </TouchableOpacity>
+
+                    {/* 
                     <TouchableOpacity onPress={async () => await lastWeekSteps()}>
                         <Text style={filter === 'week' ? styles.activeFilterText : styles.filterText}>
                             Last Week
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>*/}
 
-                    {/* 
+                    
                     <TouchableOpacity onPress={async () => await lastDaySteps()}>
                         <Text style={filter === 'day' ? styles.activeFilterText : styles.filterText}>
                             Last Day
                         </Text>
-                    </TouchableOpacity>*/}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={async () => await lastHourSteps()}>
+                        <Text style={filter === 'hour' ? styles.activeFilterText : styles.filterText}>
+                            Last Hour
+                        </Text>
+                    </TouchableOpacity>
 
                     
                 </View>
@@ -124,7 +149,7 @@ export const Progress = () => {
                             <Charts date={time} value={steps}></Charts>
                             <View style={{}}>
                                 
-                                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15,marginBottom:5}}> Time used: </Text>
+                                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15,marginBottom:5}}> Total Time used: </Text>
                                 <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15}}> Goals Completed: </Text>                            
                             </View>
                         </>
@@ -151,7 +176,7 @@ const styles = StyleSheet.create({
         
     },
     searchContainer: {
-        marginHorizontal: 15,
+        marginHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
         borderTopLeftRadius:5,
