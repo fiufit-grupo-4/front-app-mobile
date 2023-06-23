@@ -1,13 +1,33 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useReducer} from "react";
 import {StyleSheet, View, Text, ActivityIndicator, FlatList} from "react-native";
 import Errors from "../../components/utils/Error";
 import MessageListItem from "./MessageListItem";
 import {Ionicons} from "@expo/vector-icons";
+import {firebaseService} from "./index";
+import { messagesReducer } from "./reducers";
 
 const MessageScreen = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [onNewMessage, handleMessage] = useState(false);
+    const [messages, dispatchMessages] = useReducer(messagesReducer, [])
+
+    useEffect(
+      function () {
+        return firebaseService.messageRef
+          .orderBy('timestamp', 'desc')
+          .onSnapshot(function (snapshot) {
+            // console.log('snapshot', snapshot)
+            // console.log('snapshot.docs', snapshot.docs)
+            res = dispatchMessages({ type: 'add', payload: snapshot.docs })
+            console.log('res', res)
+            console.log('messages', messages)
+          })
+      },
+      []
+    )
+        
 
     const participants = [
         {
@@ -19,31 +39,6 @@ const MessageScreen = () => {
             "name": "Jane Smith"
         }
     ];
-
-    const messages = [
-        {
-            "id": 1,
-            "senderId": 1,
-            "receiverId": 2,
-            "content": "Hey Jane, how are you?",
-            "timestamp": "2023-06-19T12:30:45Z"
-        },
-        {
-            "id": 2,
-            "senderId": 2,
-            "receiverId": 1,
-            "content": "Hi John! I'm doing well, thanks. How about you?",
-            "timestamp": "2023-06-19T12:35:20Z"
-        },
-        {
-            "id": 3,
-            "senderId": 1,
-            "receiverId": 2,
-            "content": "I'm good too! Just working on a project.",
-            "timestamp": "2023-06-19T12:38:10Z"
-        }
-    ];
-
 
     return (
         <>
@@ -62,7 +57,7 @@ const MessageScreen = () => {
                                 keyExtractor={(participant) => participant.id}
                                 renderItem={({item}) => (
                                     <View style={{marginTop:10 }}>
-                                        <MessageListItem item={item} messages={messages} ></MessageListItem>
+                                        <MessageListItem item={item} messages={messages.map(message => message._data)} handleMessage={handleMessage}/>
                                     </View>
                                 )}
                             />

@@ -12,6 +12,7 @@ import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Pedometer } from 'expo-sensors';
 
+import { firebaseService } from './src/screens/Messages/index.js';
 
 GoogleSignin.configure({
   webClientId: "880473744329-ba1v2m1h1f07s3vlh27266pr6ca7svfo.apps.googleusercontent.com",
@@ -75,6 +76,16 @@ Pedometer.getStepCountAsync(start, end).then(
 });
 
 
+firebaseService.signIn().then(
+  result => {
+    console.log('[firebaseService RESULT].signIn >>> ', result);
+  },
+  error => {
+    console.log('[firebaseService ERROR].signIn >>> ', error);
+  }
+).catch(error => {
+  console.log('[firebaseService CATCH].signIn >>> ', error);
+});
 
 
 class App extends React.Component {
