@@ -24,8 +24,7 @@ import GoogleRegister from '../screens/login/GoogleRegister';
 import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
-import MessageChat from "../screens/Messages/MessageChat";
-
+import HooksExample from "../screens/Messages/components/HooksExample";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,7 +62,7 @@ class Navigation extends React.Component {
 
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
 
-                    <Stack.Screen name="Message Chat" component={MessageChat}  />
+                    <Stack.Screen name="Message Chat" component={HooksExample}  />
 
                 </Stack.Navigator>
             </NavigationContainer>

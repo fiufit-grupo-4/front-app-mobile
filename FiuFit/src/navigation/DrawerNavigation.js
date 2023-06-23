@@ -11,7 +11,7 @@ import CertifyScreen from "../screens/certify/CertifyScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ATHLETE,TRAINER,USER} from '../utils/constants';
 import CreateTraining from "../screens/training/CreateTraining";
-import MessagesScreen from "../screens/Messages/MessagesScreen";
+import HooksExample from "../screens/Messages/components/HooksExample";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
 import NotificationScreen from "../screens/Notificaciones/NotificationScreen";
@@ -159,11 +159,10 @@ function DrawerComponent() {
                 })}
             />
 
-
             <Drawer.Screen
                 name="         Messages"
                 color="#F0A500"
-                component={MessagesScreen}
+                component={HooksExample}
                 options={() => ({
                     drawerIcon: () => (
                         <AntDesign
