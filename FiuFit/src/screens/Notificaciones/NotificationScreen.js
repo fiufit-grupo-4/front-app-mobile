@@ -1,57 +1,50 @@
-import React, {useState} from "react";
-import {StyleSheet, View, Text, FlatList, ScrollView} from "react-native";
+import React, {useEffect, useState} from "react";
+import {StyleSheet, View, Text, ScrollView} from "react-native";
 import {Ionicons} from "react-native-vector-icons";
+import {getUser} from "../../utils/getters";
 
 
 const NotificationScreen = ( ) => {
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
 
-    const notifications = [
-            {
-                notification: {
-                    android: {},
-                    body: 'Pepe started following you',
-                    title:"new follower"},
-                timestamp: '2023-06-19T12:30:45Z',
-                messageId:1,
-            },
-            {
-                notification: {
-                    android: {},
-                    body: "Cumpliste tu meta sarten",
-                    title:"new goal accomplish"},
-                timestamp: '2023-06-19T12:30:45Z',
-                messageId:2,
-            }
-    ]
-
+    useEffect(() => {
+        async function getUsers() {
+            setLoading(true)
+            setError(false)
+            let userInfo = await getUser()
+            setUser(userInfo)
+            console.log("hjhbjah")
+            console.log(userInfo)
+        }
+        getUsers();
+    }, [])
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Notifications</Text>
             <ScrollView style={styles.notificationList}>
-
-                {notifications.map((notification) => (
-                    <View key={notification.notification.messageId} style={styles.notificationItem}>
-                        {notification.notification.title === 'new follower' && (
+{/* 
+                {user.notifications.map((notification) => (
+                    <View style={styles.notificationItem}>
+                        {notification.title === 'New follower' && (
 
                             <Text style={styles.notificationText}>
                                 <Ionicons name={'md-person-outline'} style={styles.icon}/>
                                 {"   "}
-                                {notification.notification.body}
+                                {notification.body}
                             </Text>
                         )}
-                        {notification.notification.title === 'new goal accomplish' && (
+                        {notification.title === 'Goal accomplished' && (
                             <Text style={styles.notificationText}>
                                 <Ionicons name={'checkmark-outline'} style={styles.icon}/>
                                 {"   "}
-                                {notification.notification.body}
+                                {notification.body}
                             </Text>
                         )}
                     </View>
-                ))}
+                ))} */}
             </ScrollView>
         </View>
     );
@@ -89,6 +82,4 @@ const styles = StyleSheet.create({
 });
 
 export default NotificationScreen;
-
-
 
