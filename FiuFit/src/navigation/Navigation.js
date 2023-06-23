@@ -24,7 +24,9 @@ import GoogleRegister from '../screens/login/GoogleRegister';
 import ViewGoal from "../screens/Goal/ViewGoal";
 import GoalProfile from "../screens/Goal/GoalProfile";
 import EditGoal from "../screens/Goal/EditGoal";
-
+import TrainingStats from '../screens/training/TrainingStats';
+import InterestsScreen from '../screens/profile/InterestScreen';
+import StartedTraining from '../screens/training/StartedTraining';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +37,8 @@ class Navigation extends React.Component {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                    
+                    {/* <Stack.Screen name="Prueba" component={Prueba} options={{ headerShown: false }} />*/}
+                
                     <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="GoogleSignUp" component={GoogleRegister} options={{ headerShown: false }} />  
@@ -43,7 +46,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="ConfirmCode" component={ConfirmCodeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
                     <Stack.Screen name="NewPassword" component={NewPasswordScreen} options={{ headerShown: false }}/>
-                
+                    <Stack.Screen name="Interests" component={InterestsScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Inicio" component={DrawerComponent}  options={{ headerShown: false }}/>
                     <Stack.Screen name="HomeTab" component={HomeTab} options={{ headerShown: false }}/>
                     <Stack.Screen name="Profile" component={MenuProfileScreen} />
@@ -53,9 +56,10 @@ class Navigation extends React.Component {
                     <Stack.Screen name="Edit Training" component={EditTrainingScreen}  />
                     <Stack.Screen name="Training" component={TrainingScreen}  />
                     <Stack.Screen name="Training Profile" component={TrainingProfile}  />
+                    <Stack.Screen name="Training Goal Profile" component={StartedTraining}  />
                     <Stack.Screen name="Favorite Profile" component={FavoriteTrainingProfile}  />
                     <Stack.Screen name="Trainings" component={ViewTrainings}  />
-
+                    <Stack.Screen name="Training Stats" component={TrainingStats}  />
                     <Stack.Screen name="View Goals" component={ViewGoal}  />
                     <Stack.Screen name="Goal Profile" component={GoalProfile}  />
                     <Stack.Screen name="Edit Goal" component={EditGoal}  />

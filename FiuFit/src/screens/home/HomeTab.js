@@ -9,26 +9,59 @@ import Client from '../../client/Client';
 
 export const HomeTab = () => {
   const [recommendedTrainings,setRecommendedTrainings] =  useState([]);
-  const [nearestTrainings,setNearestTrainings] =  useState([]);
+  const [interest,setInterests] =  useState([]);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const isFocused = useIsFocused();
+  
+  
+    const notBlocked = (data) =>{
+      const filteredData = data.filter(obj => !obj.blocked);
+      
+      return filteredData.length;
+  
+    }
 
   useEffect(() => {
     async function getTrainings() {
         setLoading(true)
         let userInfo = await getUser()
         setUserData(userInfo)
-        Client.getTrainings(userInfo.access_token).then((data) => {
-          let recommended = data
-          let near = data.slice().reverse()
-          setRecommendedTrainings(recommended)
-          setNearestTrainings(near)
+        let response = await Client.getInterests(userInfo.access_token)
+        if (!response.ok){
           setLoading(false);
-        }).catch((error) => {
+          setError(true);
+          setErrorMessage(error.toString());
+        } else {
+          let json = await response.json()
+          setInterests(json.interest)
+          Client.getTrainings(userInfo.access_token).then((data) => {
+            
+            if ( json.interest.length == 0 ) {
+              setRecommendedTrainings(data.reverse())
+            } else {
+              const filtered = data.filter((training) =>
+                json.interest.includes(training.type) && !training.blocked
+              );
+              setRecommendedTrainings(filtered.reverse())
+            }
+
             setLoading(false);
+
+          }).catch((error) => {
+              setLoading(false);
+              setError(true);
+              setErrorMessage(error.toString());
+          })
+        }
+
+        }
+        getTrainings();
+    }, [isFocused])
+
+
             setError(true);
             setErrorMessage(error.toString());
         })
@@ -68,6 +101,7 @@ export const HomeTab = () => {
 
     }, [isFocused])
 
+
     return (
         <View style ={styles.root}>
 
@@ -103,6 +137,7 @@ export const HomeTab = () => {
                                 )}
                           />
 
+                        {/* 
                         <View style = {{marginTop:15}}>
                             <Text style ={styles.subtitle}>Trainings near to you: </Text>
                         </View>
@@ -115,7 +150,7 @@ export const HomeTab = () => {
                                 renderItem={({ item }) => (
                                     <ListRecommended item={item} user={userData} canEdit={false} />
                                 )}
-                          /> 
+                          /> */}
                       </ScrollView>
                       
                   }  

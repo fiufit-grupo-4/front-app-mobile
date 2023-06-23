@@ -70,7 +70,7 @@ const UserProfile = ({ navigation,route }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileInfo}>
-          { userInfo.image  
+          { userInfo.image && userInfo.image !="string"
             ? <Image source={{uri:userInfo.image}} style={styles.profileImage}/>
             : <Image
                 style={styles.profileImage}

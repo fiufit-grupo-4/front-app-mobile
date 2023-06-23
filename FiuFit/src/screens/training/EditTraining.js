@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
 import MediaEditableBox from '../../components/media/MediaEditableBox';
 import {firebase} from '../../config/firebase'
-
+import GoalCreator from './GoalCreator';
 
 const EditTraining = ({ onPress , route }) => {
     const {post, reload} = route.params;
@@ -25,6 +25,7 @@ const EditTraining = ({ onPress , route }) => {
     const [description, setDescription] = useState(post.description);
     const [trainingType, setTrainingType] = useState(post.trainingType);
     const [difficulty, setDifficulty] = useState(post.difficulty);
+    const [goals, setGoals] = useState(post.goals); //post.goals
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +44,18 @@ const EditTraining = ({ onPress , route }) => {
     const handleDifficulty = (value) => {
         setDifficulty(value);
     };
+
+    const trainingItems = [
+        { label: "", value: "" },
+        { label: "Walking", value: "Walking" },
+        { label: "Running", value: "Running" },
+        { label: "Resistance", value: "Resistance" },
+        { label: "Flexibility", value: "Flexibility" },
+        { label: "Fitness", value: "Fitness" },
+        { label: "Calisthenics", value: "Calisthenics" },
+        { label: "Balance", value: "Balance" },
+        { label: "Yoga", value: "Yoga" },
+    ];
 
     const uploadMedia = async (video,user) => {
         setLoading(true);
@@ -85,6 +98,7 @@ const EditTraining = ({ onPress , route }) => {
     }
 
 
+
     const handleSaveChanges = async () => {
         let url = API_GATEWAY + "trainers/me/trainings/" + post.id
         setLoading(true);
@@ -124,47 +138,9 @@ const EditTraining = ({ onPress , route }) => {
             let data = await response.json()
             console.log(JSON.stringify(data))
             setLoading(false);
-            navigation.navigate("Profile",{reload:!reload})
+            navigation.goBack()
         }
-        /*
-        AsyncStorage.getItem(USER).then(async (item) => {
-            let userInfo = JSON.parse(item)
-            let array = await uploadMedia(userInfo)
-            fetch(url, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-                body: JSON.stringify({
-                    "title": title,
-                    "description": description,
-                    "type": trainingType,
-                    "difficulty" : difficulty,
-                    "media":array
-                })
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        navigation.navigate("Profile",{reload:!reload})
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }})}).catch((error) => {
-                setError(true);
-                setErrorMessage(error);
-            })*/
+      
     }
 
 
@@ -261,15 +237,18 @@ const EditTraining = ({ onPress , route }) => {
                                 onValueChange={(itemValue) =>
                                 {setTrainingType(itemValue)}}
                             >
-                                <Picker.Item label="Caminata" value="Caminata" />
-                                <Picker.Item label="Running" value="Running" />
+                                {trainingItems.map((item, index) => (
+                                    <Picker.Item key={index} label={item.label} value={item.value} />
+                                ))}
                             </Picker>
                         </View>
                     </View>
                 </View>
 
 
-            </ScrollView>
+
+
+            <View style = {{marginTop:10,marginBottom:10}}>
 
             <ScrollView
                     contentContainerStyle={styles.mediaContainer}
@@ -282,9 +261,11 @@ const EditTraining = ({ onPress , route }) => {
                     <MediaEditableBox setElement = {setMedia4} setMediaElement = {setMediaType4} oldMedia = {post.media[3]}/>
                     
             </ScrollView>
+            </View>
 
-
-
+            <View style = {{marginBottom:20}}>
+            {/*<GoalCreator goals= {goals} setGoals={setGoals}></GoalCreator>*/}
+            </View>
             { loading 
                 ? <View style={{marginBottom:100, marginHorizontal: 40}}>
                         <ActivityIndicator size="large" color = "black"/>
@@ -312,7 +293,7 @@ const EditTraining = ({ onPress , route }) => {
             
 
             
-
+            </ScrollView>
         </View>
     )
 
@@ -354,7 +335,7 @@ const styles = StyleSheet.create({
         fontWeight:"bold"
     },
     button: {
-        backgroundColor: 'black',
+        backgroundColor: '#788FAD',
         flex: 1,
         margin: 10,
         padding: 10,

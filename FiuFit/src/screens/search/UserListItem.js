@@ -25,7 +25,7 @@ const UserListItem = ({ user, myDistance,myId }) => {
     <TouchableOpacity onPress={handleOnPress}>
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-         { user.image  
+         { user.image && user.image !="string"
             ? <Image source={{uri:user.image}} style={styles.avatar}/>
             : <Image source={ require('../../../assets/images/profilepic.jpeg') } style={styles.avatar} />
           }  

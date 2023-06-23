@@ -29,7 +29,7 @@ const SignInScreen = () => {
     const navigation = useNavigation();
     const { passwordVisibility, rightIcon, handlePasswordVisibility, } =
         PasswordVisibility();
-
+    
     const [isAthlete, setIsAthlete] = useState(true); // Estado inicial del botón
 
     const toggleSwitch = () => {
@@ -38,7 +38,7 @@ const SignInScreen = () => {
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: 'ti@fi.uba.ar',
+            email: 'dante@trainer.com',
             password: '1234'
         }
     });
@@ -54,9 +54,11 @@ const SignInScreen = () => {
         ApiClient.signIn(data,getRole())
             .then(async  response => {
                 const user_info = JSON.stringify(response)
+                console.log(user_info)
                 await AsyncStorage.setItem(USER,user_info)
                 setLoading(false)
-                navigation.navigate("Inicio")
+                if (!user_info.first_login) navigation.navigate("Inicio")
+                else navigation.navigate("Interests",{ user: response})
             })
             .catch(error => {
                 setLoading(false)
@@ -133,7 +135,7 @@ const SignInScreen = () => {
                         onPress={onForgotPasswordPressed}
                         type="TERTIARY"
                     />
-                    <SocialSignInButtons />
+                    <SocialSignInButtons setError={setError} setLoading={setLoading} setErrorMessage={setErrorMessage} />
 
                     <CustomButton
                         text="Don't have an account? Create one"

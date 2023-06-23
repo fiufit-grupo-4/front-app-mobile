@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {View, Text, Switch,StyleSheet,Dimensions,Image,ScrollView,TouchableOpacity,PermissionsAndroid} from 'react-native';
+import {View, Text, Switch,StyleSheet,Dimensions,Image,ScrollView,TouchableOpacity,ActivityIndicator,PermissionsAndroid} from 'react-native';
 import CustomInput from '../../components/inputs/CustomInput';
 import CustomButton from '../../components/buttons/CustomButton';
 import CustomIconButton from '../../components/buttons/CustomIconButton';
@@ -8,10 +8,12 @@ import {useForm} from 'react-hook-form';
 import LoadingIndicator from '../../components/utils/LoadingIndicator';
 import {Ionicons} from 'react-native-vector-icons'
 import FiuFitLogo from '../../../assets/images/fiticon.png';
-import {ATHLETE,TRAINER, API_GATEWAY } from '../../utils/constants';
+import {ATHLETE,TRAINER, USER } from '../../utils/constants';
 import ApiClient from "../../client/Client"
 import { getLocation } from '../../utils/locations';
 import {GoogleSignin,} from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { startRecordingAndObserveSteps } from '../../utils/googleFit';
 
 const {height} = Dimensions.get("window")
 const validator = require('validator');
@@ -36,22 +38,25 @@ const GoogleRegister = ({ route }) => {
     const onRegisterPressed = async (data) => {
         let res = await getLocation()
         console.log(res)
+        console.log(data)
+        console.log(user)
         setLoading(true)
         setError(false)
-        //let response = await ApiClient.signUp(data,getRole(),res)
-        setLoading(false)
-        /*
+        let response = await ApiClient.googleSignUp(data,getRole(),res,user)
         if (!response.ok) {
+            setLoading(false)
             console.log(response.status)
             setError(true)
-            if (response.status ==  409) {
-                setErrorMessage("User email already in use")
-            }else {
-                setErrorMessage("Failed to connect with server")
-            }  
+            if (response.status ==  409)  setErrorMessage("User email already in use")
+            else setErrorMessage("Failed to connect with server")  
         } else {
-            navigation.navigate('ConfirmPhone',{phone : data.phone_number});
-        }     */   
+            let json = await response.json()
+            startRecordingAndObserveSteps(json.access_token)
+            const user_info = JSON.stringify(json)
+            await AsyncStorage.setItem(USER,user_info)
+            setLoading(false)
+            navigation.navigate("Inicio")
+        }      
     };
 
     const onSignInPress = async () => {
@@ -92,7 +97,11 @@ const GoogleRegister = ({ route }) => {
                         style={ {width: "80%", height: height * 0.2,marginTop:10}}
                         resizeMode="contain"
                     />
-                    <LoadingIndicator/>
+                    <View style={signUpStyles.containerLoad}>
+                        <Text style={signUpStyles.textLoad} > Loading </Text>
+                        <ActivityIndicator size="large" color = "black"/>
+                        
+                    </View>
                   </>
                 : <>
                     
@@ -199,7 +208,6 @@ const GoogleRegister = ({ route }) => {
                         text="Have an account? Sign in"
                         onPress={onSignInPress}
                         type="TERTIARY"
-                       
                     />
                     </View>
                 </ScrollView>
@@ -257,5 +265,15 @@ const signUpStyles = StyleSheet.create({
         color: 'black',
         margin: 10,
         
-    }
+    },
+    containerLoad: {
+        alignItems:"center",
+        justifyContent: 'center',
+      },
+      textLoad: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'black',
+        margin: 25,
+      }
 });
