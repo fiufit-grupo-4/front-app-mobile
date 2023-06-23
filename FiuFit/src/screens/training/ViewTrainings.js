@@ -71,7 +71,7 @@ function ViewTrainings({ navigation,route }) {
                 : <>
 
                     {trainings.length == 0  
-                        ? <Errors message={"This trainer dont have any posts yet"} icon={"image-outline"}></Errors>
+                        ? <Errors message={"This trainer don't have any posts yet"} icon={"barbell-outline"}></Errors>
                         : <View style={{padding:10 }}>
                                 <FlatList
                                 data={trainings}

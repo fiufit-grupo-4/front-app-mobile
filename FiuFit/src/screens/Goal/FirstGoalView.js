@@ -15,10 +15,11 @@ const FirstGoalView = ({item, user}) => {
                             <Text style={item.state == 3 ? newstyles.tituloCompleted : newstyles.titulo}>{item.title}</Text>
 
                             { item.state == 3 
-                             ? 
-                                <View style ={{marginLeft:30}}>
+                             ? <View style ={{marginLeft:30}}>
                                     <Ionicons name={'checkmark-outline'} size = {30} color = {"#50C878"}/>
-                                    </View> 
+                                </View> 
+                             : item.state == 5
+                             ? <Text style={newstyles.dificultad}>Expired</Text>
                              : <Text style={newstyles.dificultad}>{item.progress_steps + "/" + item.quantity_steps}</Text>
                             }
                             

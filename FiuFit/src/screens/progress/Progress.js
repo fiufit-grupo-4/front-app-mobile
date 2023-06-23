@@ -13,8 +13,8 @@ export const Progress = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [goals, setGoals] = useState({});
-    const [goalsCompleted, setCompleteGoals] = useState([1]);
-    const [timeUsed, setTimeUsed] = useState([""]);
+    const [goalsCompleted, setCompleteGoals] = useState(0);
+    const [timeUsed, setTimeUsed] = useState("0 minutes");
     const [steps, setSteps] = useState([1]);
     const [time, setTime] = useState([""]);
     const handleFilter = (filterValue) => {
@@ -22,50 +22,140 @@ export const Progress = () => {
         setFilter(filterValue);
     };
 
-    const getCompleteGoals = async(date) => {
-        let cont = 0
-
-
-    };
-
     const lastMonthSteps = async() => {
         setFilter("month");
         let data = await getLastMonthSteps()
-
+        const date = new Date();
+        date.setDate(date.getDate() - 30);
         setSteps(data.map(item => item.value))
         setTime(data.map(item =>  item.date.slice(5)))
-
+        setCompleteGoals(completedGoals(date))
+        setTimeUsed(getTimeUsed(date))
     };
 
     const lastWeekSteps = async() => {
         setFilter("week");
-        console.log("---------- LAST WEEK ---------")
-        
         let data = await getLastWeekSteps()
-        console.log(data)
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        
         setSteps(data.map(item => item.value))
         setTime(data.map(item => item.date.slice(5)))
+        setCompleteGoals(completedGoals(date))
+        setTimeUsed(getTimeUsed(date))
     };
 
     const lastDaySteps = async() => {
         setFilter("day");
-        console.log("---------- LAST Day ---------")
-       
         let data = await getLastDaySteps()
-        console.log(data)
+        const date = new Date();
+        date.setHours(date.getHours() - 24)
+        
         setSteps(data.map(item => item.steps))
         setTime(data.map(item =>  item.date.slice(12,16)))
+        setCompleteGoals(completedGoals(date))
+        setTimeUsed(getTimeUsed(date))
     };
 
     const lastHourSteps = async() => {
         setFilter("hour");
-        console.log("---------- LAST HOUR ---------")
-       
         let data = await getLastHourSteps()
-        console.log(data)
+        const date = new Date();
+        date.setHours(date.getHours() - 1)
+        
         setSteps(data.map(item => item.steps))
         setTime(data.map(item =>  item.date.slice(13,16)))
+        setCompleteGoals(completedGoals(date))
+        setTimeUsed(getTimeUsed(date))
     };
+
+
+    function completedGoals(date) {
+        const completedGoals = goals.filter(goal => {
+          return goal.date_complete && new Date(goal.date_complete) >= date;
+        });
+        return completedGoals.length;
+    }
+
+    function getTimeUsed(date) {
+        let {min,max} = getMinMaxDates(date)
+        console.log("MIN: ",min)
+        console.log("MAX: ",max)
+        if (!min && !max) return "0 minutes"
+        let diff
+        if (!min) diff = max.getTime() - date.getTime();
+        else if (!max) diff = new Date().getTime() - min.getTime();
+        else  diff = max.getTime() - min.getTime();
+        console.log(diff)
+        return formatTimeDiff(diff);
+    }
+
+
+    function getMinMaxDates(fromDate) {
+        let minDateInit = null;
+        let maxDateInit = null;
+        let minDate = null;
+        let maxDate = null;
+      
+        goals.forEach((goal) => {
+          if (goal.date_init && new Date(goal.date_init) > fromDate) {
+            const dateInit = new Date(goal.date_init);
+      
+            if (!minDateInit || dateInit < minDateInit) {
+              minDateInit = dateInit;
+            }
+      
+            if (!maxDateInit || dateInit > maxDateInit) {
+              maxDateInit = dateInit;
+            }
+          }
+      
+          if (goal.date_complete && new Date(goal.date_complete) > fromDate) {
+            const dateComplete = new Date(goal.date_complete);
+      
+            if (!minDate || dateComplete < minDate) {
+              minDate = dateComplete;
+            }
+      
+            if (!maxDate || dateComplete > maxDate) {
+              maxDate = dateComplete;
+            }
+          }
+        });
+        console.log(minDate)
+        console.log(minDateInit)
+        console.log(maxDate)
+        console.log(maxDateInit)
+        let min = minDateInit > minDate ? fromDate : minDateInit
+        let max = maxDateInit >= maxDate ? maxDateInit : maxDate
+        return {min,max};
+      }
+
+    function formatTimeDiff(diff) {
+        // Calcula el número de horas, minutos y segundos
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        console.log(minutes)
+        console.log(seconds)
+        // Construye la cadena de tiempo formateada
+        let formattedTimeDiff = "";
+      
+        if (hours > 0) {
+          formattedTimeDiff += `${hours} hora${hours > 1 ? "s" : ""}, `;
+        }
+        if (minutes > 0) {
+          formattedTimeDiff += `${minutes} minuto${minutes > 1 ? "s" : ""}, `;
+        }
+        if (seconds > 0) {
+          formattedTimeDiff += `${seconds} segundo${seconds > 1 ? "s" : ""}, `;
+        }
+      
+        // Elimina la coma y el espacio final
+        formattedTimeDiff = formattedTimeDiff.slice(0, -2);
+      
+        return formattedTimeDiff;
+      }
 
     useEffect(() => {
         async function getGoals() {
@@ -148,9 +238,12 @@ export const Progress = () => {
                         : <> 
                             <Charts date={time} value={steps}></Charts>
                             <View style={{}}>
+                            <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15,marginBottom:5}}> Goals Completed :</Text>
+                            <Text style = {{fontSize:18,marginLeft:15,marginBottom:8,alignSelf:"center"}}>  {`${goalsCompleted} goal${goalsCompleted > 1 ? "s" : ""} ` }</Text>                            
+                                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15,marginBottom:5}}> Total Time used :</Text>
+                                <Text style = {{fontSize:18,marginLeft:15,marginBottom:8,alignSelf:"center"}}> {timeUsed}</Text>
+                               
                                 
-                                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15,marginBottom:5}}> Total Time used: </Text>
-                                <Text style = {{fontWeight:"bold",fontSize:18,marginLeft:15}}> Goals Completed: </Text>                            
                             </View>
                         </>
                     }

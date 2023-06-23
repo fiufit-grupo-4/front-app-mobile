@@ -67,7 +67,7 @@ const UserFilters = ({search}) => {
           const notMyUser = myUser.mail != user.mail
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches && notMyUser ;
+          return nameMatches && roleMatches && notMyUser && !user.blocked;
           });
       } else {
         return users.filter((user) => {
@@ -75,7 +75,7 @@ const UserFilters = ({search}) => {
           const distanceMatches = calculateDistance(myUser.location,user.location)
           const nameMatches = user.name.toLowerCase().includes(search.toLowerCase());
           const roleMatches = getRole(user.role).toLowerCase().includes(type.toLowerCase());    
-          return nameMatches && roleMatches && distanceMatches && notMyUser;
+          return nameMatches && roleMatches && distanceMatches && notMyUser && !user.blocked;
       });
       }
     }

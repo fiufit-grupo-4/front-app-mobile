@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import {Ionicons} from "@expo/vector-icons";
+import { useIsFocused } from '@react-navigation/native';
 
 
 const ListType = ({setType, listItem, icon}) => {
     const [selectedValue, setSelectedValue] = useState(listItem[0]);
+    const isFocused = useIsFocused();
+
+
+    useEffect(() => {
+        setSelectedValue(listItem[0])
+        
+    }, [isFocused,])
 
     return (
         <View style={styles.container}>

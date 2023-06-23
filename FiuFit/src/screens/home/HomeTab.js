@@ -31,11 +31,12 @@ export const HomeTab = () => {
           let json = await response.json()
           setInterests(json.interest)
           Client.getTrainings(userInfo.access_token).then((data) => {
-            if ( json.interest.length == 0) {
+            
+            if ( json.interest.length == 0 ) {
               setRecommendedTrainings(data.reverse())
             } else {
               const filtered = data.filter((training) =>
-                json.interest.includes(training.type)
+                json.interest.includes(training.type) && !training.blocked
               );
               setRecommendedTrainings(filtered.reverse())
             }
@@ -52,6 +53,12 @@ export const HomeTab = () => {
         getTrainings();
     }, [isFocused])
 
+    const notBlocked = (data) =>{
+      const filteredData = data.filter(obj => !obj.blocked);
+      console.log("DATA",filteredData)
+      return filteredData.length;
+  
+    }
 
     return (
         <View style ={styles.root}>

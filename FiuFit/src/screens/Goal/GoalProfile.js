@@ -71,6 +71,7 @@ function GoalProfile({ route,  navigation }) {
         else if (state == 2) return "Started"
         else if (state == 3) return "Completed"
         else if (state == 4) return "Stoped"
+        else if (state == 5) return "Expired"
         else return "Not Sure"
     }
 

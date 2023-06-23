@@ -264,7 +264,7 @@ const EditTraining = ({ onPress , route }) => {
             </View>
 
             <View style = {{marginBottom:20}}>
-            <GoalCreator goals= {goals} setGoals={setGoals}></GoalCreator>
+            {/*<GoalCreator goals= {goals} setGoals={setGoals}></GoalCreator>*/}
             </View>
             { loading 
                 ? <View style={{marginBottom:100, marginHorizontal: 40}}>

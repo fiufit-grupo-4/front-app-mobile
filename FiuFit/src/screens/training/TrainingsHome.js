@@ -47,7 +47,9 @@ function TrainingsHome({ navigation}) {
                 : <>
                    
                     {trainings.length == 0  
-                        ? <Errors message={"This trainer dont have any posts yet"} icon={"image-outline"}></Errors>
+                        ? <View style = {{alignItems:"center",marginTop:30}}>
+                            <Text style = {{fontSize:18}}> You don´t have any trainings yet </Text>
+                     </View>
                         : <View style={{padding:10 ,maxHeight:"93%"}}>
                                 <FlatList
                                 data={trainings}

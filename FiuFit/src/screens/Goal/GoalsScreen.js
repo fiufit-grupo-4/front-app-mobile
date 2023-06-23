@@ -55,7 +55,7 @@ const GoalsScreen = () => {
                                     <Text style = {{fontSize:18}}> You don´t have any Goals yet </Text>
                                  </View>
                                : 
-                                <View style={{padding:5,maxHeight:"93%"}}>
+                                <View style={{paddingBottom:20,paddingHorizontal:5,maxHeight:"100%"}}>
                                     <FlatList
                                         data={goals}
                                         keyExtractor={(goalItem) => goalItem.id}
