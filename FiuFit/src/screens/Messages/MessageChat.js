@@ -1,23 +1,32 @@
 import {
     ScrollView,
     StyleSheet,
-    TouchableOpacity,
     View,
     Text,
     FlatList,
     TextInput,
-    TouchableWithoutFeedback, Modal
+    TouchableWithoutFeedback
 } from "react-native";
-import React, {useState} from "react";
+import React, {useState, useCallback} from "react";
 import {Ionicons} from "react-native-vector-icons";
+import { firebaseService } from "./index";
 
-function handleAddMessage() {
-
-}
 
 function MessageChat({ route }) {
     const {item, messages} = route.params;
-    const senderId = item.id;
+    const senderId = 'martuxd1';
+    const [message, setMessage] = useState('')
+
+    const handleAddMessage = useCallback(
+        function () {
+          firebaseService
+            .createMessage({ message: 'message jiji', uid: 'martuxd1'})
+            .then(function () {
+              setMessage('')
+            })
+        },
+        [message]
+      )
 
     const renderMessage = ({ item }) => {
         const messageSenderId = item.senderId;
@@ -31,7 +40,7 @@ function MessageChat({ route }) {
     };
 
     return (
-        <Modal>
+        <View style={{flex:1}}>
             <ScrollView>
                 <View style={styles.container}>
                     <FlatList
@@ -42,7 +51,6 @@ function MessageChat({ route }) {
                 </View>
             </ScrollView>
 
-            {/* NUEVO COMENTARIO */}
             <View style={styles.newComment}>
                 <TextInput
                     style={styles.commentInput}
@@ -54,7 +62,7 @@ function MessageChat({ route }) {
                     <Ionicons name={'send-outline'} style={styles.sendCommentIcon}/>
                 </TouchableWithoutFeedback>
             </View>
-        </Modal>
+        </View>
     );
 };
 

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "880473744329",
+    "firebase_url": "https://react-native-fiufit-default-rtdb.firebaseio.com",
     "project_id": "react-native-fiufit",
     "storage_bucket": "react-native-fiufit.appspot.com"
   },
