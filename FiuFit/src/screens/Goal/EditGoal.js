@@ -5,109 +5,76 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {API_GATEWAY, USER} from "../../utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Picker} from "@react-native-picker/picker";
+import Client from '../../client/Client';
+import { getErrorMessage, getUser } from '../../utils/getters';
+import DatePicker from 'react-native-date-picker';
 
 
-const EditGoal = ({ route }) => {
-    const {post: goalPost, navigation} = route.params;
-    const [title, setTitle] = useState(goalPost.title);
-    const [description, setDescription] = useState(goalPost.description);
-    const [metric, setMetric] = useState(goalPost.metric);
-    const [difficulty, setDifficulty] = useState(goalPost.difficulty);
+
+const EditGoal = ({ route, navigation }) => {
+    const {goal} = route.params;
+    console.log(goal.limit_time)
+    const [title, setTitle] = useState(goal.title);
+    const [description, setDescription] = useState(goal.description);
+    const [metric, setMetric] = useState(goal.metric);
+    const [quantity, setQuanity] = useState(goal.quantity_steps.toString());
+    const [limit, setLimit] = useState(new Date(goal.limit_time));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedValue, setSelectedValue] = useState(" ");
-
-    const handleDifficulty = (value) => {
-        setDifficulty(value);
-    };
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false)
 
     const metricItems = [
         { label: " ", value: " " },
-        { label: "Distancia recorrida", value: "Distancia recorrida" },
-        { label: "Tiempo utilizado", value: "Tiempo utilizado" },
-        { label: "Calorias utilizadas", value: "Calorias utilizadas" },
-        { label: "Cantidad de hitos realizados", value: "Cantidad de hitos realizados" },
-        { label: "Tipo de actividad realizada", value: "Tipo de actividad realizada" },
+        { label: "Calories Burned", value: "Calories" },
+        { label: "Number of Steps", value: "Steps" },
+        { label: "Distance traveled (Km)", value: "Kilometers" },
+        
     ];
 
     const handleSaveChanges = async () => {
-        let url = API_GATEWAY + "trainers/me/trainings/" + goalPost.id
+        console.log(goal)
         setLoading(true);
         setError(false)
-
-        let item =  await AsyncStorage.getItem(USER)
-        let userInfo = JSON.parse(item)
-
-        let response = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userInfo.access_token,
-            },
-            body: JSON.stringify({
-                "title": title,
-                "description": description,
-                "metric": metric,
-                "difficulty" : difficulty,
-            })
-        })
+        let userInfo = await getUser()
+        let response = await Client.editGoals(userInfo.access_token,title,description,metric,parseInt(quantity),limit.toISOString(),goal.id)
+        setLoading(false);
+        console.log(JSON.stringify(response))
         if (!response.ok) {
+            
             setError(true);
-            setLoading(false);
-            if (response.status === 401) {
-                setErrorMessage('Unauthorized, not a valid access token');
-            } else {
-                setErrorMessage('Failed to connect with the server');
-            }
+            setErrorMessage(getErrorMessage(response.status))
         } else {
-            let data = await response.json()
-            console.log(JSON.stringify(data))
-            setLoading(false);
-            navigation.navigate("View Challenges",{reload:!reload})
+            navigation.goBack();  
+            navigation.goBack();    
         }
+
     }
 
-    function handleDelete() {
-        let url = API_GATEWAY + "trainers/me/goal/" + goalPost.id
+    async function handleDelete() {
+        console.log(goal)
         setLoading(true);
         setError(false)
-        AsyncStorage.getItem(USER).then((item) => {
-            let userInfo = JSON.parse(item)
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + userInfo.access_token,
-                },
-            }).then((response) => {
-                setLoading(false);
-                console.log(JSON.stringify(response))
-                if (!response.ok) {
-                    setError(true);
-                    if (response.status === 401) {
-                        setErrorMessage('Unauthorized, not a valid access token');
-                    } else {
-                        setErrorMessage('Failed to connect with the server');
-                    }
-                } else {
-                    response.json().then((data) => {
-                        console.log(JSON.stringify(data))
-                        navigation.navigate("View Challenges",{reload:!reload})
-                    }).catch((error) => {
-                        setError(true);
-                        setErrorMessage(error);
-                    });
-                }})}).catch((error) => {
+        let userInfo = await getUser()
+        console.log(userInfo.access_token)
+        let response = await Client.deleteGoal(userInfo.access_token,goal.id)
+        setLoading(false);
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
             setError(true);
-            setErrorMessage(error);
-        })
+            setErrorMessage(getErrorMessage(response.status))
+        } else {
+            navigation.goBack();
+            navigation.goBack();   
+        }     
     }
 
     return (
-        <View style={{padding: 20, backgroundColor: 'white', flex:1}}>
+        <View style={{padding: 30, backgroundColor: 'white', flex:1,paddingTop:50}}>
 
-            <ScrollView>
+            
                 <View style={styles.inputContainer}>
                     <Text style={styles.text}>Title</Text>
                     <View style={{flexDirection: 'row'}}>
@@ -126,10 +93,11 @@ const EditGoal = ({ route }) => {
                     <View style={{flexDirection: 'row'}}>
                         <Ionicons name="md-pencil-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
                         <TextInput
-                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}
+                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%'}}
                             placeholder="Enter the description"
                             value={description}
                             onChangeText={setDescription}
+                            multiline={true}
                         />
                     </View>
                 </View>
@@ -138,7 +106,7 @@ const EditGoal = ({ route }) => {
                     <View style={{padding:1, marginTop:10, paddingTop:10 }}>
                         <Text style={styles.text}>Training Type</Text>
                         <View style={{flexDirection:"row"}}>
-                            <Ionicons name="fitness-outline" size={24} color={"rgba(53,63,79,0.74)"} style={styles.icon}/>
+                            <Ionicons name="fitness-outline" size={24} color={"rgba(53,63,79,0.74)"} style={styles.iconType}/>
                             <Picker
                                 selectedValue={selectedValue}
                                 style={{ height: 50, width: '99%', marginLeft: -10, color: "rgba(53,63,79,0.74)", fontSize: 18, }}
@@ -157,28 +125,54 @@ const EditGoal = ({ route }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.text}> Difficulty </Text>
-                    <View style={{flexDirection: 'row', marginTop: 8}}>
-                        <Ionicons name="ios-stats-chart-outline" size={16} color="#A6A6A6" style={styles.icon}/>
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                            {[1, 2, 3, 4, 5].map((value) => (
-                                <TouchableWithoutFeedback key={value} onPress={() => handleDifficulty(value)}>
-                                    <Icon name={value <= difficulty ? 'star' : 'star-outline'} size={20} color="#FDB813" />
-                                </TouchableWithoutFeedback>
-                            ))}
-                            <Text style={{ marginLeft: 10 }}>{difficulty > 0 ? ' ' + ' ' : ' '}</Text>
-                        </View>
+                    <Text style={styles.text}>Quantity</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Ionicons name="md-pulse-outline" size={16} color={"rgba(52,60,80,0.85)"} style={styles.icon}/>
+                        <TextInput
+                            style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}
+                            placeholder="Enter the quantity"
+                            value={quantity}
+                            onChangeText={setQuanity}
+                        />
                     </View>
                 </View>
 
-            </ScrollView>
+
+                <View style={styles.inputContainer}>
+                    <Text style={styles.text}>Limit Time</Text>
+                        <TouchableOpacity style={{flexDirection:"row"}} onPress={ () => {setOpen(true)}}>
+                            <Ionicons name="md-calendar-outline" size={24} color="#A6A6A6" style={styles.icon}/> 
+                            {/* limit == limit_default || !limit 
+                              ? <Text style={styles.input}> Select Limit Date (Optional)</Text>
+                              : <Text style={styles.input}> {limit.toISOString().slice(0,10)} </Text>
+                                */}
+                            <Text style={{fontSize: 16,  color: "rgba(53,63,79,0.74)", width: '99%',}}> { limit.toISOString().slice(0,10)} </Text>
+                        </TouchableOpacity>
+                    </View>
+
+            
+
+            <DatePicker
+                        modal
+                        open={open}
+                        date={date}
+                        minimumDate={date}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setLimit(date)
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
+                    />
 
 
             { loading
-                ? <View style={{marginBottom:100, marginHorizontal: 40}}>
+                ? <View style={{marginBottom:100, marginHorizontal: 40,marginTop:20}}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
                 : <>
+                    <View style = {{marginBottom:60}}>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                             <Text style={styles.deleteButtonText}>Delete Goal</Text>
@@ -188,16 +182,17 @@ const EditGoal = ({ route }) => {
                         </TouchableOpacity>
 
                     </View>
-
+                    {error && (
+                        <View style = {{alignItems:"center"}}>
+                            <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                        </View>
+                    )}
+                    </View>
 
                 </>
             }
 
-            {error && (
-                <View style = {{alignItems:"center",marginTop:15}}>
-                    <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
-                </View>
-            )}
+            
 
 
 
@@ -212,19 +207,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        justifyContent:"center",
         backgroundColor: '#fff',
     },
     buttonContainer:{
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:50
+        marginBottom:20,
+        marginTop:20
     },
     inputContainer: {
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
         marginVertical: 10,
-        marginTop:20
+        marginTop:20,
+        padding:5
     },
     icon: {
         marginRight: 10,
@@ -232,9 +230,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "#A6A6A6"
     },
+    iconType: {
+        
+        marginTop: 19,
+        fontSize: 16,
+        color: "#A6A6A6"
+    },
     input: {
         flex: 1,
         fontSize: 18,
+        padding:5
     },
     buttonText: {
         fontSize: 18,
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: '#333',
-        marginBottom: 10
+        marginBottom: 10,
     },
     trainingType: {
         height:5,

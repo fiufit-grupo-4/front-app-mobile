@@ -6,9 +6,9 @@ import { DEFAULT_IMAGE } from "../../utils/constants";
 
 export function trainingPrincipalContent(item, toggleModal) {
     return <>
-        <View style={{padding: 5}}>
-            <Text style={styles.title}>{item.title}</Text>
-        </View>
+        
+
+        
     
         <ScrollView
             contentContainerStyle={styles.mediaContainer}
@@ -52,6 +52,11 @@ export function trainingPrincipalContent(item, toggleModal) {
 
 export function trainingContent(item) {
     return <>
+
+        <View style={styles.item}>
+            <Ionicons name={'md-person-outline'} style={styles.icon}/>
+            <Text style={styles.itemText}>{'Trainer: ' + item.trainer.name + " " + item.trainer.lastname}</Text>
+        </View>
         <View style={styles.item}>
             <Ionicons name={'md-pencil-outline'} style={styles.icon}/>
             <Text style={styles.itemText}>{'Description: ' + item.description}</Text>
@@ -59,11 +64,11 @@ export function trainingContent(item) {
 
         <View style={styles.item}>
             <Ionicons name={'fitness-outline'} style={styles.icon}/>
-            <Text style={styles.itemText}>{'Training Type: ' + item.type}</Text>
+            <Text style={styles.itemText}>{'Type: ' + item.type}</Text>
         </View>
 
         <View style={styles.item}>
-            <Ionicons name={'ios-stats-chart-outline'} style={styles.icon}/>
+            <Ionicons name={'cellular-outline'} style={styles.icon}/>
             <Text style={styles.itemText}>{'Difficulty: ' + item.difficulty}</Text>
         </View>
     </>;
@@ -77,7 +82,7 @@ const styles = StyleSheet.create({
     title: {
         borderTopWidth: 1,
         borderTopColor: 'orange',
-        fontSize: 18,
+        
         //marginLeft:7,
         color: 'rgba(23,29,52,0.76)'
     },
@@ -93,7 +98,7 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.63)'
     },
     icon: {
-        fontSize: 12,
+        fontSize: 16,
         color: 'rgba(32,38,70,0.63)',
         marginLeft: 8
     },

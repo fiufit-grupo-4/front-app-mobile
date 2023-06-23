@@ -8,6 +8,9 @@ import {AntDesign} from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { USER } from '../../utils/constants';
 import { getRole } from '../../utils/getters';
+import { Ionicons } from '@expo/vector-icons';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import GoogleFit from 'react-native-google-fit';
 
 const CustomDrawer = (props) => {
     const navigation = useNavigation();
@@ -48,14 +51,19 @@ const CustomDrawer = (props) => {
                 },
                 {
                     text: 'OK',
-                    onPress: () => {
+                    onPress: async () => {
                         console.log('User logged out');
-                        AsyncStorage.removeItem(USER).then(() => {
+                        try{
+                            await AsyncStorage.removeItem(USER)
+                            await GoogleSignin.signOut();
+                            GoogleFit.disconnect();
                             ToastAndroid.show('Logged out successfully', ToastAndroid.SHORT)
                             navigation.navigate("SignIn")
-                        }).catch(() => {
+                        }
+                        catch(e) {
+                            console.log(e.toString())
                             navigation.navigate("SignIn")
-                        }) 
+                        }
                     
                     }
                 }

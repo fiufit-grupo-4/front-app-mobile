@@ -94,12 +94,13 @@ function MenuProfileScreen({ navigation,route }) {
                         </TouchableOpacity>
                     )}
 
-
+                        
                     { user.role !== TRAINER &&(
                         <TouchableOpacity style={styles.trainingButton} onPress={() => navigation.navigate('View Goals',{user: user, myUser:true})}>
                             <Text style={styles.buttonText}>View Goals</Text>
                         </TouchableOpacity>
                     )}
+                    
                     
 
                     <View style={styles.tableContainer}>

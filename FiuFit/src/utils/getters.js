@@ -34,7 +34,7 @@ export async function updateUser(newData,oldData){
         "lastname":newData.lastname,
         "age":newData.age,
         "mail":newData.mail,
-        "role":newData.role,
+        "role":oldData.role,
         "image":newData.image,
         "blocked":newData.blocked,
         "phone_number":newData.phone_number,

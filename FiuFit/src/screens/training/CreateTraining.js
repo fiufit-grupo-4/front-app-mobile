@@ -9,7 +9,8 @@ import {
     TouchableWithoutFeedback,
     ScrollView,
     ActivityIndicator,
-    ToastAndroid
+    ToastAndroid,
+    Modal
 } from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -19,6 +20,8 @@ import MediaBox from '../../components/media/MediaBox';
 import { getUser,getErrorMessage } from '../../utils/getters';
 import Client from '../../client/Client';
 import ListType from "../../components/trainings/ListType";
+import ModalGoal from '../Goal/ModalGoal';
+import { GoalCreator } from './GoalCreator';
 
 export const CreateTraining = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -26,6 +29,8 @@ export const CreateTraining = ({ navigation }) => {
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [difficulty, setDifficulty] = useState(0);
+    const [goals, setGoals] = useState([]);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -39,13 +44,17 @@ export const CreateTraining = ({ navigation }) => {
     const [media4, setMedia4] = useState("");
     const [mediaType4, setMediaType4] = useState("");
 
-
     const trainingItems = [
-        { label: " ", value: " " },
-        { label: "Caminata", value: "Caminata" },
+        { label: "", value: "" },
+        { label: "Walking", value: "Walking" },
         { label: "Running", value: "Running" },
+        { label: "Resistance", value: "Resistance" },
+        { label: "Flexibility", value: "Flexibility" },
+        { label: "Fitness", value: "Fitness" },
+        { label: "Calisthenics", value: "Calisthenics" },
+        { label: "Balance", value: "Balance" },
+        { label: "Yoga", value: "Yoga" },
     ];
-
 
     const handleDifficulty = (value) => {
         setDifficulty(value);
@@ -101,8 +110,8 @@ export const CreateTraining = ({ navigation }) => {
         setMediaType3("")
         setMedia4("");
         setMediaType4("")
+        setGoals([])
     }
-
 
 
 
@@ -116,11 +125,16 @@ export const CreateTraining = ({ navigation }) => {
             Alert.alert('Error', 'Please fill all fields');
             return;
         }
+        if (goals.length == 0) {
+            Alert.alert('Error', 'Please add a Goal');
+            return;
+        }
+       
         let user = await getUser()
         let array = await handleMedia(user)
         setLoading(true)
         setError(false)  
-        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array)
+        let response = await Client.createNewPost(user.access_token,title,description,type,difficulty,array,goals)
         setLoading(false)
         if (!response.ok) {
             setError(true);
@@ -132,36 +146,6 @@ export const CreateTraining = ({ navigation }) => {
             resetStates()                
             navigation.goBack();
         }
-
-        /*
-        let response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + user.access_token,
-            },
-            body: JSON.stringify({       
-                "title": title,
-                "description": description,
-                "type": type,
-                "difficulty": difficulty,
-                "media": array
-            })
-        })
-        setLoading(false)
-        if (!response.ok) {
-            setError(true);
-            if (response.status === 401) {
-                setErrorMessage('Unauthorized, not a valid access token');
-            } else {
-                setErrorMessage('Failed to connect with the server');
-            }
-        } else {
-            let data = await response.json()
-            console.log(JSON.stringify(data))                
-            navigation.goBack();
-        }*/
-        
         
     };
 
@@ -223,14 +207,15 @@ export const CreateTraining = ({ navigation }) => {
                     
                 </ScrollView>
 
+                <GoalCreator goals = {goals} setGoals={setGoals}></GoalCreator>
 
                 { loading 
                 ? <View style={{marginTop:50, marginHorizontal: 40}}>
                         <ActivityIndicator size="large" color = "black"/>
                     </View>
                 : <TouchableOpacity style={styles.button} onPress={createPost}>
-                        <Text style={styles.buttonText}>Post</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.buttonText}>Post</Text>
+                  </TouchableOpacity>
                 }
 
                 {error && (
@@ -239,7 +224,9 @@ export const CreateTraining = ({ navigation }) => {
                     </View>
                 )}
 
+
                 </ScrollView>
+
             </View>
     );
 };
@@ -319,7 +306,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0A500',
         borderRadius: 10,
         paddingVertical: 10,
-        marginTop:50,
+        marginTop:30,
+        marginBottom:20,
         marginHorizontal: 40,
         width:"80%",
         
@@ -347,25 +335,3 @@ const styles = StyleSheet.create({
 });
 
 export default CreateTraining;
-
-/*
-import { ScrollView } from 'react-native';
-import MediaBox from './MediaBox';
-
-const YourScreen = () => {
-  return (
-    
-  );
-};
-
-const styles = {
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-};
-
-export default YourScreen;
-
-*/
