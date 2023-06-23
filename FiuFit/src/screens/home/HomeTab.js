@@ -58,15 +58,7 @@ export const HomeTab = () => {
         }
 
         }
-        getTrainings();
-    }, [isFocused])
-
-
-            setError(true);
-            setErrorMessage(error.toString());
-        })
-      }
-    
+ 
     getTrainings();
     
     const requestUserPermission = async () => {
