@@ -38,7 +38,9 @@ const SignInScreen = () => {
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
+
             email: 'dante@trainer.com',
+
             password: '1234'
         }
     });

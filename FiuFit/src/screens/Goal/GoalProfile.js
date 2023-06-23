@@ -12,7 +12,6 @@ function GoalProfile({ route,  navigation }) {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-
     const handleEditPress = () => {
         
         navigation.navigate('Edit Goal', { goal: item});

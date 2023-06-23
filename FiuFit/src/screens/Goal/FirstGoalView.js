@@ -12,6 +12,7 @@ const FirstGoalView = ({item, user}) => {
                 <View style={styles.postBackground}>
                     <View key = {item.id} style={newstyles.container}>
                         <View style={newstyles.header}>
+
                             <Text style={item.state == 3 ? newstyles.tituloCompleted : newstyles.titulo}>{item.title}</Text>
 
                             { item.state == 3 
@@ -22,7 +23,7 @@ const FirstGoalView = ({item, user}) => {
                              ? <Text style={newstyles.dificultad}>Expired</Text>
                              : <Text style={newstyles.dificultad}>{item.progress_steps + "/" + item.quantity_steps}</Text>
                             }
-                            
+
                         </View>
                     </View>
                     <View style={styles.item}>
