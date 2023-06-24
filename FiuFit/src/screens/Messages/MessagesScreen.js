@@ -1,71 +1,80 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Text, ActivityIndicator, FlatList} from "react-native";
+import {StyleSheet, View, Text, ActivityIndicator, FlatList,ScrollView} from "react-native";
 import Errors from "../../components/utils/Error";
 import MessageListItem from "./MessageListItem";
 import {Ionicons} from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import firestore from '@react-native-firebase/firestore';
+import { getUser } from "../../utils/getters";
 
 const MessageScreen = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [chats, setChats] = useState([]);
+    const [user, setUser] = useState({})
 
-    const participants = [
-        {
-            "id": 1,
-            "name": "John Doe"
-        },
-        {
-            "id": 2,
-            "name": "Jane Smith"
-        }
-    ];
+    const isFocused = useIsFocused()
 
-    const messages = [
-        {
-            "id": 1,
-            "senderId": 1,
-            "receiverId": 2,
-            "content": "Hey Jane, how are you?",
-            "timestamp": "2023-06-19T12:30:45Z"
-        },
-        {
-            "id": 2,
-            "senderId": 2,
-            "receiverId": 1,
-            "content": "Hi John! I'm doing well, thanks. How about you?",
-            "timestamp": "2023-06-19T12:35:20Z"
-        },
-        {
-            "id": 3,
-            "senderId": 1,
-            "receiverId": 2,
-            "content": "I'm good too! Just working on a project.",
-            "timestamp": "2023-06-19T12:38:10Z"
+    useEffect(() => {
+        async function getChats() {
+            setLoading(true)
+            setError(false)
+            let userInfo = await getUser()
+
+            setUser(userInfo)
+            const userChatsRef = firestore()
+            .collection('chats')
+            .where('participants', 'array-contains', userInfo.id);
+            userChatsRef.get()
+            .then((querySnapshot) => {
+              
+              const chatsInfo = [];
+              querySnapshot.forEach((doc) => {
+                const chat = doc.data();
+                chatsInfo.push(chat);
+              });
+              
+              setChats(chatsInfo);
+              setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false)
+              setError(true)
+              setErrorMessage('Error al obtener los chats:' + error.toString())
+            });
+            
         }
-    ];
+        getChats()
+      }, [isFocused])
+
 
 
     return (
-        <>
+        <View style={styles.container}>
+                <Text style={styles.title}> {"Messages "}</Text>
+        
             {loading
-                ? <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                ? <View style={{marginTop:250, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                     <ActivityIndicator size="large" color = "black"/>
                 </View>
 
                 : <>
-                    {participants.length === 0
-                        ? <Errors message={"You dont have any message yet"} icon={"mail"}></Errors>
-                        : <View style={{padding:10 }}>
-                            <Text style={styles.header}>Messages</Text>
-                            <FlatList
-                                data={participants}
-                                keyExtractor={(participant) => participant.id}
-                                renderItem={({item}) => (
-                                    <View style={{marginTop:10 }}>
-                                        <MessageListItem item={item} messages={messages} ></MessageListItem>
-                                    </View>
-                                )}
-                            />
+                    {chats.length === 0
+                        ? <View style = {{alignItems:"center",marginTop:30}}>
+                            <Text style = {{fontSize:18}}> You don´t have any messages yet </Text>
+                          </View>
+                        : <View style={{padding:5 }}>
+                            <ScrollView>
+                                {chats.map((item, index) => (
+                                    <View key={index} style={{marginTop:5 }}>
+                                        
+                                    <MessageListItem chat={item} myId={user.id}></MessageListItem>
+                                </View>
+                                    
+                                ))}
+                                </ScrollView>
+                               
                         </View>
                     }
 
@@ -76,7 +85,7 @@ const MessageScreen = () => {
                     )}
                 </>
             }
-        </>
+        </View>
     )
 }
 
@@ -99,13 +108,7 @@ const styles = StyleSheet.create({
         color: 'rgba(32,38,70,0.91)',
         marginBottom:10,
     },
-    title: {
-        borderTopWidth: 1,
-        borderTopColor: 'orange',
-        fontSize: 18,
-        //marginLeft:7,
-        color: 'rgba(23,29,52,0.76)'
-    },
+
     item: {
         alignItems: 'center'
     },
@@ -138,15 +141,16 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
     },
-    mediaContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-    },
-    image: {
-        width: 300,
-        height: 300,
-    }
+    container: {
+    
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom:20
+      },
 });
 
 export default MessageScreen;

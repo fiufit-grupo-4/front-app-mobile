@@ -3,18 +3,18 @@ import {StyleSheet, TouchableOpacity, View} from "react-native";
 import React from "react";
 import FirstMessageView from "./FirstMessageView";
 
-function MessageListItem({item, messages}) {
+function MessageListItem({chat,myId}) {
     const navigation = useNavigation();
 
     //TODO PASAR LOS MSJ CON ESA PERSONA
     function handleOnPress() {
-        navigation.navigate("Message Chat", { item, messages });
+        navigation.navigate("Message Chat", { chat,myId });
     }
 
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handleOnPress}>
-                <FirstMessageView item={item}  />
+                <FirstMessageView item={chat} myId={myId}  />
             </TouchableOpacity>
         </View>
     );

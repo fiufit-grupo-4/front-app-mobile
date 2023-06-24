@@ -8,53 +8,87 @@ import {
     TextInput,
     TouchableWithoutFeedback, Modal
 } from "react-native";
-import React, {useState} from "react";
+import React, {useState,useEffect,useCallback} from "react";
 import {Ionicons} from "react-native-vector-icons";
+import { GiftedChat,InputToolbar } from 'react-native-gifted-chat'
 
-function handleAddMessage() {
 
-}
+
+const customtInputToolbar = props => {
+    return (
+      <InputToolbar
+        {...props}
+        containerStyle={{
+          backgroundColor: "white",
+          borderTopColor: "#E8E8E8",
+         
+          borderRadius:15,
+          
+        }}
+      />
+    );
+  };
 
 function MessageChat({ route }) {
-    const {item, messages} = route.params;
-    const senderId = item.id;
+    const {chat, myId} = route.params;
+    const [messages, setMessages] = useState([])
+    const [sender, setSender] = useState({})
+    const [user, setMyUser] = useState({})
 
-    const renderMessage = ({ item }) => {
-        const messageSenderId = item.senderId;
+    const getMessages = () =>{
+        const senderUser = chat?.users.filter(user => user.id !== myId)[0];
+        const myUser = chat?.users.filter(user => user.id == myId)[0];
+        setSender(senderUser)
+        setMyUser(myUser)
 
-        return (
-            <View style={(senderId === messageSenderId) ? styles.messageContainerSender : styles.messageContainerReceiver}>
+       
 
-                <Text style={(senderId === messageSenderId) ? styles.messageContentSender : styles.messageContentReceiver}>{item.content}</Text>
-            </View>
-        );
-    };
+        const messages = chat.messages.map((message) => {
+            const userFind = chat.users.find((user) => user.id === message.sender_id);
+            
+            return {
+            _id: message.id,
+            text: message.text,
+            createdAt: new Date(message.time),
+            user: {
+                _id: userFind.id,
+                name: userFind.name + " " + userFind.lastname,
+                avatar: userFind.image,
+            },
+            };
+        });
+          
+            
+          
+        setMessages(messages);
+    }
+
+    useEffect(() => {
+
+        
+        getMessages()
+        
+      }, [])
+
+      const onSend = useCallback((messages = []) => {
+        setMessages(previousMessages =>
+          GiftedChat.append(previousMessages, messages),
+        )
+      }, [])
 
     return (
-        <Modal>
-            <ScrollView>
-                <View style={styles.container}>
-                    <FlatList
-                        data={messages}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={renderMessage}
-                    />
-                </View>
-            </ScrollView>
+        <View style ={{flex:1,padding:5,marginBottom:10}}>
 
-            {/* NUEVO COMENTARIO */}
-            <View style={styles.newComment}>
-                <TextInput
-                    style={styles.commentInput}
-                    placeholder="New message..."
-                    //onChangeText={(text) => setCommentText(text)}
-                    //value={commentText}
+
+            <GiftedChat
+                messages={messages}
+                onSend={messages => onSend(messages)}
+                renderInputToolbar={props => customtInputToolbar(props)}
+                user={{
+                    _id: myId,
+                }}
                 />
-                <TouchableWithoutFeedback onPress={handleAddMessage}>
-                    <Ionicons name={'send-outline'} style={styles.sendCommentIcon}/>
-                </TouchableWithoutFeedback>
-            </View>
-        </Modal>
+        </View>
     );
 };
 
