@@ -19,6 +19,7 @@ import TrainingsHome from "../screens/training/TrainingsHome";
 import { useIsFocused } from "@react-navigation/native";
 import Progress from "../screens/progress/Progress";
 import InterestHome from "../screens/profile/InterestHome";
+import NotificationScreen from "../screens/notifications/NotificationsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -226,7 +227,7 @@ function DrawerComponent() {
         <Drawer.Screen
             name="        Notifications"
             color="#F0A500"
-            component={FollowersScreen}
+            component={NotificationScreen}
             initialParams={ {user: userInfo} }
             options={() => ({
                 drawerIcon: () => (
