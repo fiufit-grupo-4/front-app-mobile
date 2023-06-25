@@ -6,7 +6,7 @@ import {Ionicons} from "@expo/vector-icons";
 
 
 const NotificationScreen = ( ) => {
-    const [notifications, setNotifications] = useState({});
+    const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
