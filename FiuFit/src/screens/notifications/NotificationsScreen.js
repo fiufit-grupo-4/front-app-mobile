@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Text, ScrollView} from "react-native";
+import {StyleSheet, View, Text, ScrollView, ActivityIndicator, FlatList} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {USER, API_GATEWAY } from '../../utils/constants';
 import {Ionicons} from "@expo/vector-icons";
+import GoalsListItem from "../Goal/GoalsListItem";
 
 
 const NotificationScreen = ( ) => {
@@ -13,7 +14,7 @@ const NotificationScreen = ( ) => {
 
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
-        console.log("------")
+        //console.log("------")
         async function getUsers() {
             await AsyncStorage.getItem(USER)
             .then((item) => {
@@ -52,9 +53,48 @@ const NotificationScreen = ( ) => {
         getUsers();
     }, [])
 
+    //console.log("ESTAS SON LAS NOTIF POSTA POSTA: ", notifications)
+
     return (
         <View>
-        { loading ? 
+
+            { loading
+                ? <View style={{marginTop:250, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
+                    <ActivityIndicator size="large" color = "black"/>
+                </View>
+                : <>
+
+                {notifications && notifications.map((notification, index) => (
+                    <View key={index} style={styles.notificationItem}>
+                        {notification.title === 'New follower' && (
+
+                            <Text style={styles.notificationText}>
+                                <Ionicons name={'md-person-outline'} style={styles.icon}/>
+                                {"   "}
+                                {notification.body}
+                            </Text>
+                        )}
+                        {notification.title === 'Goal accomplished' && (
+                            <Text key={index} style={styles.notificationText}>
+                                <Ionicons name={'checkmark-outline'} style={styles.icon}/>
+                                {"   "}
+                                {notification.body}
+                            </Text>
+                        )}
+                    </View>
+                ))}
+
+
+                    {error && (
+                        <View style = {{alignItems:"center",marginTop:15}}>
+                            <Text style = {{fontSize:18,color : "crimson"}}> {errorMessage} </Text>
+                        </View>
+                    )}
+                </>
+            }
+
+
+        {/*{ loading ?
             <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
                <ActivityIndicator size="large" color = "black"/>
             </View> :
@@ -87,7 +127,7 @@ const NotificationScreen = ( ) => {
                     ))}
                 </ScrollView>
             </View>
-        }
+        }*/}
         </View>
     );
 };
