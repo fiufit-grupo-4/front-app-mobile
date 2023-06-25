@@ -71,7 +71,6 @@ export const CreateGoal = ({ navigation }) => {
         setLoading(true)
         setError(false)
         let response = await Client.createNewGoal(user.access_token,title,description,metric,parseInt(quantity),limit.toISOString())
-        console.log(limit)
         if (!response.ok) {
             console.log(response.status)
             setLoading(false)

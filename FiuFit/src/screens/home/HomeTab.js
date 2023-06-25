@@ -74,7 +74,6 @@ export const HomeTab = () => {
       messaging().getToken().then(async token => { 
         let userInfo = await getUser();
         let url = API_GATEWAY + 'users/' + userInfo.id;
-        console.log(token);
         fetch(url, {
           method: 'PATCH',
           headers: {

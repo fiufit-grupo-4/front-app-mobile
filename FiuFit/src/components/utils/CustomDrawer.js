@@ -28,7 +28,6 @@ const CustomDrawer = (props) => {
     useEffect(() => {
         async function getUser() {
             AsyncStorage.getItem(USER).then( user => {
-                console.log(user)
                 setUserInfo(JSON.parse(user))          
             }
             ).catch(error => {

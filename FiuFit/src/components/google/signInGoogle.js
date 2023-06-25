@@ -31,7 +31,6 @@ function GoogleSignInButton() {
     React.useEffect(() => {
       if (response?.type === 'success') {
         const { authentication } = response;
-        console.log(JSON.stringify(response))
         // Aquí puedes manejar la respuesta de autenticación exitosa
       }
     }, [response]);
