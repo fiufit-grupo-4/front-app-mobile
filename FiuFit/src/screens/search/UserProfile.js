@@ -35,7 +35,7 @@ const UserProfile = ({ navigation,route }) => {
     async function getUsers() {
         let  myUser = await getUser()
         Client.getUserById(myUser.access_token,user.id).then(async data => {
-          console.log(data)
+
           setIsFollowing(followed(data))
           setUser(data)
          
@@ -62,7 +62,7 @@ const UserProfile = ({ navigation,route }) => {
           
     } else {
       let json = await response.json()
-      console.log(json)
+
       setIsFollowing(!isFollowing);
     }
     setLoading(false)
@@ -72,27 +72,32 @@ const UserProfile = ({ navigation,route }) => {
     setLoadingMessage(true)
     setError(false)
     let myUser = await getUser()
-    console.log("Mi id",myUser.id)
-    console.log("User id",userInfo.id)
     const chatsRef = firestore().collection('chats');
-
+    const exist = false
     // Buscar el chat existente entre los usuarios
-    const query = chatsRef.where('participants', 'array-contains', myUser.id && userInfo.id);
+    const query = chatsRef.where('participants', 'array-contains', myUser.id );
     const snapshot = await query.get();
 
     if (!snapshot.empty) {
-      const chat = snapshot.docs[0].data();
-      const chatId = snapshot.docs[0].id;
-      const newChat = {
-        id: chatId,
-        participants: chat.participants,
-        messages: chat.messages,
-        users : chat.users
-      }
-      console.log('El chat ya existe:', chat);
-      console.log('ID del chat:', chatId);
-      navigation.navigate("Message Chat", { chat: newChat,myId: myUser.id });
-    } else {
+      snapshot.docs.forEach((doc) => {
+        const chat = doc.data()
+        if (chat.participants.includes(userInfo.id)){
+          const chatId = doc.id;
+          const newChat = {
+            id: chatId,
+            participants: chat.participants,
+            messages: chat.messages,
+            users : chat.users
+          }
+
+         
+          exist = true
+          navigation.navigate("Message Chat", { chat: newChat,myId: myUser.id });
+        } 
+      })
+    } 
+
+    if (!exist) {
       
       const newChat = {
         participants: [myUser.id ,  user.id],
@@ -103,7 +108,6 @@ const UserProfile = ({ navigation,route }) => {
         messages: [],
       };
 
-      // Agregar el nuevo chat a Firestore
       const docRef = await chatsRef.add(newChat);
       const chatId = docRef.id;
 
@@ -113,8 +117,8 @@ const UserProfile = ({ navigation,route }) => {
         messages: newChat.messages,
         users : newChat.users
       }
-      console.log('Se creó un nuevo chat:', newChat);
-      console.log('ID del chat:', chatId);
+
+
       navigation.navigate("Message Chat", { chat: chat,myId: myUser.id });
     }
     

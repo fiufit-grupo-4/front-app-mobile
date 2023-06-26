@@ -46,7 +46,7 @@ function MessageChat({ route }) {
 
         const messages = chat.messages.map((message) => {
             const userFind = chat.users.find((user) => user.id === message.sender_id);
-            
+            console.log("IMAGE:",userFind.image)
             return {
                 _id: message.id,
                 text: message.text,
@@ -54,7 +54,7 @@ function MessageChat({ route }) {
                 user: {
                     _id: userFind.id,
                     name: userFind.name + " " + userFind.lastname,
-                    avatar: userFind.image,
+                    avatar: !userFind.image ||userFind.image == "string"  ? "" : userFind.image ,
                 },
             };
         });

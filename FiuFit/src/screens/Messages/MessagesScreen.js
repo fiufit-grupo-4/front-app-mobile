@@ -42,8 +42,8 @@ const MessageScreen = () => {
                 }
                 chatsInfo.push(newChat);
               });
-              
-              setChats(chatsInfo);
+              let reversed = chatsInfo.reverse()
+              setChats(reversed);
               setLoading(false)
             })
             .catch((error) => {
