@@ -12,9 +12,19 @@ const NotificationScreen = ( ) => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const getIconName = (type) => {
+        switch (type) {
+            case 'New follower':
+                return 'md-person-outline';
+            case 'Goal accomplished':
+                return 'checkmark-outline';
+            default:
+                return 'notifications-outline';
+        }
+    };
+
     useEffect(() => {
         const url = API_GATEWAY + 'users/me'
-        //console.log("------")
         async function getUsers() {
             await AsyncStorage.getItem(USER)
             .then((item) => {
@@ -35,9 +45,6 @@ const NotificationScreen = ( ) => {
                         } else {
                             response.json().then((data) => {
                                 setNotifications(data.notifications);
-                                console.log(data.notifications)
-                                console.log("---")
-                                console.log(notifications)
                             }).catch((error) => {
                                 setError(true);
                                 setErrorMessage(error);
@@ -53,7 +60,7 @@ const NotificationScreen = ( ) => {
         getUsers();
     }, [])
 
-    //console.log("ESTAS SON LAS NOTIF POSTA POSTA: ", notifications)
+    //console.log("NOTIFICATIONS  : ", notifications)
 
     return (
         <View>
@@ -64,26 +71,21 @@ const NotificationScreen = ( ) => {
                 </View>
                 : <>
 
-                {notifications && notifications.map((notification, index) => (
-                    <View key={index} style={styles.notificationItem}>
-                        {notification.title === 'New follower' && (
-
-                            <Text style={styles.notificationText}>
-                                <Ionicons name={'md-person-outline'} style={styles.icon}/>
-                                {"   "}
-                                {notification.body}
-                            </Text>
-                        )}
-                        {notification.title === 'Goal accomplished' && (
-                            <Text key={index} style={styles.notificationText}>
-                                <Ionicons name={'checkmark-outline'} style={styles.icon}/>
-                                {"   "}
-                                {notification.body}
-                            </Text>
-                        )}
-                    </View>
-                ))}
-
+                    <ScrollView contentContainerStyle={styles.container}>
+                        {notifications.map((notification) => (
+                            <View key={notification.id} style={styles.notificationContainer}>
+                                <View style={styles.notificationHeader}>
+                                    <View style={styles.iconContainer}>
+                                        <Ionicons name={getIconName(notification.title)} size={18} color='rgba(26,49,70,0.86)'/>
+                                    </View>
+                                    <Text style={styles.notificationTitle}>{notification.title}</Text>
+                                </View>
+                                <View style={styles.notificationBody}>
+                                    <Text style={styles.notificationText}>{notification.body}</Text>
+                                </View>
+                            </View>
+                        ))}
+                    </ScrollView>
 
                     {error && (
                         <View style = {{alignItems:"center",marginTop:15}}>
@@ -94,73 +96,45 @@ const NotificationScreen = ( ) => {
             }
 
 
-        {/*{ loading ?
-            <View style={{marginTop:350, transform: [{ scaleX: 2 }, { scaleY: 2 }] }}>
-               <ActivityIndicator size="large" color = "black"/>
-            </View> :
-            <View style={styles.container}>
-                <Text style={styles.title}>Notifications</Text>
-                <ScrollView style={styles.notificationList}>
-                {error && (
-                        <View style = {{alignItems:"center"}}>
-                        <Text style = {{fontSize:18,color : "crimson",padding:5}}> {errorMessage} </Text>
-                        </View>
-                    )}
-                  {notifications && notifications.map((notification, index) => (
-                        <View key={index} style={styles.notificationItem}>
-                            {notification.title === 'New follower' && (
-
-                                <Text style={styles.notificationText}>
-                                    <Ionicons name={'md-person-outline'} style={styles.icon}/>
-                                    {"   "}
-                                    {notification.body}
-                                </Text>
-                            )}
-                            {notification.title === 'Goal accomplished' && (
-                                <Text key={index} style={styles.notificationText}>
-                                    <Ionicons name={'checkmark-outline'} style={styles.icon}/>
-                                    {"   "}
-                                    {notification.body}
-                                </Text>
-                            )}
-                        </View>
-                    ))}
-                </ScrollView>
-            </View>
-        }*/}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 16,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
     },
-    notificationList: {
-        flex: 1,
+    notificationContainer: {
+        backgroundColor: 'rgb(255,255,255)',
+        borderRadius: 12,
+        marginBottom: 10,
+        padding: 13,
     },
-    title:{
-        fontSize:20,
-        color: 'rgba(32,38,70,0.91)',
-        marginBottom:10,
-    },
-    notificationItem: {
-        padding: 10,
+    notificationHeader: {
+        borderBottomColor: 'rgba(58,142,212,0.21)',
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        paddingBottom: 8,
+        marginBottom: 6,
+        flexDirection: "row"
+    },
+    notificationTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'rgba(26,49,70,0.86)',
+    },
+    notificationBody: {
+        marginBottom: 8,
     },
     notificationText: {
-        fontSize: 18,
-        color: 'rgba(32,38,70,0.63)',
-        paddingTop: 6
-    },
-    icon: {
         fontSize: 16,
-        color: 'rgba(32,38,70,0.63)',
-        marginLeft: 8,
-        paddingHorizontal:10
+        color: 'rgba(26,49,70,0.86)',
+    },
+    iconContainer: {
+        marginRight: 16,
+        color: 'rgba(26,49,70,0.86)',
     },
 });
+
 
 export default NotificationScreen;
