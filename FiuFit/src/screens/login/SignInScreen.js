@@ -19,6 +19,8 @@ import {Ionicons} from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ATHLETE,TRAINER,API_GATEWAY,USER } from '../../utils/constants';
 import ApiClient from "../../client/Client"
+
+
 const validator = require('validator');
 
 
@@ -55,11 +57,20 @@ const SignInScreen = () => {
         setLoading(true)
         ApiClient.signIn(data,getRole())
             .then(async  response => {
+                
+                
                 const user_info = JSON.stringify(response)
-                console.log(user_info)
+               
                 await AsyncStorage.setItem(USER,user_info)
                 setLoading(false)
-                if (!user_info.first_login) navigation.navigate("Inicio")
+                if (!response.first_login){
+                    if (response.role == ATHLETE) {
+                       
+                        navigation.navigate("Permissions",{user:response})
+                    } else {
+                        navigation.navigate("Inicio")
+                    }
+                } 
                 else navigation.navigate("Interests",{ user: response})
             })
             .catch(error => {

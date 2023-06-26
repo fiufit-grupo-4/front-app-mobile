@@ -30,6 +30,7 @@ import MessageChat from "../screens/Messages/MessageChat";
 import TrainingStats from '../screens/training/TrainingStats';
 import InterestsScreen from '../screens/profile/InterestScreen';
 import StartedTraining from '../screens/training/StartedTraining';
+import GooglePermissions from '../screens/home/GooglePermissions';
 
 
 const Stack = createNativeStackNavigator();
@@ -67,7 +68,7 @@ class Navigation extends React.Component {
                     <Stack.Screen name="View Goals" component={ViewGoal}  />
                     <Stack.Screen name="Goal Profile" component={GoalProfile}  />
                     <Stack.Screen name="Edit Goal" component={EditGoal}  />
-
+                    <Stack.Screen name="Permissions" component={GooglePermissions} options={{ headerShown: false }} />
                     <Stack.Screen name="FavoriteTraining" component={FavoriteTrainingScreen}  />
 
                     <Stack.Screen name="Message Chat" component={MessageChat}  />
