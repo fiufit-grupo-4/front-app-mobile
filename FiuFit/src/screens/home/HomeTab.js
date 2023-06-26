@@ -27,6 +27,7 @@ export const HomeTab = () => {
   useEffect(() => {
     async function getTrainings() {
         setLoading(true)
+        setError(false)
         let userInfo = await getUser()
         setUserData(userInfo)
         let response = await Client.getInterests(userInfo.access_token)
