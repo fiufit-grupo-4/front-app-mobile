@@ -6,6 +6,8 @@ import { getRole,getUser,getErrorMessage } from '../../utils/getters';
 import { useIsFocused } from '@react-navigation/native';
 import Client from '../../client/Client';
 import FollowersContainer from '../../components/followers/FollowersContainer';
+import firestore from '@react-native-firebase/firestore';
+
 
 const UserProfile = ({ navigation,route }) => {
   const {user,id} = route.params;
@@ -22,6 +24,7 @@ const UserProfile = ({ navigation,route }) => {
   const [userInfo, setUser] = useState(user);
   const [isFollowing, setIsFollowing] = useState(followed(user));
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("false");
 
@@ -65,6 +68,59 @@ const UserProfile = ({ navigation,route }) => {
     setLoading(false)
   };
 
+  const handleMessage = async () => {
+    setLoadingMessage(true)
+    setError(false)
+    let myUser = await getUser()
+    console.log("Mi id",myUser.id)
+    console.log("User id",userInfo.id)
+    const chatsRef = firestore().collection('chats');
+
+    // Buscar el chat existente entre los usuarios
+    const query = chatsRef.where('participants', 'array-contains', myUser.id && userInfo.id);
+    const snapshot = await query.get();
+
+    if (!snapshot.empty) {
+      const chat = snapshot.docs[0].data();
+      const chatId = snapshot.docs[0].id;
+      const newChat = {
+        id: chatId,
+        participants: chat.participants,
+        messages: chat.messages,
+        users : chat.users
+      }
+      console.log('El chat ya existe:', chat);
+      console.log('ID del chat:', chatId);
+      navigation.navigate("Message Chat", { chat: newChat,myId: myUser.id });
+    } else {
+      
+      const newChat = {
+        participants: [myUser.id ,  user.id],
+        users: [
+          { id: myUser.id , image : myUser.image, lastname: myUser.lastname, name: myUser.name  },
+          { id: user.id, image : user.image, lastname: user.lastname, name: user.name },
+        ],
+        messages: [],
+      };
+
+      // Agregar el nuevo chat a Firestore
+      const docRef = await chatsRef.add(newChat);
+      const chatId = docRef.id;
+
+      const chat = {
+        id: chatId,
+        participants: newChat.participants,
+        messages: newChat.messages,
+        users : newChat.users
+      }
+      console.log('Se creó un nuevo chat:', newChat);
+      console.log('ID del chat:', chatId);
+      navigation.navigate("Message Chat", { chat: chat,myId: myUser.id });
+    }
+    
+    setLoadingMessage(false)
+  };
+
 
   return (
     <View style={styles.container}>
@@ -105,8 +161,11 @@ const UserProfile = ({ navigation,route }) => {
             }
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.messageButton}>
-            <Text style={styles.messageButtonText}>Message</Text>
+          <TouchableOpacity style={styles.messageButton} onPress={handleMessage} >
+            {loadingMessage
+                ? <ActivityIndicator color = "white"></ActivityIndicator>
+                :<Text style={styles.messageButtonText}>Message</Text>
+            }
           </TouchableOpacity> 
 
           

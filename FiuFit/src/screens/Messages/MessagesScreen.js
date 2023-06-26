@@ -26,13 +26,21 @@ const MessageScreen = () => {
             const userChatsRef = firestore()
             .collection('chats')
             .where('participants', 'array-contains', userInfo.id);
+            
+
             userChatsRef.get()
             .then((querySnapshot) => {
               
               const chatsInfo = [];
               querySnapshot.forEach((doc) => {
                 const chat = doc.data();
-                chatsInfo.push(chat);
+                const newChat = {
+                    id: doc.id,
+                    participants: chat.participants,
+                    messages: chat.messages,
+                    users : chat.users
+                }
+                chatsInfo.push(newChat);
               });
               
               setChats(chatsInfo);

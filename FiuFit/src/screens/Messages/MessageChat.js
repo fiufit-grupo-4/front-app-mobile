@@ -11,6 +11,7 @@ import {
 import React, {useState,useEffect,useCallback} from "react";
 import {Ionicons} from "react-native-vector-icons";
 import { GiftedChat,InputToolbar } from 'react-native-gifted-chat'
+import firestore from '@react-native-firebase/firestore';
 
 
 
@@ -47,20 +48,20 @@ function MessageChat({ route }) {
             const userFind = chat.users.find((user) => user.id === message.sender_id);
             
             return {
-            _id: message.id,
-            text: message.text,
-            createdAt: new Date(message.time),
-            user: {
-                _id: userFind.id,
-                name: userFind.name + " " + userFind.lastname,
-                avatar: userFind.image,
-            },
+                _id: message.id,
+                text: message.text,
+                createdAt: new Date(message.time),
+                user: {
+                    _id: userFind.id,
+                    name: userFind.name + " " + userFind.lastname,
+                    avatar: userFind.image,
+                },
             };
         });
           
-            
-          
-        setMessages(messages);
+        let sorted = messages.sort((a, b) =>  b.createdAt -  a.createdAt);
+        
+        setMessages(sorted);
     }
 
     useEffect(() => {
@@ -70,11 +71,26 @@ function MessageChat({ route }) {
         
       }, [])
 
-      const onSend = useCallback((messages = []) => {
+      const onSend = async (newMessages = []) => {
+        const { text } = newMessages[0]
+        let date = new Date()
+
         setMessages(previousMessages =>
-          GiftedChat.append(previousMessages, messages),
+          GiftedChat.append(previousMessages, newMessages),
         )
-      }, [])
+        await firestore()
+        .collection('chats')
+        .doc(chat.id)
+        .update({
+            messages: firestore.FieldValue.arrayUnion({
+                text: text,
+                sender_id: user.id,
+                time: date.toISOString(),
+                id: Date.now().toString(36),
+            }),
+          });
+      }
+
 
     return (
         <View style ={{flex:1,padding:5,marginBottom:10}}>
