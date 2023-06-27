@@ -14,9 +14,6 @@ import CreateTraining from "../screens/training/CreateTraining";
 import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
-
-import NotificationScreen from "../screens/Notificaciones/NotificationScreen";
-
 import GoalsScreen from "../screens/Goal/GoalsScreen";
 import TrainingsHome from "../screens/training/TrainingsHome";
 import { useIsFocused } from "@react-navigation/native";
