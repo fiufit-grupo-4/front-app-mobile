@@ -72,8 +72,8 @@ const NotificationScreen = ( ) => {
                 : <>
 
                     <ScrollView contentContainerStyle={styles.container}>
-                        {notifications.map((notification) => (
-                            <View style={styles.notificationContainer}>
+                        {notifications.map((notification, index) => (
+                            <View key={index} style={styles.notificationContainer}>
                                 <View style={styles.notificationHeader}>
                                     <View style={styles.iconContainer}>
                                         <Ionicons name={getIconName(notification.title)} size={18} color='rgba(26,49,70,0.86)'/>
