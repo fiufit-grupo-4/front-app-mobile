@@ -13,7 +13,6 @@ const UploadImage = ({setImage}) => {
         let image = pickImage()
         if (image){
             setUploading(true)
-            //console.log(imageUri)
             const response = await fetch(imageUri);
             const blob = await response.blob();
             const ref = firebase.storage().ref().child(`images/${new Date().getTime()}`).put(blob);    

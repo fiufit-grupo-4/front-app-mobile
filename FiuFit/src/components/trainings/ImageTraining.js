@@ -4,8 +4,6 @@ import Video from 'react-native-video';
 const ImageTraining = (media) => {
 
   const renderMediaItem = (item) => {
-    console.log(item)
-    console.log("hola")
     if (item.media_type == 'image') {
       return <Image source={{ uri: item.url }} style={styles.image} />;
     } else if (item.media_type == 'video') {
