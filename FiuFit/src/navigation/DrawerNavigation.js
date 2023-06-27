@@ -209,8 +209,6 @@ function DrawerComponent() {
 
 
             <Drawer.Screen
-                name="         Messages"
-
             name="        New Post"
             color="#F0A500"
             component={CreateTraining}
