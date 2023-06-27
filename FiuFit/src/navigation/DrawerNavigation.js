@@ -14,11 +14,15 @@ import CreateTraining from "../screens/training/CreateTraining";
 import MessagesScreen from "../screens/Messages/MessagesScreen";
 import FollowersScreen from "../screens/Followers/FollowersScreen";
 import CreateGoal from "../screens/Goal/CreateGoal";
+
+import NotificationScreen from "../screens/Notificaciones/NotificationScreen";
+
 import GoalsScreen from "../screens/Goal/GoalsScreen";
 import TrainingsHome from "../screens/training/TrainingsHome";
 import { useIsFocused } from "@react-navigation/native";
 import Progress from "../screens/progress/Progress";
 import InterestHome from "../screens/profile/InterestHome";
+
 
 const Drawer = createDrawerNavigator();
 
@@ -191,6 +195,24 @@ function DrawerComponent() {
             />
 
             <Drawer.Screen
+
+                name="         Notifications"
+                color="#F0A500"
+                component={NotificationScreen}
+                options={() => ({
+                    drawerIcon: () => (
+                        <AntDesign
+                            name="bells"
+                        />
+                    ),
+                    headerShown: true,
+                })}
+            />
+
+
+            <Drawer.Screen
+                name="         Messages"
+
             name="        New Post"
             color="#F0A500"
             component={CreateTraining}
@@ -241,6 +263,7 @@ function DrawerComponent() {
 
         <Drawer.Screen
                 name="        Messages"
+
                 color="#F0A500"
                 component={MessagesScreen}
                 options={() => ({
