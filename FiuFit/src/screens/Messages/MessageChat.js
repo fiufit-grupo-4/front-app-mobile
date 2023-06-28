@@ -12,8 +12,8 @@ import React, {useState,useEffect,useCallback} from "react";
 import {Ionicons} from "react-native-vector-icons";
 import { GiftedChat,InputToolbar } from 'react-native-gifted-chat'
 import firestore from '@react-native-firebase/firestore';
-
-
+import {getUser} from "../../utils/getters"
+import { API_GATEWAY } from "../../utils/constants";
 
 const customtInputToolbar = props => {
     return (
@@ -42,8 +42,6 @@ function MessageChat({ route }) {
         setSender(senderUser)
         setMyUser(myUser)
 
-       
-
         const messages = chat.messages.map((message) => {
             const userFind = chat.users.find((user) => user.id === message.sender_id);
 
@@ -65,18 +63,14 @@ function MessageChat({ route }) {
     }
 
     useEffect(() => {
-
-        
         getMessages()
-        
-      }, [])
+    }, [])
 
-      const onSend = async (newMessages = []) => {
+    const onSend = async (newMessages = []) => {
         const { text } = newMessages[0]
         let date = new Date()
-
         setMessages(previousMessages =>
-          GiftedChat.append(previousMessages, newMessages),
+            GiftedChat.append(previousMessages, newMessages),
         )
         await firestore()
         .collection('chats')
@@ -88,8 +82,30 @@ function MessageChat({ route }) {
                 time: date.toISOString(),
                 id: Date.now().toString(36),
             }),
-          });
-      }
+        });
+        let userInfo = await getUser()
+        const url = API_GATEWAY + 'notifications/message/send'
+        let response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + userInfo.access_token,
+          },
+          body: JSON.stringify({       
+            "message": text,
+            "id_sender": user.id ,
+            "id_receiver": sender.id, 
+          })
+        })
+        if (!response.ok) {
+            
+            console.log("RESPONSE: ", response.status);
+        } else {
+            let data = await response.json()
+            console.log(data)
+        }
+
+    }
 
 
     return (
