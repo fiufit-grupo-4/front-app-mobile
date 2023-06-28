@@ -24,6 +24,8 @@ export const Progress = () => {
 
     const lastMonthSteps = async() => {
         setFilter("month");
+        setLoading(true)
+       
         let data = await getLastMonthSteps()
         const date = new Date();
         date.setDate(date.getDate() - 30);
@@ -31,10 +33,13 @@ export const Progress = () => {
         setTime(data.map(item =>  item.date.slice(5)))
         setCompleteGoals(completedGoals(date))
         setTimeUsed(getTimeUsed(date))
+        setLoading(false)
     };
 
     const lastWeekSteps = async() => {
         setFilter("week");
+        setLoading(true)
+        
         let data = await getLastWeekSteps()
         const date = new Date();
         date.setDate(date.getDate() - 7);
@@ -43,10 +48,13 @@ export const Progress = () => {
         setTime(data.map(item => item.date.slice(5)))
         setCompleteGoals(completedGoals(date))
         setTimeUsed(getTimeUsed(date))
+        setLoading(false)
     };
 
     const lastDaySteps = async() => {
         setFilter("day");
+        setLoading(true)
+        
         let data = await getLastDaySteps()
         const date = new Date();
         date.setHours(date.getHours() - 24)
@@ -55,10 +63,13 @@ export const Progress = () => {
         setTime(data.map(item =>  item.date.slice(12,16)))
         setCompleteGoals(completedGoals(date))
         setTimeUsed(getTimeUsed(date))
+        setLoading(false)
     };
 
     const lastHourSteps = async() => {
         setFilter("hour");
+        setLoading(true)
+        
         let data = await getLastHourSteps()
         const date = new Date();
         date.setHours(date.getHours() - 1)
@@ -67,6 +78,7 @@ export const Progress = () => {
         setTime(data.map(item =>  item.date.slice(13,16)))
         setCompleteGoals(completedGoals(date))
         setTimeUsed(getTimeUsed(date))
+        setLoading(false)
     };
 
 
@@ -162,9 +174,10 @@ export const Progress = () => {
             setLoading(true)
             setError(false)
             let userInfo = await getUser()
-            Client.getGoals(userInfo.access_token).then((data) => {
+            Client.getGoals(userInfo.access_token).then(async (data) => {
                 setGoals(data)
                 console.log(data)
+                await lastMonthSteps()
                 setLoading(false)
             }).catch((error) => {
                 setError(true);

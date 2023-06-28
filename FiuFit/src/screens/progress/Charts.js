@@ -57,7 +57,7 @@ const Charts = ({date, value}) => {
                 <View style={styles.chartContainer}>
                     <LineChart
                         data={calories}
-                        width={320}
+                        width={350}
                         height={200}
                         chartConfig={chartConfig}
                     />
@@ -71,7 +71,7 @@ const Charts = ({date, value}) => {
                 <View style={styles.chartContainer}>
                 <LineChart
                     data={kilometers}
-                    width={320}
+                    width={350}
                     height={200}
                     chartConfig={chartConfig}
                 />
@@ -105,6 +105,9 @@ const Charts = ({date, value}) => {
     backgroundGradientFrom: '#ffffff',
     backgroundGradientTo: '#ffffff',
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    xAxisLabelFontSize: 1,
+    horizontalLabelRotation: 45,
+   
   };
   
   const styles = StyleSheet.create({
