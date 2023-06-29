@@ -14,7 +14,7 @@ const validator = require('validator');
 const ForgotPasswordScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      email: 'dantereinaudo@hotmail.com',
+      email: '',
     }
   });
 

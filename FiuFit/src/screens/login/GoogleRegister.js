@@ -66,10 +66,10 @@ const GoogleRegister = ({ route }) => {
 
     const { control, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
-            phone_number: "+5491161637747",
+            phone_number: "",
             name:user.name,
             lastname: user.lastname,
-            age: "27"
+            age: ""
         }
     });
 
